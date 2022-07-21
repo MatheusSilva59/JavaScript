@@ -7,22 +7,64 @@
     <title>IF / ELSE</title>
 
     <script>
-        var nota1 = Number(prompt('Digite a nota 1: '))
-        var nota2 = Number(prompt('Digite a nota 2: '))
-        var mediaAluno = (nota1 + nota2) / 2
-        var minMedia = 7
+        // var nota1 = Number(prompt('Digite a nota 1: '))
+        // var nota2 = Number(prompt('Digite a nota 2: '))
+        // var faltas = Number(prompt('Digite a quantidade de faltas: '))
+        // var mediaAluno = (nota1 + nota2) / 2
 
-        console.log(mediaAluno)
+        // var minMedia = 7
+        // var minFreq = 10
 
-        if (mediaAluno >= minMedia){
-            document.write('Aprovado')
+        // console.log(mediaAluno)
+
+        // if (mediaAluno >= minMedia && faltas <= minFreq){
+        //     document.write('<h1><strong>Aprovado</strong></h1>')
+        //     document.write('<h2>Frequência de ' + faltas + '/' + minFreq + '</h2><h3>Notas</h3> <ul><li>Nota 1: ' + nota1 + '</li><li>Nota 2: ' + nota2 + '</li><li>Média: ' + mediaAluno + '</li></ul>')
+        // }
+        // else{
+        //     document.write('<h1><strong>Reprovado</strong></h1>')
+        //     document.write('<h2>Frequência de ' + faltas + '/' + minFreq + '</h2><h3>Notas</h3> <ul><li>Nota 1: ' + nota1 + '</li><li>Nota 2: ' + nota2 + '</li><li>Média: ' + mediaAluno + '</li></ul>')
+        // }
+
+        var nome = prompt('Qual seu nome?')
+        var altura = Number(prompt('Qual sua altura (cm)?'))
+        var peso = Number(prompt('Qual seu peso (kg)?'))
+
+        altura /= 100
+        ms = peso / (altura*altura)
+        var condicao = null
+
+        if (ms <= 16){
+            condicao = 'Baixo peso muito grave'
+        } 
+        else if (ms <= 16.99){
+            condicao = 'Baixo peso grave'
+        }  
+        else if (ms <= 18.49){
+            condicao = 'Baixo peso'
+        }           
+        else if (ms <= 24.99){
+            condicao = 'Peso normal'
+        }     
+        else if (ms <= 29.99){
+            condicao = 'Sobrepeso'
+        }  
+        else if (ms <= 34.99){
+            condicao = 'Obesidade grau 1'
+        } 
+        else if (ms <= 39.99){
+            condicao = 'Obesidade grau 2'
+        }   
+        else {
+            condicao = 'Obesidade grau 3'
         }
-        else{
-            document.write('Reprovado')
-        }
+            
+        document.write(nome + ' possui o índice de massa corporal igual a ' + ms.toFixed(2) + ', sendo classificado como: ' + condicao) 
+        console.log(ms)
+
     </script>
 </head>
 <body>
-
+    
 </body>
 </html>
