@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/490ac8585b.js" crossorigin="anonymous"></script>
+
+    <title>Calculadora</title>
+
+    <style>
+        body{
+            background-color: #060817f5;
+        }
+        .display{
+            height: 250px;
+        }
+        .display h1{
+            color: white;
+            font-size: 3em;
+            padding-right: 3px;
+        }
+        .displayInput{
+            background-color: transparent;
+            border: none;
+            height: 60px;
+            width: 100%;
+            font-size: 3em;
+            text-align: right;
+            color: white;
+        }
+        .displayHistory{
+            background-color: transparent;
+            border: none;
+            height: 25px;
+            width: 100%;
+            text-align: right;
+            font-size: 1em;
+            color: gray;
+        }
+        .calc{
+            width: 416px;
+            height: 746px;
+            background-color: #1e202191;
+        }
+        .btn-custom{
+            width: 100px;
+            height: 80px;
+            color: white;
+            background-color: #3233324d;
+            border: none;
+            border-radius: 0;
+            margin: 1px 1px;
+            font-size: 30px;
+        }
+        .btn-custom:hover{
+            background-color: #767776 !important;
+            color: white;
+            transition-duration: .4s;
+        }
+        .btn-custom-black{
+            background-color: #111010;
+        }
+    </style>
+
+    <script>
+
+        var lastOperation = null
+        var lastNumber = null
+        var arrayNumbers = false
+        var numbers = null
+        var end = false
+
+        function element(){
+            return document.getElementById('numDisplay').value
+        }
+        
+
+        function insertValue(value){
+            end = false
+            if(arrayNumbers === true){
+                document.getElementById('numDisplay').value = value
+                arrayNumbers = false
+            }
+            else{
+                document.getElementById('numDisplay').value += value
+            }
+        }
+        
+        function deleteAllValues(){
+            document.getElementById('numDisplay').value = ''
+            arrayNumbers = false
+            lastNumber = null
+            numbers = ''
+            document.getElementById('historyDisplay').value = numbers
+        }
+
+        function deleteLastValue(){           
+            var length = (document.getElementById('numDisplay').value.length) - 1;
+            var newLength = document.getElementById('numDisplay').value.slice(0, length)
+            document.getElementById('numDisplay').value = newLength
+        }
+
+        function deleteInstanceValue(){
+            document.getElementById('numDisplay').value = ''
+        }
+
+        function saveNumber(operation){
+            
+            numbers = element()
+
+            var sign = whichOperation(operation)
+            document.getElementById('historyDisplay').value += (numbers + sign)
+            if (lastNumber === null){
+                lastNumber = Number(element())
+                lastOperation = operation
+                document.getElementById('numDisplay').value = ''
+            }
+            else{
+                if (lastOperation != operation && end === false){
+                    equal()
+                    lastOperation = operation
+                }
+                else if(end === false){
+                    equal();
+                }
+                    
+                arrayNumbers = true
+            }
+            lastOperation = operation
+            end = false
+        }
+
+        function plus(a, b){
+            return a + b
+        }
+        
+        function minus(a, b){
+            return a - b
+        }
+
+        function divided(a, b){
+            return a / b
+        }
+
+        function times(a, b){
+            return a * b
+        }
+
+        function equal(endLocal){
+            
+            var a = Number(element())
+            var result = a
+
+            if(arrayNumbers === false){
+                switch (lastOperation){
+                case plus:
+                    result = plus(lastNumber, a)
+                    break
+                case minus:
+                    result = minus(lastNumber, a)
+                    break
+                case divided:
+                    result = divided(lastNumber, a)
+                    break
+                case times:
+                    result = times(lastNumber, a)
+                    break
+                }  
+            } 
+
+            if(endLocal === true){
+                deleteAllValues();
+                end = true;
+            }  
+
+            lastNumber = result
+            document.getElementById('numDisplay').value = result
+        }
+        function whichOperation(operation){
+            
+            var lastOperationSign = ''
+            switch (operation){
+                case plus:
+                    lastOperationSign = ' + '
+                    break
+                case minus:
+                    lastOperationSign = ' - '
+                    break
+                case divided:
+                    lastOperationSign = ' / '
+                    break
+                case times:
+                    lastOperationSign = ' x '
+                    break
+            }            
+            return lastOperationSign
+        }
+    </script>
+</head>
+<body>
+    <div class="container d-flex justify-content-center">
+        <div class="calc mt-3">
+            <div class="row m-0 justify-content-center">
+                <div class="display col-12 d-flex flex-column justify-content-center">
+
+                    <input type="text" class="displayHistory mb-1" id="historyDisplay" disabled>
+
+                    <input class="displayInput" type="text" id="numDisplay" disabled placeholder="0">
+
+                </div>
+                <!-- row 1 -->
+                <button type="button" class="btn-custom col-3">
+                    %
+                </button>
+                <button type="button" class="btn-custom col-3">
+                    √
+                </button>
+                <button type="button" class="btn-custom col-3">
+                    x<sup>2</sup>
+                </button>
+                <button type="button" class="btn-custom col-3">
+                    <sup>1</sup>/x
+                </button>
+                <!-- row 2 -->
+                <button onclick="deleteInstanceValue()" type="button" class="btn-custom col-3">
+                    CE
+                </button>
+                <button onclick="deleteAllValues()" type="button" class="btn-custom col-3"> <!--Delete all values-->
+                    C
+                </button>
+                <button onclick="deleteLastValue()" type="button" class="btn-custom col-3"> 
+                    <i class="fa-solid fa-delete-left"></i> <!--Delete last value-->
+                </button>
+                <button onclick="saveNumber(divided)" type="button" class="btn-custom col-3">
+                    <i class="fa-solid fa-divide"></i>
+                </button>
+                <!-- row 3 -->
+                <button onclick="insertValue(7)" type="button" class="btn-custom btn-custom-black col-3">
+                    7
+                </button>
+                <button  onclick="insertValue(8)" type="button" class="btn-custom btn-custom-black col-3">
+                    8
+                </button>
+                <button  onclick="insertValue(9)" type="button" class="btn-custom btn-custom-black col-3">
+                    9
+                </button>
+                <button onclick="saveNumber(times)" type="button" class="btn-custom col-3">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <!-- row 4 -->
+                <button  onclick="insertValue(4)" type="button" class="btn-custom btn-custom-black col-3">
+                    4
+                </button>
+                <button  onclick="insertValue(5)" type="button" class="btn-custom btn-custom-black col-3">
+                    5
+                </button>
+                <button  onclick="insertValue(6)" type="button" class="btn-custom btn-custom-black col-3">
+                    6
+                </button>
+                <button onclick="saveNumber(minus)" type="button" class="btn-custom col-3">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+                <!-- row 5 -->
+                <button  onclick="insertValue(1)" type="button" class="btn-custom btn-custom-black col-3">
+                    1
+                </button>
+                <button  onclick="insertValue(2)" type="button" class="btn-custom btn-custom-black col-3">
+                    2
+                </button>
+                <button  onclick="insertValue(3)" type="button" class="btn-custom btn-custom-black col-3">
+                    3
+                </button>
+                <button onclick="saveNumber(plus)" type="button" class="btn-custom col-3">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <!-- row 6 -->
+                <button type="button" class="btn-custom col-3">
+                    <i class="fa-solid fa-plus-minus"></i>
+                </button>
+                <button onclick="insertValue(0)" type="button" class="btn-custom btn-custom-black col-3">
+                    0
+                </button>
+                <button type="button" class="btn-custom col-3">
+                    ,
+                </button>
+                <button onclick="equal(true)" type="button" class="btn-custom col-3">
+                    <i class="fa-solid fa-equals"></i>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+    </script>
+</body>
+</html>

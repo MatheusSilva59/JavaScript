@@ -6,13 +6,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DOM</title>
 
+    <style>
+        .btn{
+            padding: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: white;
+            border: none;
+        }
+        .btn:hover{
+            cursor: pointer;
+        }
+        .btn-green{
+            background-color:  #156915a6;
+        }
+        .btn-green:hover{
+            background-color: green;
+        }
+        .btn-blue{
+            background-color: #1616c8b0;
+        }
+        .btn-blue:hover{
+            background-color: blue;
+        }
+        .btn-red{
+            background-color: rgba(255, 0, 0, 0.487);
+        }
+        .btn-red:hover{
+            background-color: red;
+        }
+        .box{
+            height: 300px;
+            width: 300px;
+            background-color: black;
+            margin: 3rem auto 0 auto;
+        }
+    </style>
+
+    <script>
+        function distCaract(){
+            var caract = document.getElementById('caract').value
+            document.getElementById('caract').value = ''
+            caract.trim()
+
+            var num = /^[0-9]+$/
+            var letter = /^[a-zA-Z]+$/
+
+            if (caract.match(letter)){
+                document.getElementById('letter').value += caract
+            }
+            else if(caract.match(num)){
+                document.getElementById('number').value += caract
+            }
+        }
+        function modifyBackground(color){
+            document.getElementById('box').style.transitionDuration = '1s'
+            document.getElementById('box').style.backgroundColor = color
+            isRounded = isRounded === false ? true : false;
+            if (isRounded === true){
+                document.getElementById('box').style.borderRadius = '150px'
+            }
+            else{
+                document.getElementById('box').style.borderRadius = '0px'
+            }
+        }
+
+        var isRounded = false
+
+    </script>
 </head>
 <body>
-    <input type="text" placeholder="Digite seu nome" name="user" id="user">
+    <!-- <input type="text" placeholder="Digite um caractér aqui" name="caract" id="caract" onkeyup="distCaract()">
 
-    
-    <script>
-        console.log(document.getElementById('user'))
-    </script>
+    <div style="margin-top: 1rem;">
+        <span>
+            Letras:
+            <input type="text" name="letter" id="letter" disabled>
+        </span>
+        <span>
+            Números:
+            <input type="text" name="number" id="number" disabled>
+        </span>
+    </div>
+
+    <hr> -->
+
+    <div style="text-align: center;">
+        <h2>Manipulando estilos</h2>
+        <button type="button" class="btn btn-green" onclick="modifyBackground('green')">Verde</button>
+        <button type="button" class="btn btn-blue" onclick="modifyBackground('blue')">Azul</button>
+        <button type="button" class="btn btn-red" onclick="modifyBackground('red')">Vermelho</button>
+        <div class="box" id="box"></div>
+    </div>
 </body>
 </html>
