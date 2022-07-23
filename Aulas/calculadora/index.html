@@ -74,11 +74,15 @@
         var lastOperation = null
         var lastNumber = null
         var arrayNumbers = false
-        var numbers = null
+        var numbers = []
+        var waitingValue = true
         var end = false
 
         function element(){
             return document.getElementById('numDisplay').value
+        }
+        function elementHistory(){
+            return document.getElementById('historyDisplay').value 
         }
         
 
@@ -112,29 +116,47 @@
         }
 
         function saveNumber(operation){
-            
-            numbers = element()
 
             var sign = whichOperation(operation)
-            document.getElementById('historyDisplay').value += (numbers + sign)
-            if (lastNumber === null){
+
+            if (element().length == 0 || (element() == lastNumber && end === false)){
+                waitingValue = false
+            }
+            else{
+                waitingValue = true
+            }
+            console.log('waitingValue: ' + waitingValue)
+            console.log('elementHistoryLength: ' + elementHistory().length)
+            
+            if (waitingValue === false){
+                document.getElementById('historyDisplay').value = elementHistory().slice(0, elementHistory().length -1) + sign
+                console.log('change sign')
+            }   
+            else{
+                document.getElementById('historyDisplay').value += element() + sign
+            }
+
+            if (element().length != 0){
+                if (lastNumber === null){
                 lastNumber = Number(element())
                 lastOperation = operation
                 document.getElementById('numDisplay').value = ''
-            }
-            else{
-                if (lastOperation != operation && end === false){
-                    equal()
-                    lastOperation = operation
                 }
-                else if(end === false){
-                    equal();
+                else{
+                    if (lastOperation != operation && end === false){
+                        equal()
+                        lastOperation = operation
+                    }
+                    else if(end === false){
+                        equal();
+                    }
+                        
+                    arrayNumbers = true
                 }
-                    
-                arrayNumbers = true
+                end = false
             }
             lastOperation = operation
-            end = false
+                
         }
 
         function plus(a, b){
@@ -188,16 +210,16 @@
             var lastOperationSign = ''
             switch (operation){
                 case plus:
-                    lastOperationSign = ' + '
+                    lastOperationSign = '+'
                     break
                 case minus:
-                    lastOperationSign = ' - '
+                    lastOperationSign = '-'
                     break
                 case divided:
-                    lastOperationSign = ' / '
+                    lastOperationSign = '/'
                     break
                 case times:
-                    lastOperationSign = ' x '
+                    lastOperationSign = 'x'
                     break
             }            
             return lastOperationSign
