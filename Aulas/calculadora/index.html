@@ -76,6 +76,9 @@
         var arrayNumbers = false
         var numbers = []
         var waitingValue = true
+        var repeatSign = false
+        var elementTemp = null
+        var result = null
         var end = false
 
         function element(){
@@ -95,13 +98,14 @@
             else{
                 document.getElementById('numDisplay').value += value
             }
+            elementTemp = element().length + 1
         }
         
         function deleteAllValues(){
-            document.getElementById('numDisplay').value = ''
+            document.getElementById('numDisplay').value = null
             arrayNumbers = false
             lastNumber = null
-            numbers = ''
+            numbers = null
             document.getElementById('historyDisplay').value = numbers
         }
 
@@ -118,19 +122,27 @@
         function saveNumber(operation){
 
             var sign = whichOperation(operation)
+            repeatSign = elementHistory().charAt(elementHistory().length - 1) != sign? false : true
 
-            if (element().length == 0 || (element() == lastNumber && end === false)){
+            console.log(repeatSign)
+            console.log(element())
+            console.log(lastNumber)
+            var asd = /^[+-x/]+$/
+            console.log('AAAAAA' + (elementHistory().charAt(elementHistory().length - 1).match(asd)))
+            if (
+                result === 0 && (elementHistory().charAt(elementHistory().length - 1).match(asd)) && element().length == 0
+            ){
                 waitingValue = false
+                console.log('FALSO')
             }
             else{
                 waitingValue = true
+                console.log('VERDADEIRO')        
             }
-            console.log('waitingValue: ' + waitingValue)
-            console.log('elementHistoryLength: ' + elementHistory().length)
-            
+
+
             if (waitingValue === false){
-                document.getElementById('historyDisplay').value = elementHistory().slice(0, elementHistory().length -1) + sign
-                console.log('change sign')
+            document.getElementById('historyDisplay').value = elementHistory().slice(0, elementHistory().length -1) + sign
             }   
             else{
                 document.getElementById('historyDisplay').value += element() + sign
@@ -155,8 +167,12 @@
                 }
                 end = false
             }
+
             lastOperation = operation
-                
+            if (elementHistory().length < 3){
+                console.log('RESULT')
+                result = 0
+            }         
         }
 
         function plus(a, b){
@@ -178,9 +194,9 @@
         function equal(endLocal){
             
             var a = Number(element())
-            var result = a
+            result = a
 
-            if(arrayNumbers === false){
+            if(arrayNumbers === false && end === false){
                 switch (lastOperation){
                 case plus:
                     result = plus(lastNumber, a)
@@ -204,6 +220,7 @@
 
             lastNumber = result
             document.getElementById('numDisplay').value = result
+            result = 0
         }
         function whichOperation(operation){
             
