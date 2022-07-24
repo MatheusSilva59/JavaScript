@@ -62,7 +62,9 @@ function deleteInstanceValue(){
 function saveNumber(operation){
 
     if (operation == 'changeSign'){
-        return document.getElementById('numDisplay').value = changeSign(element())
+        var tempNumber = changeSign(element())
+        if (end === true){lastNumber = tempNumber}
+        return document.getElementById('numDisplay').value = tempNumber
     }
 
     var sign = whichOperation(operation)
@@ -126,7 +128,7 @@ function equal(endLocal){
     
     var a = Number(element())
     result = a
-
+    console.log('AAAAAAAA')
     if(arrayNumbers === false && end === false){
         switch (lastOperation){
         case plus:
@@ -174,4 +176,3 @@ function whichOperation(operation){
     }            
     return lastOperationSign
 }
-
