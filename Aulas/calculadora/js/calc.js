@@ -50,6 +50,9 @@ function deleteLastValue(){
         document.getElementById('numDisplay').value = newTempValue
         lastNumber = Number(newTempValue)
     }
+    if (element().length == 0){
+        document.getElementById('numDisplay').value = 0
+    }
 }
 
 function deleteInstanceValue(){
