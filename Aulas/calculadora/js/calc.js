@@ -44,7 +44,7 @@ function deleteAllValues(){
 
 function deleteLastValue(){   
 
-    if (newValue === true){
+    if (newValue === true || end === true){
         var length = (document.getElementById('numDisplay').value.length) - 1;
         var newTempValue = document.getElementById('numDisplay').value.slice(0, length)
         document.getElementById('numDisplay').value = newTempValue
