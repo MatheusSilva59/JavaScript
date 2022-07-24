@@ -74,23 +74,22 @@
         var lastOperation = null
         var lastNumber = null
         var arrayNumbers = false
-        var numbers = []
-        var waitingValue = true
-        var repeatSign = false
-        var elementTemp = null
+        var newValue = false
         var result = null
         var end = false
 
+        var decimalPlace = ',' //Alterar valor inserido pelo botão
+
         function element(){
-            return document.getElementById('numDisplay').value
+            return document.getElementById('numDisplay').value.replace(decimalPlace , '.')
         }
         function elementHistory(){
             return document.getElementById('historyDisplay').value 
         }
         
-
         function insertValue(value){
             end = false
+            newValue = true
             if(arrayNumbers === true){
                 document.getElementById('numDisplay').value = value
                 arrayNumbers = false
@@ -98,7 +97,6 @@
             else{
                 document.getElementById('numDisplay').value += value
             }
-            elementTemp = element().length + 1
         }
         
         function deleteAllValues(){
@@ -109,10 +107,14 @@
             document.getElementById('historyDisplay').value = numbers
         }
 
-        function deleteLastValue(){           
-            var length = (document.getElementById('numDisplay').value.length) - 1;
-            var newLength = document.getElementById('numDisplay').value.slice(0, length)
-            document.getElementById('numDisplay').value = newLength
+        function deleteLastValue(){   
+
+            if (newValue === true){
+                var length = (document.getElementById('numDisplay').value.length) - 1;
+                var newTempValue = document.getElementById('numDisplay').value.slice(0, length)
+                document.getElementById('numDisplay').value = newTempValue
+                lastNumber = Number(newTempValue)
+            }
         }
 
         function deleteInstanceValue(){
@@ -121,38 +123,24 @@
 
         function saveNumber(operation){
 
+            if (operation == 'changeSign'){
+                return document.getElementById('numDisplay').value = changeSign(element())
+            }
+
             var sign = whichOperation(operation)
-            repeatSign = elementHistory().charAt(elementHistory().length - 1) != sign? false : true
 
-            console.log(repeatSign)
-            console.log(element())
-            console.log(lastNumber)
-            var asd = /^[+-x/]+$/
-            console.log('AAAAAA' + (elementHistory().charAt(elementHistory().length - 1).match(asd)))
-            if (
-                result === 0 && (elementHistory().charAt(elementHistory().length - 1).match(asd)) && element().length == 0
-            ){
-                waitingValue = false
-                console.log('FALSO')
-            }
-            else{
-                waitingValue = true
-                console.log('VERDADEIRO')        
-            }
-
-
-            if (waitingValue === false){
-            document.getElementById('historyDisplay').value = elementHistory().slice(0, elementHistory().length -1) + sign
+            if (result === 0 && newValue === false && elementHistory().length > 0){
+                document.getElementById('historyDisplay').value = elementHistory().slice(0, elementHistory().length -1) + sign
             }   
             else{
-                document.getElementById('historyDisplay').value += element() + sign
+                document.getElementById('historyDisplay').value += element().replace('.', decimalPlace) + sign
             }
 
             if (element().length != 0){
                 if (lastNumber === null){
-                lastNumber = Number(element())
-                lastOperation = operation
-                document.getElementById('numDisplay').value = ''
+                    lastNumber = Number(element())
+                    lastOperation = operation
+                    document.getElementById('numDisplay').value = ''
                 }
                 else{
                     if (lastOperation != operation && end === false){
@@ -169,10 +157,10 @@
             }
 
             lastOperation = operation
-            if (elementHistory().length < 3){
-                console.log('RESULT')
-                result = 0
-            }         
+            result = 0
+            // if (elementHistory().length < 3){
+                
+            // }         
         }
 
         function plus(a, b){
@@ -189,6 +177,9 @@
 
         function times(a, b){
             return a * b
+        }
+        function changeSign(a){
+            return a = a < 0 ? a*-1 : -a
         }
 
         function equal(endLocal){
@@ -219,8 +210,9 @@
             }  
 
             lastNumber = result
-            document.getElementById('numDisplay').value = result
+            document.getElementById('numDisplay').value = result.toString().replace('.', decimalPlace).slice(0, 15)
             result = 0
+            newValue = false
         }
         function whichOperation(operation){
             
@@ -255,29 +247,29 @@
 
                 </div>
                 <!-- row 1 -->
-                <button type="button" class="btn-custom col-3">
+                <button type="button" class="btn-custom col-3"><!--Percent-->
                     %
                 </button>
-                <button type="button" class="btn-custom col-3">
+                <button type="button" class="btn-custom col-3"><!--Square root-->
                     √
                 </button>
-                <button type="button" class="btn-custom col-3">
+                <button type="button" class="btn-custom col-3"><!--Pow-->
                     x<sup>2</sup>
                 </button>
-                <button type="button" class="btn-custom col-3">
+                <button type="button" class="btn-custom col-3"><!--1/x-->
                     <sup>1</sup>/x
                 </button>
                 <!-- row 2 -->
-                <button onclick="deleteInstanceValue()" type="button" class="btn-custom col-3">
+                <button onclick="deleteInstanceValue()" type="button" class="btn-custom col-3"><!--Delete actual value, but not memory's values-->
                     CE
                 </button>
                 <button onclick="deleteAllValues()" type="button" class="btn-custom col-3"> <!--Delete all values-->
                     C
                 </button>
-                <button onclick="deleteLastValue()" type="button" class="btn-custom col-3"> 
-                    <i class="fa-solid fa-delete-left"></i> <!--Delete last value-->
+                <button onclick="deleteLastValue()" type="button" class="btn-custom col-3"> <!--Delete last value-->
+                    <i class="fa-solid fa-delete-left"></i> 
                 </button>
-                <button onclick="saveNumber(divided)" type="button" class="btn-custom col-3">
+                <button onclick="saveNumber(divided)" type="button" class="btn-custom col-3"><!--Divided-->
                     <i class="fa-solid fa-divide"></i>
                 </button>
                 <!-- row 3 -->
@@ -320,13 +312,13 @@
                     <i class="fa-solid fa-plus"></i>
                 </button>
                 <!-- row 6 -->
-                <button type="button" class="btn-custom col-3">
+                <button onclick="saveNumber('changeSign')" type="button" class="btn-custom col-3">
                     <i class="fa-solid fa-plus-minus"></i>
                 </button>
                 <button onclick="insertValue(0)" type="button" class="btn-custom btn-custom-black col-3">
                     0
                 </button>
-                <button type="button" class="btn-custom col-3">
+                <button onclick="insertValue(',')" type="button" class="btn-custom col-3">
                     ,
                 </button>
                 <button onclick="equal(true)" type="button" class="btn-custom col-3">
