@@ -56,3 +56,47 @@ button:disabled{
 .btn-custom-black{
     background-color: #111010;
 }
+@media (max-width: 339.98px){
+    .calc{
+        width: 208px;
+        height: 373px;
+    }
+    .btn-custom{
+        width: 50px;
+        height: 40px;
+        font-size: 15px;
+    }
+    .displayInput{
+        height: 30px;
+        font-size: 1.5em;
+    }
+    .displayHistory{
+        height: 12.5px;
+        font-size: .5em;
+    }
+    .display{
+        height: 125px;
+    }
+} 
+@media (min-width: 340px) and (max-width: 459.98px){
+    .calc{
+        width: 312px;
+        height: 559.5px;
+    }
+    .btn-custom{
+        width: 75px;
+        height: 60px;
+        font-size: 22.5px;
+    }
+    .displayInput{
+        height: 45px;
+        font-size: 2.25em;
+    }
+    .displayHistory{
+        height: 18.75px;
+        font-size: .75em;
+    }
+    .display{
+        height: 187.5px;
+    }
+}

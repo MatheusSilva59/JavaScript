@@ -22,96 +22,94 @@
 
 </head>
 <body>
-    <div class="container d-flex justify-content-center">
-        <div class="calc mt-3">
-            <div class="row m-0 justify-content-center">
-                <div class="display col-12 d-flex flex-column justify-content-center">
+    <div class="container d-flex justify-content-center mt-3 mb-3" style="min-width: 235px;">
+        <div class="calc row m-0 justify-content-center">
+            <div class="display col-12 d-flex flex-column justify-content-center">
 
-                    <input type="text" class="displayHistory mb-1" id="historyDisplay" disabled>
+                <input type="text" class="displayHistory mb-1" id="historyDisplay" disabled>
 
-                    <input class="displayInput" type="text" id="numDisplay" disabled value="0">
-
-                </div>
-                <!-- row 1 -->
-                <button type="button" class="btn-custom col-3" disabled><!--Percent-->
-                    %
-                </button>
-                <button type="button" class="btn-custom col-3" disabled><!--Square root-->
-                    √
-                </button>
-                <button type="button" class="btn-custom col-3" disabled><!--Pow-->
-                    x<sup>2</sup>
-                </button>
-                <button type="button" class="btn-custom col-3" disabled><!--1/x-->
-                    <sup>1</sup>/x
-                </button>
-                <!-- row 2 -->
-                <button onclick="deleteInstanceValue()" type="button" class="btn-custom col-3"><!--Delete actual value, but not memory's values-->
-                    CE
-                </button>
-                <button onclick="deleteAllValues()" type="button" class="btn-custom col-3"> <!--Delete all values-->
-                    C
-                </button>
-                <button onclick="deleteLastValue()" type="button" class="btn-custom col-3"> <!--Delete last value-->
-                    <i class="fa-solid fa-delete-left"></i> 
-                </button>
-                <button onclick="saveNumber(divided)" type="button" class="btn-custom col-3"><!--Divided-->
-                    <i class="fa-solid fa-divide"></i>
-                </button>
-                <!-- row 3 -->
-                <button onclick="insertValue(7)" type="button" class="btn-custom btn-custom-black col-3">
-                    7
-                </button>
-                <button  onclick="insertValue(8)" type="button" class="btn-custom btn-custom-black col-3">
-                    8
-                </button>
-                <button  onclick="insertValue(9)" type="button" class="btn-custom btn-custom-black col-3">
-                    9
-                </button>
-                <button onclick="saveNumber(times)" type="button" class="btn-custom col-3">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <!-- row 4 -->
-                <button  onclick="insertValue(4)" type="button" class="btn-custom btn-custom-black col-3">
-                    4
-                </button>
-                <button  onclick="insertValue(5)" type="button" class="btn-custom btn-custom-black col-3">
-                    5
-                </button>
-                <button  onclick="insertValue(6)" type="button" class="btn-custom btn-custom-black col-3">
-                    6
-                </button>
-                <button onclick="saveNumber(minus)" type="button" class="btn-custom col-3">
-                    <i class="fa-solid fa-minus"></i>
-                </button>
-                <!-- row 5 -->
-                <button  onclick="insertValue(1)" type="button" class="btn-custom btn-custom-black col-3">
-                    1
-                </button>
-                <button  onclick="insertValue(2)" type="button" class="btn-custom btn-custom-black col-3">
-                    2
-                </button>
-                <button  onclick="insertValue(3)" type="button" class="btn-custom btn-custom-black col-3">
-                    3
-                </button>
-                <button onclick="saveNumber(plus)" type="button" class="btn-custom col-3">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-                <!-- row 6 -->
-                <button onclick="saveNumber('changeSign')" type="button" class="btn-custom col-3">
-                    <i class="fa-solid fa-plus-minus"></i>
-                </button>
-                <button onclick="insertValue(0)" type="button" class="btn-custom btn-custom-black col-3">
-                    0
-                </button>
-                <button onclick="insertValue(',')" type="button" class="btn-custom col-3">
-                    ,
-                </button>
-                <button onclick="equal(true)" type="button" class="btn-custom col-3">
-                    <i class="fa-solid fa-equals"></i>
-                </button>
+                <input class="displayInput" type="text" id="numDisplay" disabled value="0">
 
             </div>
+            <!-- row 1 -->
+            <button type="button" class="btn-custom col-3" disabled><!--Percent-->
+                %
+            </button>
+            <button type="button" class="btn-custom col-3" disabled><!--Square root-->
+                √
+            </button>
+            <button type="button" class="btn-custom col-3" disabled><!--Pow-->
+                x<sup>2</sup>
+            </button>
+            <button type="button" class="btn-custom col-3" disabled><!--1/x-->
+                <sup>1</sup>/x
+            </button>
+            <!-- row 2 -->
+            <button onclick="deleteInstanceValue()" type="button" class="btn-custom col-3"><!--Delete actual value, but not memory's values-->
+                CE
+            </button>
+            <button onclick="deleteAllValues()" type="button" class="btn-custom col-3"> <!--Delete all values-->
+                C
+            </button>
+            <button onclick="deleteLastValue()" type="button" class="btn-custom col-3"> <!--Delete last value-->
+                <i class="fa-solid fa-delete-left"></i> 
+            </button>
+            <button onclick="saveNumber(divided)" type="button" class="btn-custom col-3"><!--Divided-->
+                <i class="fa-solid fa-divide"></i>
+            </button>
+            <!-- row 3 -->
+            <button onclick="insertValue(7)" type="button" class="btn-custom btn-custom-black col-3">
+                7
+            </button>
+            <button  onclick="insertValue(8)" type="button" class="btn-custom btn-custom-black col-3">
+                8
+            </button>
+            <button  onclick="insertValue(9)" type="button" class="btn-custom btn-custom-black col-3">
+                9
+            </button>
+            <button onclick="saveNumber(times)" type="button" class="btn-custom col-3">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <!-- row 4 -->
+            <button  onclick="insertValue(4)" type="button" class="btn-custom btn-custom-black col-3">
+                4
+            </button>
+            <button  onclick="insertValue(5)" type="button" class="btn-custom btn-custom-black col-3">
+                5
+            </button>
+            <button  onclick="insertValue(6)" type="button" class="btn-custom btn-custom-black col-3">
+                6
+            </button>
+            <button onclick="saveNumber(minus)" type="button" class="btn-custom col-3">
+                <i class="fa-solid fa-minus"></i>
+            </button>
+            <!-- row 5 -->
+            <button  onclick="insertValue(1)" type="button" class="btn-custom btn-custom-black col-3">
+                1
+            </button>
+            <button  onclick="insertValue(2)" type="button" class="btn-custom btn-custom-black col-3">
+                2
+            </button>
+            <button  onclick="insertValue(3)" type="button" class="btn-custom btn-custom-black col-3">
+                3
+            </button>
+            <button onclick="saveNumber(plus)" type="button" class="btn-custom col-3">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <!-- row 6 -->
+            <button onclick="saveNumber('changeSign')" type="button" class="btn-custom col-3">
+                <i class="fa-solid fa-plus-minus"></i>
+            </button>
+            <button onclick="insertValue(0)" type="button" class="btn-custom btn-custom-black col-3">
+                0
+            </button>
+            <button onclick="insertValue(',')" type="button" class="btn-custom col-3">
+                ,
+            </button>
+            <button onclick="equal(true)" type="button" class="btn-custom col-3">
+                <i class="fa-solid fa-equals"></i>
+            </button>
+
         </div>
     </div>
 

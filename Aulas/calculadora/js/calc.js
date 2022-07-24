@@ -174,3 +174,4 @@ function whichOperation(operation){
     }            
     return lastOperationSign
 }
+
