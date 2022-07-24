@@ -48,6 +48,7 @@ body{
     background-color: #767776;
     color: white;
     transition-duration: .4s;
+    transition-timing-function: ease;
 }
 button:disabled{
     background-color: #ededed5c !important;
