@@ -56,7 +56,7 @@ function deleteLastValue(){
 }
 
 function deleteInstanceValue(){
-    document.getElementById('numDisplay').value = ''
+    document.getElementById('numDisplay').value = 0
 }
 
 function saveNumber(operation){
@@ -128,7 +128,6 @@ function equal(endLocal){
     
     var a = Number(element())
     result = a
-    console.log('AAAAAAAA')
     if(arrayNumbers === false && end === false){
         switch (lastOperation){
         case plus:
