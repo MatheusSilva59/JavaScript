@@ -45,9 +45,12 @@ body{
     font-size: 30px;
 }
 .btn-custom:hover{
-    background-color: #767776 !important;
+    background-color: #767776;
     color: white;
     transition-duration: .4s;
+}
+button:disabled{
+    background-color: #ededed5c !important;
 }
 .btn-custom-black{
     background-color: #111010;
