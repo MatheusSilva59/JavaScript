@@ -98,7 +98,7 @@ function saveNumber(operation){
     if (operation == 'changeSign'){
         var tempNumber = changeSign(element())
         if (end === true){lastNumber = tempNumber}
-        return document.getElementById('numDisplay').value = tempNumber
+        return document.getElementById('numDisplay').value = tempNumber.toString().replace('.', ',')
     }
 
     var sign = whichOperation(operation)
@@ -183,7 +183,7 @@ function equal(endLocal){
     }
 
     lastNumber = result
-    document.getElementById('numDisplay').value = result.toString().replace('.', decimalPlace).slice(0, 15)
+    document.getElementById('numDisplay').value = result.toString().replace('.', decimalPlace).slice(0, 14)
     result = 0
     newValue = false
     newOperation = false
