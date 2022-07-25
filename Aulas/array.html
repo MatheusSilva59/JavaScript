@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array</title>
+
+    <style>
+        body{
+
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+        }
+        .btn-custom{
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.49);
+            border-radius: 10px;
+            background-color: transparent;
+            font-weight: bold;
+        }
+        .btn-custom:hover{
+            background-color: black;
+            color: white;
+            transition-duration: .4s;
+        }
+        .input-text{
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.49);
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+    </style>
+
+    <script>
+        var lista = Array()
+
+        function addToArray(content, where){
+            if (lista.indexOf(content) === -1 && content != ''){
+                if (where == 'end'){
+                lista.push(content);
+                }
+                else{
+                    lista.unshift(content);
+                }
+            }
+            else{
+                alert('Valor inserido inválido ou já contêm na lista.')
+            }
+            document.getElementById('inserir').value = ''
+            updateInput()
+        }
+        function removeFromArray(where){
+            if (where == 'end'){
+                    lista.pop()
+                }
+                else{
+                    lista.shift()
+            }
+            document.getElementById('inserir').value = ''
+            updateInput()
+        }
+        function orderArray(){
+            lista.sort()
+            updateInput()
+        }
+        function updateInput(){
+            document.getElementById('input').value = lista
+        }
+        function getContent(){
+            return document.getElementById('inserir').value
+        }
+    </script>
+</head>
+<body>
+    <h1>Array</h1>
+    <hr>
+    <div class="container">
+        <div>
+            <input type="text" id="inserir" class="input-text">
+            <button onclick="addToArray(getContent(), 'end')" class="btn-custom" id="add">Adicionar</button>
+            <button onclick="removeFromArray('end')" class="btn-custom" id="remove">Remover</button>
+            <button onclick="orderArray()" class="btn-custom">Ordenar</button>
+            <div>
+                <input type="text" id="input" class="input-text" style="width: 100%;" disabled>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("add").addEventListener("click", () => {
+        document.getElementById("inserir").focus();});
+        document.getElementById("remove").addEventListener("click", () => {
+        document.getElementById("inserir").focus();});
+    </script>
+</body>
+</html>
