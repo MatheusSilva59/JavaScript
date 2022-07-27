@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Responsivo</title>
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/490ac8585b.js" crossorigin="anonymous"></script>
+
+    <style>
+        .marcador{
+            border: 1px solid red;
+        }
+        .marcador-blue{
+            border: 1px solid blue;
+        }
+        nav{
+            height: 0px;
+            overflow: hidden;
+            transition-duration: .3s;
+        }
+        nav ul{
+            list-style: none;
+        }
+        nav ul li{
+            float: left;
+            margin: 0px 10px;
+        }
+        li a{
+            text-decoration: none;
+            color: black;
+        }
+        li a:hover{
+            text-decoration: underline;
+        }
+        .btn-custom{
+            background-color: transparent;
+            color: black;
+            border: 1px solid black;
+            border-radius: 3px;
+        }
+        .btn-custom:hover{
+            background-color: gray;
+            color: black;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function showMenu(){
+            if (document.getElementById('nav').style.height === '' || document.getElementById('nav').style.height !== '60px'){
+                document.getElementById('nav').style.height = '60px';
+            }
+            else{
+                document.getElementById('nav').style.height = '0px';
+            }
+        }
+    </script>
+</head>
+<body>
+    <header style="width: 75%; margin: 0 auto;" id="header">
+        <button onclick="showMenu()" class="btn-custom" id="menu-horizontal">
+            <i class="fa-solid fa-bars fa-2x"></i>
+        </button>
+        <nav class="" id="nav">
+            <ul class="">
+                <li>
+                    <a href="">Home</a>
+                </li>
+                <li>
+                    <a href="">Sobre</a>
+                </li>
+                <li>
+                    <a href="">Contato</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div style="clear: both;"></div>
+    <div>
+        <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit facilis quis placeat consectetur. Eius, corrupti dolore. Maxime quam aut illum aspernatur repellat, vel deleniti quia explicabo fugit quidem, ipsam eius.</h1>
+    </div>
+</body>
+</html>
