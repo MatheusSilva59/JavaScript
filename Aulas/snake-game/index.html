@@ -21,100 +21,185 @@
         var topPos = 0
         var timeDelay = 200
         
-        var a
-        var w
-        var d
-        var s
+        var isMoving
+        var lastInput
 
-        document.onkeypress = function(asd){
-        //    inserir função para determinar movimentos
-            moveSnake(asd.key)
+        var actualDirection = null
+
+        var ms = timeDelay/10
+        var temp = null
+        var timeInputs
+        var timeBetweenInputs = 30
+        var counter = 0
+        var numberKeysDown = 0
+
+        var lastPosTop = 0
+        var lastPosLeft = 0
+
+        document.onkeydown = function(asd){
+            if ((lastInput != asd.key && asd.key == 'a' || asd.key == 'w' || asd.key == 's' || asd.key == 'd') && (counter > timeBetweenInputs || counter === 0)){
+
+                moveSnake(asd.key)
+
+                counter = 0
+                if (numberKeysDown % 2 === 0){ //Contador para evitar dupla inserção de teclas
+                    if (timeInputs === undefined){
+                        timeInputs = setInterval(
+                            function(){
+                                counter++
+                                document.getElementById('h1-nav').innerHTML = counter
+                            },1
+                        )
+                    }
+                }
+
+                lastInput = asd.key
+                numberKeysDown++
+            }
         }
         function canMove(firstTarget, secondTarget, operation){
+      
+            lastPosLeft = leftPos
+            lastPosTop = topPos
 
             if ( operation == '+'){
-                firstTarget += stepToCalc
+                if(firstTarget == 'leftPos'){
+                    leftPos += stepToCalc
+                }
+                else{
+                    topPos += stepToCalc
+                }
             }
             else{
-                firstTarget -= stepToCalc
-
+                if(firstTarget == 'leftPos'){
+                    leftPos -= stepToCalc
+                }
+                else{
+                    topPos -= stepToCalc
+                }
             }
 
+            if (temp === null){
+                temp = setInterval(
+                        function(){
+                            ms--
+                            //document.getElementById('snake').innerHTML = ms
+                            if (ms == 0){
+                                ms = timeDelay/10
+                            }
+                        },
+                        10
+                )
+            }
             if (leaveMap()){
                 clearAllInterval()
             }
             else{
-                if(secondTarget == snakePos.left){
-                    snakePos.left = firstTarget + stepToCSS
+                if(secondTarget === true){
+                    snakePos.left = leftPos + stepToCSS
                 }
                 else{
-                    snakePos.top = firstTarget + stepToCSS
+                    snakePos.top = topPos + stepToCSS
                 }
             }
-            
-        }
-        function moveSnake(directionLocal){
-        
-            switch (directionLocal){
 
-                case 'a':{
-                    direction = 'a'
-                    clearAllInterval()
-                    
-                    a = setInterval(
-                        function(){canMove(leftPos, snakePos.left, '-')},
+        }
+
+        var posString = ''
+        var operationString = ''
+        var isLeft = false
+        function moveSnake(directionLocal){
+            
+            if (isMoving === undefined){
+                isMoving = setInterval(
+                        function(){
+                            
+                            canMove(posString, isLeft, operationString)
+                            collision()
+                            if (hasBody){bodySnake()}
+                        },
                         timeDelay
                     )
+            }
+
+            whichDirection(directionLocal)
+        }
+        function whichDirection(direction){
+            switch (direction){
+                case 'a':{
+                    if (actualDirection != 'd'){
+                        posString = 'leftPos'
+                        operationString = '-'
+                        isLeft = true
+                        actualDirection = 'a'
+                    }
                     break
                 }
                 case 'w':{
-                    direction = 'w'
-                    clearAllInterval()
-                    w = setInterval(
-                        function(){
-                            topPos -= stepToCalc
-                            snakePos.top  = topPos + stepToCSS},
-                        timeDelay
-                    )
+                    if (actualDirection != 's'){
+                        posString = 'topPos'
+                        operationString = '-'
+                        isLeft = false
+                        actualDirection = 'w'
+                    }
                     break
                 }
                 case 's':{
-                    direction = 's'
-                    clearAllInterval()
-                    s = setInterval(
-                        function(){
-                            topPos += stepToCalc
-                            snakePos.top = topPos + stepToCSS},
-                        timeDelay
-                    )
+                    if (actualDirection != 'w'){
+                        posString = 'topPos'
+                        operationString = '+'
+                        isLeft = false
+                        actualDirection = 's'
+                    }
                     break
                 }
                 case 'd':{
-                    direction = 'd'
-                    clearAllInterval()
-                    d = setInterval(
-                        function(){
-                            leftPos += stepToCalc
-                            snakePos.left = leftPos + stepToCSS
-                            leaveMap()},
-                        timeDelay
-                    )
+                    if (actualDirection != 'a'){
+                        posString = 'leftPos'
+                        operationString = '+'
+                        isLeft = true
+                        actualDirection = 'd'
+                    }
                     break
                 }
             }
-
         }
         function clearAllInterval(){
-            clearInterval(a)
-            clearInterval(w)
-            clearInterval(s)
-            clearInterval(d)
+            clearInterval(isMoving)
+            clearInterval(temp)
+            clearInterval(timeInputs)
         }
         function leaveMap(){
-            if (leftPos < 0 || leftPos > 1400 || topPos < 0 || topPos > 600){
-                console.log('LEAVE MAP')
+            if (leftPos < 0 || leftPos >= 1400 || topPos < 0 || topPos >= 600){ 
                 return true
             }    
+        }
+        function collision(){
+            if (snakePosGet.top === foodPosGet.top && snakePosGet.left === foodPosGet.left){
+                randomPosition()
+                hasBody = true
+                document.getElementById('snake').innerHTML += '<span class="snake-body"></span>'  
+            }
+            
+        }
+        function randomPosition(){
+            var x = Math.ceil(Math.random() * (7)) * stepToCalc
+            var y = Math.ceil(Math.random() * (3)) * stepToCalc
+
+            foodPos.left = x + stepToCSS
+            foodPos.top = y + stepToCSS
+        }
+
+        var bodyArray = new Array()
+        const bodyGet = document.getElementsByClassName('snake-body')
+        var hasBody = false
+        function bodySnake(){
+
+            bodyGet[0].style.left = (leftPos) + stepToCSS
+            bodyGet[0].style.top = (topPos) + stepToCSS
+
+            console.log('LEFT: ' + leftPos)
+            console.log('TOP: ' + topPos)
         }
     </script>
 
@@ -122,7 +207,7 @@
         .nav{
             width: 1400px;
             height: 150px;
-            background-color: black;
+            background-color: lightgray;
         }
         .map{
             width: 1400px;
@@ -130,12 +215,29 @@
             background-color: gray;
             position: relative;
         }
+        #map{
+            color: black;
+            font-size: 5rem;
+        }
         #snake{
             width: 100px;
             height: 100px;
             background-color: green;
             position: absolute;
-            transition-duration: .3s;
+        }
+        .snake-body{
+            width: 100px;
+            height: 100px;
+            background-color: rgb(38, 8, 189);
+            position: absolute;
+        }
+        .food{
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background-color: red;
+            left: 600px;
+            top: 200px;
         }
     </style>
 </head>
@@ -143,17 +245,24 @@
 
     
     <main class="d-flex justify-content-center flex-wrap">
-        <div class="nav">
-
+        <div class="nav d-block">
+            <h1 id="h1-nav"></h1>
+            <h2 id="h2-nav"></h2>
         </div>
-        <div class="map">
+        <div class="map" id="map">
             <div id="snake"></div>
+            
+            <div class="food" id="food"></div>
         </div>
     </main>
 
     <script>
         var pressed = document.getElementById('pressed')
-        var snakePos = document.getElementById('snake').style
+        const snakePos = document.getElementById('snake').style
+        const foodPos = document.getElementById('food').style
+        const snakePosGet = window.getComputedStyle(document.getElementById('snake'))
+        const foodPosGet = window.getComputedStyle(document.getElementById('food'))
+        
     </script>
 </body>
 </html>
