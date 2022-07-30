@@ -29,17 +29,28 @@
         var ms = timeDelay/10
         var temp = null
         var timeInputs
-        var timeBetweenInputs = 30
+        var timeBetweenInputs = 0
+        var firstKey = false
         var counter = 0
         var numberKeysDown = 0
 
         var lastPosTop = 0
         var lastPosLeft = 0
 
-        document.onkeydown = function(asd){
-            if ((lastInput != asd.key && asd.key == 'a' || asd.key == 'w' || asd.key == 's' || asd.key == 'd') && (counter > timeBetweenInputs || counter === 0)){
 
+        var isExecutingW = false
+        var isExecutingS = false
+        var isExecutingA = false
+        var isExecutingD = false
+
+        var arrayKeys = new Array()
+
+        document.onkeydown = function(asd){
+            if ((asd.key == 'a' || asd.key == 'w' || asd.key == 's' || asd.key == 'd') && (counter > timeBetweenInputs || firstKey === false)){
+
+                //notExecuting()
                 moveSnake(asd.key)
+                firstKey = true
 
                 counter = 0
                 if (numberKeysDown % 2 === 0){ //Contador para evitar dupla inserção de teclas
@@ -53,9 +64,21 @@
                     }
                 }
 
-                lastInput = asd.key
                 numberKeysDown++
             }
+            else if (asd.key == 'p'){
+                if (isMoving != undefined){
+                    clearInterval(isMoving)
+                    isMoving = undefined
+                }
+                else{
+                    moveSnake(asd.key)
+                }
+            }
+            else{
+                //randomPosition()
+            }
+
         }
         function canMove(firstTarget, secondTarget, operation){
       
@@ -95,6 +118,9 @@
                 clearAllInterval()
             }
             else{
+
+                snakePos = document.getElementById('snake').style
+
                 if(secondTarget === true){
                     snakePos.left = leftPos + stepToCSS
                 }
@@ -108,60 +134,120 @@
         var posString = ''
         var operationString = ''
         var isLeft = false
+        var isValid = false
+
+        function notExecuting(){
+            isExecutingW = false
+            isExecutingS = false
+            isExecutingA = false
+            isExecutingD = false
+        }
+        function isExecuting(){
+            if (isExecutingW === true || isExecutingS === true || isExecutingA === true || isExecutingD === true){
+                return true
+            }
+            else{
+                return false
+            }
+        }
+
+        function defaultMove(){
+            if (arrayKeys.length != 0){
+                whichDirection(arrayKeys[0])
+                arrayKeys.shift()
+            }
+            notExecuting()
+            canMove(posString, isLeft, operationString)
+            if (leaveMap() === false){
+                collision()
+                if (hasBody){bodySnake()}
+            }
+        }
         function moveSnake(directionLocal){
-            
+
+            whichDirection(directionLocal)
+
             if (isMoving === undefined){
-                isMoving = setInterval(
+                if (isValid === true){
+
+                    defaultMove()
+
+                    isMoving = setInterval(
                         function(){
-                            
-                            canMove(posString, isLeft, operationString)
-                            collision()
-                            if (hasBody){bodySnake()}
+                            defaultMove()
                         },
                         timeDelay
                     )
+                }
             }
-
-            whichDirection(directionLocal)
         }
+
         function whichDirection(direction){
             switch (direction){
-                case 'a':{
-                    if (actualDirection != 'd'){
-                        posString = 'leftPos'
-                        operationString = '-'
-                        isLeft = true
-                        actualDirection = 'a'
-                    }
-                    break
-                }
-                case 'w':{
-                    if (actualDirection != 's'){
+
+                case 'w':
+                    if (actualDirection != 's' && isExecuting() === false){
+                        isExecutingW = true
                         posString = 'topPos'
                         operationString = '-'
                         isLeft = false
                         actualDirection = 'w'
+                        //console.log('W')
+                        isValid = true
+                    }
+                    else{
+                        isValid = false
+                        arrayKeys.push(direction)
                     }
                     break
-                }
-                case 's':{
-                    if (actualDirection != 'w'){
+
+                case 's':
+                    if (actualDirection != 'w' && isExecuting() === false){
+                        isExecutingS = true
                         posString = 'topPos'
                         operationString = '+'
                         isLeft = false
                         actualDirection = 's'
+                        //console.log('S')
+                        isValid = true
+                    }
+                    else{
+                        isValid = false
+                        arrayKeys.push(direction)
                     }
                     break
-                }
-                case 'd':{
-                    if (actualDirection != 'a'){
+
+                case 'a':
+                    if (actualDirection != 'd' && isExecuting() === false){
+                        isExecutingA = true
+                        posString = 'leftPos'
+                        operationString = '-'
+                        isLeft = true
+                        actualDirection = 'a'
+                        //console.log('A')
+                        isValid = true
+                    }
+                    else{
+                        isValid = false
+                        arrayKeys.push(direction)
+                    }
+                    break
+                
+                case 'd':
+                    if (actualDirection != 'a' && isExecuting() === false){
+                        isExecutingD = true
                         posString = 'leftPos'
                         operationString = '+'
                         isLeft = true
                         actualDirection = 'd'
+                        //console.log('D')
+                        isValid = true
                     }
-                    break
-                }
+                    else{
+                        isValid = false
+                        arrayKeys.push(direction)
+                    }
+                    break              
             }
         }
         function clearAllInterval(){
@@ -171,35 +257,73 @@
         }
         function leaveMap(){
             if (leftPos < 0 || leftPos >= 1400 || topPos < 0 || topPos >= 600){ 
+                console.log('LEAVE MAP')
                 return true
-            }    
+            } 
+            else{
+                return false
+            }
         }
         function collision(){
+            //console.log(snakePosGet.top + ' / ' + foodPosGet.top)
             if (snakePosGet.top === foodPosGet.top && snakePosGet.left === foodPosGet.left){
                 randomPosition()
                 hasBody = true
-                document.getElementById('snake').innerHTML += '<span class="snake-body"></span>'  
+                document.getElementById('map').innerHTML += '<span class="snake-body"></span>'
+                redeclareConst()
             }
             
         }
+        function redeclareConst(){
+            snakePos = document.getElementById('snake').style
+            foodPos = document.getElementById('food').style
+            snakePosGet = window.getComputedStyle(document.getElementById('snake'))
+            foodPosGet = window.getComputedStyle(document.getElementById('food'))
+        }
         function randomPosition(){
-            var x = Math.ceil(Math.random() * (7)) * stepToCalc
-            var y = Math.ceil(Math.random() * (3)) * stepToCalc
+            var x = Math.floor(Math.random() * (14)) * stepToCalc
+            var y = Math.floor(Math.random() * (6)) * stepToCalc
 
             foodPos.left = x + stepToCSS
             foodPos.top = y + stepToCSS
+            console.log('X: ' + x + '///' + 'Y: ' + y)
         }
 
         var bodyArray = new Array()
-        const bodyGet = document.getElementsByClassName('snake-body')
+        const bodySet = document.getElementsByClassName('snake-body')
+
         var hasBody = false
         function bodySnake(){
 
-            bodyGet[0].style.left = (leftPos) + stepToCSS
-            bodyGet[0].style.top = (topPos) + stepToCSS
+            let x = {p1: 0, p2: 0}
+            let y = {p1: 0, p2: 0}
+            let xy
 
-            console.log('LEFT: ' + leftPos)
-            console.log('TOP: ' + topPos)
+            for (let i = 0; i < bodySet.length; i++){
+
+                xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
+
+                if (i % 2 === 0){
+                    x.p1 = xy.left
+                    x.p2 = xy.top
+
+                    if (i === 0) {
+                        bodySet[i].style.left = (lastPosLeft) + stepToCSS
+                        bodySet[i].style.top = (lastPosTop) + stepToCSS
+                    }
+                    else{
+                        bodySet[i].style.left = y.p1
+                        bodySet[i].style.top = y.p2
+                    }
+                }
+                else{
+                    y.p1 = xy.left
+                    y.p2 = xy.top
+
+                    bodySet[i].style.left = x.p1
+                    bodySet[i].style.top = x.p2
+                }
+            }
         }
     </script>
 
@@ -209,21 +333,18 @@
             height: 150px;
             background-color: lightgray;
         }
-        .map{
+        #map{
             width: 1400px;
             height: 600px;
             background-color: gray;
             position: relative;
         }
-        #map{
-            color: black;
-            font-size: 5rem;
-        }
         #snake{
             width: 100px;
             height: 100px;
             background-color: green;
-            position: absolute;
+            position: relative;
+            z-index: 10;
         }
         .snake-body{
             width: 100px;
@@ -236,8 +357,6 @@
             height: 100px;
             position: absolute;
             background-color: red;
-            left: 600px;
-            top: 200px;
         }
     </style>
 </head>
@@ -249,7 +368,7 @@
             <h1 id="h1-nav"></h1>
             <h2 id="h2-nav"></h2>
         </div>
-        <div class="map" id="map">
+        <div id="map">
             <div id="snake"></div>
             
             <div class="food" id="food"></div>
@@ -258,11 +377,11 @@
 
     <script>
         var pressed = document.getElementById('pressed')
-        const snakePos = document.getElementById('snake').style
-        const foodPos = document.getElementById('food').style
-        const snakePosGet = window.getComputedStyle(document.getElementById('snake'))
-        const foodPosGet = window.getComputedStyle(document.getElementById('food'))
-        
+        var snakePos = document.getElementById('snake').style
+        var foodPos = document.getElementById('food').style
+        var snakePosGet = window.getComputedStyle(document.getElementById('snake'))
+        var foodPosGet = window.getComputedStyle(document.getElementById('food'))
+        randomPosition() //Alterar posição da comida inicial
     </script>
 </body>
 </html>
