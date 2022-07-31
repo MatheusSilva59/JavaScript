@@ -171,12 +171,13 @@
         var stepForContinuos = 10
         var intervalContinuos
         function continuosMovement(){
-            console.log('AAAAAA')
 
             var a = stepToCalc / stepForContinuos
             var b = 1
             var c = timeDelay / a
             var step = stepToCalc
+
+            console.log(c)
 
             snakePos.left = leftPos - (step) + a*b + stepToCSS
 
@@ -187,6 +188,7 @@
                     console.log(a*b)
                     if (a*b === stepToCalc){
                         clearInterval(intervalContinuos)
+                        b = 1
                     }
                 },c
             )
