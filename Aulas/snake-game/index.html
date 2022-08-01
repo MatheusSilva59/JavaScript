@@ -16,10 +16,10 @@
 
     <script>
         var stepToCSS = 'px'
-        var stepToCalc = 50
+        var stepToCalc = 10
         var leftPos = 0
         var topPos = 0
-        var timeDelay = 750
+        var timeDelay = 40
         
         var isMoving
         var lastInput
@@ -42,6 +42,7 @@
         var isExecutingS = false
         var isExecutingA = false
         var isExecutingD = false
+        var isExecutingContinuos = false
 
         var arrayKeys = new Array()
         var arrayBody = new Array()
@@ -94,7 +95,7 @@
             isExecutingD = false
         }
         function isExecuting(){
-            if (isExecutingW === true || isExecutingS === true || isExecutingA === true || isExecutingD === true){
+            if (isExecutingW === true || isExecutingS === true || isExecutingA === true || isExecutingD === true || isExecutingContinuos === true){
                 return true
             }
             else{
@@ -107,9 +108,25 @@
         var lastPosBodyTop
 
         function canMove(firstTarget, secondTarget, operation){
-      
+
             lastPosLeft = leftPos
             lastPosTop = topPos
+
+            if (actualDirection === 'a'){
+                lastPosLeft = leftPos + 40
+            }
+            else if (actualDirection === 'd'){
+                lastPosLeft = leftPos - 40
+            }
+            else if (actualDirection === 'w'){
+                lastPosTop = topPos + 40
+            }
+            else if (actualDirection === 's'){
+                lastPosTop = topPos - 40
+            }
+      
+
+
 
             if (bodySet.length === 0){
                 lastPosBodyLeft = leftPos
@@ -133,34 +150,21 @@
                 }
             }
 
-
-            if (temp === null){
-                temp = setInterval(
-                        function(){
-                            ms--
-                            //document.getElementById('snake').innerHTML = ms
-                            if (ms == 0){
-                                ms = timeDelay/10
-                            }
-                        },
-                        10
-                )
-            }
-
             colissionBody()
 
             if (leaveMap()){
                 clearAllInterval()
             }
-            else if (isCollidingBody === false){
+            else if (isCollidingBody === false && isExecutingContinuos === false){
 
                 snakePos = document.getElementById('snake').style
 
                 if(secondTarget === true){
-                    continuosMovement()
-                    //snakePos.left = leftPos + stepToCSS
+                    //continuosMovement('left')
+                    snakePos.left = leftPos + stepToCSS
                 }
                 else{
+                    //continuosMovement('top')
                     snakePos.top = topPos + stepToCSS
                 }
 
@@ -168,41 +172,85 @@
             }
         }
 
-        var stepForContinuos = 10
-        var intervalContinuos
-        function continuosMovement(){
+        function continuosLeft(){
+            if (actualDirection === 'd'){
+                snakePos.left = leftPos - (step) + a*b + stepToCSS
+            }
+            else{
+                snakePos.left = leftPos + (step) - a*b + stepToCSS
+            }
+            b++
+            if (a*b === stepToCalc){
+                clearInterval(intervalContinuos)
+                intervalContinuos = undefined
+                snakePos.left = leftPos + stepToCSS
+                isExecutingContinuos = false
+                b = 1
+            }
+        }
+        function continuosTop(){
+            if (actualDirection === 's'){
+                snakePos.top = topPos - (step) + a*b + stepToCSS
+            }
+            else{
+                snakePos.top = topPos + (step) - a*b + stepToCSS
+            }
+            b++
+            if (a*b === stepToCalc){
+                clearInterval(intervalContinuos)
+                intervalContinuos = undefined
+                snakePos.top = topPos + stepToCSS
+                isExecutingContinuos = false
+                b = 1
+            }
+        }
 
-            var a = stepToCalc / stepForContinuos
-            var b = 1
-            var c = timeDelay / a
-            var step = stepToCalc
+        var stepForContinuos = 10
+        var intervalContinuos 
+        
+        var a = stepToCalc / stepForContinuos
+        var b = 1
+        var c = timeDelay / a
+        var step = stepToCalc
+
+        function continuosMovement(directionLocal){
 
             console.log(c)
 
-            snakePos.left = leftPos - (step) + a*b + stepToCSS
+            //snakePos.left = leftPos - (step) + a*b + stepToCSS
 
-            intervalContinuos = setInterval(
-                function(){
-                    snakePos.left = leftPos - (step) + a*b + stepToCSS
-                    b++
-                    console.log(a*b)
-                    if (a*b === stepToCalc){
-                        clearInterval(intervalContinuos)
-                        b = 1
-                    }
-                },c
-            )
+
+            isExecutingContinuos = true
+            if (directionLocal === 'left'){
+                intervalContinuos = setInterval(
+                    function(){
+                        continuosLeft()
+                    },timeDelay / stepForContinuos
+                )
+            }
+            else{
+                intervalContinuos = setInterval(
+                    function(){
+                        continuosTop()
+                    },timeDelay / stepForContinuos
+                )
+            }
         }
 
 
         function defaultMove(){
+
             if (arrayKeys.length != 0){
                 whichDirection(arrayKeys[0])
                 arrayKeys.shift()
             }
+
             notExecuting()
 
+            //clearInterval(intervalContinuos)
+
             canMove(posString, isLeft, operationString)
+            
 
             if (leaveMap() === false){
                 collisionFood()
@@ -213,10 +261,22 @@
             //document.getElementById('map').innerHTML += '<span class="way" style="left:' + lastPosLeft + stepToCSS +'; top: ' + lastPosTop + stepToCSS +'"></span>'
             //redeclareConst()
         }
+        var arrayLastKeys = new Array()
         function moveSnake(directionLocal){
 
-            whichDirection(directionLocal)
+            if (leftPos % 50 === 0 && topPos % 50 === 0){
+                if (arrayLastKeys.length === 0){
+                    whichDirection(directionLocal)
+                }
+            }
+            else{
+                arrayLastKeys.push(directionLocal)
+            }
 
+
+
+            //defaultMove()
+            
             if (isMoving === undefined){
                 if (isValid === true){
 
@@ -224,6 +284,10 @@
 
                     isMoving = setInterval(
                         function(){
+                            if (arrayLastKeys.length != 0 &&(leftPos % 50 === 0 && topPos % 50 === 0)){
+                                whichDirection(arrayLastKeys[0])
+                                arrayLastKeys.shift()
+                            }
                             defaultMove()
                         },
                         timeDelay
@@ -234,6 +298,7 @@
 
         function whichDirection(direction){
             //console.log('DIRECTION: ' + direction)
+            //console.log('arrayKEYS: ' + arrayKeys)
             switch (direction){
 
                 case 'w':
@@ -377,8 +442,8 @@
 
         function randomPosition(){
 
-            var x = Math.floor(Math.random() * (14*2)) * stepToCalc
-            var y = Math.floor(Math.random() * (6*2)) * stepToCalc
+            var x = Math.floor(Math.random() * (14*2)) * 50
+            var y = Math.floor(Math.random() * (6*2)) * 50
 
             foodPos.left = x + stepToCSS
             foodPos.top = y + stepToCSS
@@ -438,11 +503,10 @@
                     //bodySet[i].style.left = x.p1
                     //bodySet[i].style.top = x.p2
                 }
-
-                if (i == bodySet.length - 1){
-                    console.log(lastPosBodyLeft + '///' + lastPosBodyTop)
-                }
             }
+        }
+        function continuosBody(){
+
         }
         function bodySnakeApply(){
 
