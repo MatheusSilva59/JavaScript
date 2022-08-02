@@ -16,10 +16,10 @@
 
     <script>
         var stepToCSS = 'px'
-        var stepToCalc = 10
+        var stepToCalc = 50
         var leftPos = 0
         var topPos = 0
-        var timeDelay = 40
+        var timeDelay = 200
         
         var isMoving
         var lastInput
@@ -107,30 +107,44 @@
         var lastPosBodyLeft
         var lastPosBodyTop
 
+        var arrayLastPositions = new Array() //Continuos
+
         function canMove(firstTarget, secondTarget, operation){
 
+            // arrayLastPositions.push({left: leftPos, top: topPos})
+
+            // if (arrayLastPositions.length === 5){ //Continuos
+
+            //     lastPosLeft = arrayLastPositions[0].left
+            //     lastPosTop = arrayLastPositions[0].top
+
+            //     arrayLastPositions.shift()
+
+            // }
+
+            
             lastPosLeft = leftPos
             lastPosTop = topPos
-
-            if (actualDirection === 'a'){
-                lastPosLeft = leftPos + 40
-            }
-            else if (actualDirection === 'd'){
-                lastPosLeft = leftPos - 40
-            }
-            else if (actualDirection === 'w'){
-                lastPosTop = topPos + 40
-            }
-            else if (actualDirection === 's'){
-                lastPosTop = topPos - 40
-            }
+            // if (actualDirection === 'a'){
+            //     lastPosLeft = leftPos + 40
+            // }
+            // else if (actualDirection === 'd'){
+            //     lastPosLeft = leftPos - 40
+            // }
+            // else if (actualDirection === 'w'){
+            //     lastPosTop = topPos + 40
+            // }
+            // else if (actualDirection === 's'){
+            //     //lastPosTop = topPos - 40
+            //     lastPosLeft = leftPos - 40
+            // }
       
 
 
 
             if (bodySet.length === 0){
-                lastPosBodyLeft = leftPos
-                lastPosBodyTop = topPos
+                lastPosBodyLeft = lastPosLeft
+                lastPosBodyTop = lastPosTop
             }
 
             if ( operation == '+'){
@@ -160,12 +174,12 @@
                 snakePos = document.getElementById('snake').style
 
                 if(secondTarget === true){
-                    //continuosMovement('left')
-                    snakePos.left = leftPos + stepToCSS
+                    continuosMovement('left')
+                    //snakePos.left = leftPos + stepToCSS
                 }
                 else{
-                    //continuosMovement('top')
-                    snakePos.top = topPos + stepToCSS
+                    continuosMovement('top')
+                    //snakePos.top = topPos + stepToCSS
                 }
 
                 bodySnakeApply()
@@ -180,6 +194,7 @@
                 snakePos.left = leftPos + (step) - a*b + stepToCSS
             }
             b++
+            //console.log(a)
             if (a*b === stepToCalc){
                 clearInterval(intervalContinuos)
                 intervalContinuos = undefined
@@ -196,7 +211,7 @@
                 snakePos.top = topPos + (step) - a*b + stepToCSS
             }
             b++
-            if (a*b === stepToCalc){
+            if (a*b >= stepToCalc){
                 clearInterval(intervalContinuos)
                 intervalContinuos = undefined
                 snakePos.top = topPos + stepToCSS
@@ -210,15 +225,11 @@
         
         var a = stepToCalc / stepForContinuos
         var b = 1
-        var c = timeDelay / a
         var step = stepToCalc
 
         function continuosMovement(directionLocal){
 
-            console.log(c)
-
-            //snakePos.left = leftPos - (step) + a*b + stepToCSS
-
+            //console.log(c)
 
             isExecutingContinuos = true
             if (directionLocal === 'left'){
@@ -254,29 +265,19 @@
 
             if (leaveMap() === false){
                 collisionFood()
-
                 if (hasBody === true && isCollidingBody === false){}
             }
 
             //document.getElementById('map').innerHTML += '<span class="way" style="left:' + lastPosLeft + stepToCSS +'; top: ' + lastPosTop + stepToCSS +'"></span>'
             //redeclareConst()
         }
-        var arrayLastKeys = new Array()
+
         function moveSnake(directionLocal){
 
-            if (leftPos % 50 === 0 && topPos % 50 === 0){
-                if (arrayLastKeys.length === 0){
-                    whichDirection(directionLocal)
-                }
-            }
-            else{
-                arrayLastKeys.push(directionLocal)
-            }
-
+            whichDirection(directionLocal)
 
 
             //defaultMove()
-            
             if (isMoving === undefined){
                 if (isValid === true){
 
@@ -284,10 +285,6 @@
 
                     isMoving = setInterval(
                         function(){
-                            if (arrayLastKeys.length != 0 &&(leftPos % 50 === 0 && topPos % 50 === 0)){
-                                whichDirection(arrayLastKeys[0])
-                                arrayLastKeys.shift()
-                            }
                             defaultMove()
                         },
                         timeDelay
@@ -402,7 +399,7 @@
                         isCollidingBody = true
                         clearInterval(isMoving)
                         break
-                        //isMoving = undefined
+                        isMoving = undefined
                     }
                 }
             }
@@ -411,9 +408,19 @@
         function collisionFood(){
 
             if (snakePosGet.top === foodPosGet.top && snakePosGet.left === foodPosGet.left){
+
                 randomPosition()
+
                 hasBody = true
-                document.getElementById('map').innerHTML += '<span class="snake-body" style="left:' + lastPosBodyLeft + stepToCSS +'; top: ' + lastPosBodyTop + stepToCSS +'"></span>'
+
+                document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + lastPosBodyLeft + stepToCSS +'; top: ' + lastPosBodyTop + stepToCSS +'"><span class="snake-body-style"></span></span>'
+
+                // let xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[bodySetStyle.length - 1])
+                // console.log(xy.left)
+                // bodySetStyle[bodySetStyle.length - 1].style.width = '40px'
+                // bodySetStyle[bodySetStyle.length - 1].style.height = '40px' WORKING HERE
+
+
                 redeclareConst()
             }  
 
@@ -423,6 +430,7 @@
             foodPos = document.getElementById('food').style
             snakePosGet = window.getComputedStyle(document.getElementById('snake'))
             foodPosGet = window.getComputedStyle(document.getElementById('food'))
+            drawFillet()
         }
 
         function initiate(){
@@ -439,12 +447,22 @@
                 allPosY.push(y)
             }
         }
-
+        var kls = 0
         function randomPosition(){
 
             var x = Math.floor(Math.random() * (14*2)) * 50
             var y = Math.floor(Math.random() * (6*2)) * 50
 
+            if (kls === 0){
+                x = 100
+                y = 50
+                kls = 1
+            }
+            else if( kls === 1){
+                x = 400
+                y = 50
+                kls = 2
+            }
             foodPos.left = x + stepToCSS
             foodPos.top = y + stepToCSS
 
@@ -454,6 +472,7 @@
 
         var bodyArray = new Array()
         const bodySet = document.getElementsByClassName('snake-body')
+        const bodySetStyle = document.getElementsByClassName('snake-body-style')
 
         var hasBody = false
 
@@ -466,8 +485,9 @@
             for (let i = 0; i < bodySet.length; i++){
 
                 xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
-
+                multStep[i] = 1
                 if (i % 2 === 0){
+
                     x.p1 = xy.left
                     x.p2 = xy.top
 
@@ -484,6 +504,7 @@
                     }
 
                     if(i == bodySet.length - 1){
+
                         lastPosBodyLeft = x.p1.replace('px', '')
                         lastPosBodyTop = x.p2.replace('px', '')
                     }
@@ -508,16 +529,126 @@
         function continuosBody(){
 
         }
+
+        var savePosTop
+        var savePosLeft
         function bodySnakeApply(){
+
+            if ((savePosLeft === undefined || savePosTop === undefined) && bodyArray.length != 0){
+                savePosLeft = lastPosBodyLeft
+                savePosTop = lastPosBodyTop
+            }
+
+            let xy
+            let top
+            let left
+
 
             if (isCollidingBody === false){
 
                 for (let i = 0; i < bodySet.length; i++){
 
-                    bodySet[i].style.left = bodyArray[i].left
-                    bodySet[i].style.top = bodyArray[i].top
+                    xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
+                    top = xy.top
+                    left = xy.left
+                    if (bodyArray[i].left != xy.left && bodyArray[i].top == xy.top){
+                        bodySetStyle[i].style.width = '60px'
+                        bodySetStyle[i].style.height = '40px'
+                        continuosBody('left', i, left)
+                        //console.log('LEFT')
+                    }
+                    else{
+                        //bodySet[i].style.width = '50px'
+                    }
+                    if(bodyArray[i].top != xy.top && bodyArray[i].left == xy.left){
+                        bodySetStyle[i].style.width = '40px'
+                        bodySetStyle[i].style.height = '60px'
+                        continuosBody('top', i, top)
+                        //console.log('TOP')
+                    }
+                    else{
+                        //bodySet[i].style.height = '50px'
+                    }
 
                 }
+            }
+        }
+
+        var multStep = new Array()
+
+        function continuosBodyTop(i, top){
+            
+            if (Number(bodyArray[i].top.replace('px', '')) > Number(top.replace('px', ''))){
+                bodySet[i].style.top = (Number(bodyArray[i].top.replace('px', '')) - (step) + a*multStep[i]) + stepToCSS
+            }
+            else{
+                bodySet[i].style.top = (Number(bodyArray[i].top.replace('px', '')) + (step) - a*multStep[i]) + stepToCSS
+            }
+            multStep[i]++
+            if (a*multStep[i] >= stepToCalc){
+                clearInterval(window ["intervalContinuosBody" + i])
+                bodySet[i].style.top = bodyArray[i].top
+                multStep[i] = 1
+            }
+        }
+        function continuosBodyLeft(i, left){
+
+            if (Number(bodyArray[i].left.replace('px', '')) > Number(left.replace('px', ''))){
+                bodySet[i].style.left = (Number(bodyArray[i].left.replace('px', '')) - (step) + a*multStep[i]) + stepToCSS
+            }
+            else{
+                bodySet[i].style.left = (Number(bodyArray[i].left.replace('px', '')) + (step) - a*multStep[i]) + stepToCSS
+            }
+            multStep[i]++
+            if (a*multStep[i] >= stepToCalc){
+                clearInterval(window ["intervalContinuosBody" + i])
+                bodySet[i].style.left = bodyArray[i].left
+                multStep[i] = 1
+            }
+        }
+        var isExecutingContinuosBody = false
+        var intervalContinuosBody
+        function continuosBody(directionLocal, i, xy){
+
+            isExecutingContinuosBody = true
+            
+            if (directionLocal === 'left'){
+                window ["intervalContinuosBody" + i] = setInterval(
+                    function(){
+                        continuosBodyLeft(i, xy)
+                    },timeDelay / stepForContinuos
+                )
+            }
+            else{
+                window ["intervalContinuosBody" + i] = setInterval(
+                    function(){
+                        continuosBodyTop(i, xy)
+                    },timeDelay / stepForContinuos
+                )
+            }
+        }
+        
+        function drawFillet(){
+
+            var fillet = document.getElementById('fillet')
+            var ctx = fillet.getContext('2d')
+
+            if (fillet.getContext){
+                
+                //ctx.fillRect(0, 0, 100, 100)
+                ctx.fillStyle = 'gray'
+                ctx.beginPath()
+                ctx.lineTo(0, 0)
+                ctx.lineTo(50, 0)
+                ctx.arc( 0, 50, 50, 0*(Math.PI/180), 270*(Math.PI/180), true)
+                ctx.fill()
+
+                ctx.fillStyle = 'rgb(38, 8, 189)'
+                ctx.beginPath()
+                ctx.lineTo(0, 50)
+                ctx.lineTo(50, 50)
+                ctx.arc( 0, 50, 50, 0*(Math.PI/180), 270*(Math.PI/180), true)
+                ctx.fill()
             }
         }
     </script>
@@ -544,8 +675,12 @@
         .snake-body{
             width: 50px;
             height: 50px;
+            position: absolute;
+        }
+        .snake-body-style{
+            width: 50px;
+            height: 50px;
             background-color: rgb(38, 8, 189);
-            
             position: absolute;
         }
         .food{
@@ -560,17 +695,27 @@
             position: absolute;
             background-color: red;
         }
+        #fillet{
+            position: absolute;
+            z-index: 15;
+        }
     </style>
 </head>
-<body>
+<body onload="drawFillet()">
 
     
     <main class="d-flex justify-content-center flex-wrap">
         <div class="nav d-block">
+
+            
+
             <h1 id="h1-nav"></h1>
             <h2 id="h2-nav"></h2>
         </div>
         <div id="map">
+
+            <canvas id="fillet" style="left: 500px; top: 300px;"></canvas>
+
             <div id="snake"></div>
             
             <div class="food" id="food"></div>
