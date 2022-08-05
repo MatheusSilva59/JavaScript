@@ -155,6 +155,10 @@
                 }
 
                 //bodySnakeApply()
+
+                //Adiciona posição à lista de banimento de posicionamento para a comida, pois está em uso
+                indexHasSomething.push(coordToIndex(leftPos, topPos))
+                //console.log(indexHasSomething)
             }
         }
 
@@ -242,6 +246,9 @@
                 collisionFood()
 
                 snakeConectionFunc()
+            }
+            if (hasBody === false){
+                indexHasSomething.shift()
             }
 
             //document.getElementById('map').innerHTML += '<span class="way" style="left:' + lastPosLeft + stepToCSS +'; top: ' + lastPosTop + stepToCSS +'"></span>'
@@ -378,7 +385,7 @@
                         isCollidingBody = true
                         clearInterval(isMoving)
                         break
-                        isMoving = undefined
+                        //isMoving = undefined
                     }
                 }
             }
@@ -406,37 +413,65 @@
             foodPosGet = window.getComputedStyle(document.getElementById('food'))
         }
 
+        var mapWidth
+        var mapHeight
+        var allPos = []
+        var allIndex = []
         function initiate(){
 
-            var allPosX = []
-            var allPosY = []
+            mapWidth = 1400 - stepToCalc
+            mapHeight = 600 - stepToCalc
 
-            var mapStyle = window.getComputedStyle(document.getElementById('map'))
+            let i = 0
 
-            for (let x = 0; x <= mapStyle.width.replace('px', ''); x += stepToCalc){
-                allPosX.push(x)
-            }
-            for (let y = 0; y <= mapStyle.height.replace('px', ''); y += stepToCalc){
-                allPosY.push(y)
+            for (let x = 0; x <= mapWidth; x += stepToCalc){
+                    for (let y = 0; y <= mapHeight; y += stepToCalc){
+                        allPos.push({left: x, top: y})
+                        allIndex.push(i)
+                        i++
+                }
             }
         }
-        var kls = 0
-        var asm = 1
+
+        function randomNumber(except){
+
+            let tempAllIndex = allIndex
+
+            for (let i = 0; i < except.length; i++){
+                tempAllIndex.splice(except[i], 1)
+            }
+
+            let value = tempAllIndex[Math.floor(Math.random() * tempAllIndex.length)]
+
+            return value
+        }
+        
+        var indexHasSomething = []
+
         function randomPosition(){
 
-            var x = Math.floor(Math.random() * (14*2)) * 50
-            var y = Math.floor(Math.random() * (6*2)) * 50
 
-            // if (kls === 0){
-            //     x = 100 + (50*asm)
-            //     y = 50 
-            //     asm += 2
-            // }
-            foodPos.left = x + stepToCSS
-            foodPos.top = y + stepToCSS
+            let index = randomNumber(indexHasSomething)
 
-            //foodPos.display = 'none'
-            //console.log('X: ' + x + '///' + 'Y: ' + y)
+            foodPos.left = allPos[index].left + stepToCSS
+            foodPos.top = allPos[index].top + stepToCSS
+            
+        }
+
+        function coordToIndex(left, top){
+
+            let x1 = left/50*12
+            let y1 = top/50
+            let temp
+
+            if (y1 == 0){
+                temp = x1
+            }
+            else{
+                temp = Number(x1 + y1)
+            }
+
+            return temp
         }
 
         var bodyArray = new Array()
@@ -454,7 +489,9 @@
             for (let i = 0; i < bodySet.length; i++){
 
                 xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
+
                 multStep[i] = 1
+
                 if (i % 2 === 0){
 
                     x.p1 = xy.left
@@ -474,20 +511,35 @@
 
                     if(i == bodySet.length - 1){
 
-                        lastPosBodyLeft = x.p1.replace('px', '')
-                        lastPosBodyTop = x.p2.replace('px', '')
+                        lastPosBodyLeft = clearUn(x.p1)
+                        lastPosBodyTop = clearUn(x.p2)
+
+
+
+                        if (clearUn(x.p1) === allPos[indexHasSomething[0]].left &&
+                            clearUn(x.p2) === allPos[indexHasSomething[0]].top){
+
+                            indexHasSomething.shift() //Remove posição da lista de banimento
+                        }
+
                     }
                 }
                 else{
                     y.p1 = xy.left
                     y.p2 = xy.top
 
-
                     bodyArray[i] = {left: x.p1, top: x.p2}
 
                     if(i == bodySet.length - 1){
-                        lastPosBodyLeft = y.p1.replace('px', '')
-                        lastPosBodyTop = y.p2.replace('px', '')
+
+                        lastPosBodyLeft = clearUn(y.p1)
+                        lastPosBodyTop = clearUn(y.p2)
+
+                        if (clearUn(y.p1) === allPos[indexHasSomething[0]].left &&
+                            clearUn(y.p2) === allPos[indexHasSomething[0]].top){
+                                
+                            indexHasSomething.shift() //Remove posição da lista de banimento
+                        }
                     }
 
                     //bodySet[i].style.left = x.p1
@@ -495,6 +547,11 @@
                 }
             }
         }
+
+        function clearUn(value){ 
+            return Number(value.replace('px', ''))
+        }
+
 
         var arrayStatus = new Array()
 
@@ -513,12 +570,16 @@
                     xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
                     top = xy.top
                     left = xy.left
-                 
+                    
 
                     if (bodyArray[i].left != xy.left && bodyArray[i].top == xy.top){
                         bodySetStyle[i].style.width = '60px'
                         bodySetStyle[i].style.height = '40px'
+
                         continuosBody('left', i, left)
+
+                        //bodySet[i].style.left = bodyArray[i].left
+
                         arrayStatus[i] = 'left'
                         //console.log('LEFT')
                     }
@@ -528,7 +589,11 @@
                     if(bodyArray[i].top != xy.top && bodyArray[i].left == xy.left){
                         bodySetStyle[i].style.width = '40px'
                         bodySetStyle[i].style.height = '60px'
+
                         continuosBody('top', i, top)
+
+                        //bodySet[i].style.top = bodyArray[i].top
+
                         arrayStatus[i] = 'top'
                         //console.log('TOP')
                     }
@@ -598,40 +663,28 @@
                 }
             }
         }
-        function clearUn(value){ 
-            return Number(value.replace('px', ''))
-        }
+
         var multStep = new Array()
 
         function continuosBodyTop(i, top){
             
-            if (Number(bodyArray[i].top.replace('px', '')) > Number(top.replace('px', ''))){
-                bodySet[i].style.top = (Number(bodyArray[i].top.replace('px', '')) - (step) + a*multStep[i]) + stepToCSS
+            if (clearUn(bodyArray[i].top) > clearUn(top)){
+                bodySet[i].style.top = ((clearUn(bodyArray[i].top)) - (step) + a*multStep[i]) + stepToCSS
             }
             else{
-                bodySet[i].style.top = (Number(bodyArray[i].top.replace('px', '')) + (step) - a*multStep[i]) + stepToCSS
+                bodySet[i].style.top = (clearUn(bodyArray[i].top) + (step) - a*multStep[i]) + stepToCSS
             }
             multStep[i]++
-            if (a*multStep[i] >= stepToCalc){
-                clearInterval(window ["intervalContinuosBody" + i])
-                bodySet[i].style.top = bodyArray[i].top
-                multStep[i] = 1
-            }
         }
         function continuosBodyLeft(i, left){
 
-            if (Number(bodyArray[i].left.replace('px', '')) > Number(left.replace('px', ''))){
-                bodySet[i].style.left = (Number(bodyArray[i].left.replace('px', '')) - (step) + a*multStep[i]) + stepToCSS
+            if (clearUn(bodyArray[i].left) > clearUn(left)){
+                bodySet[i].style.left = (clearUn(bodyArray[i].left) - (step) + a*multStep[i]) + stepToCSS
             }
             else{
-                bodySet[i].style.left = (Number(bodyArray[i].left.replace('px', '')) + (step) - a*multStep[i]) + stepToCSS
+                bodySet[i].style.left = (clearUn(bodyArray[i].left) + (step) - a*multStep[i]) + stepToCSS
             }
             multStep[i]++
-            if (a*multStep[i] >= stepToCalc){
-                clearInterval(window ["intervalContinuosBody" + i])
-                bodySet[i].style.left = bodyArray[i].left
-                multStep[i] = 1
-            }
         }
         var isExecutingContinuosBody = false
         var intervalContinuosBody
@@ -640,17 +693,33 @@
             isExecutingContinuosBody = true
             
             if (directionLocal === 'left'){
+                clearInterval(window ["intervalContinuosBody" + i])
                 window ["intervalContinuosBody" + i] = setInterval(
                     function(){
                         continuosBodyLeft(i, xy)
                     },timeDelay / stepForContinuos
                 )
+                setTimeout(
+                    function(){
+                        clearInterval(window ["intervalContinuosBody" + i])
+                        bodySet[i].style.left = bodyArray[i].left
+                        multStep[i] = 1
+                    }, timeDelay - timeDelay / stepForContinuos
+                )
             }
             else{
+                clearInterval(window ["intervalContinuosBody" + i])
                 window ["intervalContinuosBody" + i] = setInterval(
                     function(){
                         continuosBodyTop(i, xy)
                     },timeDelay / stepForContinuos
+                )
+                setTimeout(
+                    function(){
+                        clearInterval(window ["intervalContinuosBody" + i])
+                        bodySet[i].style.top = bodyArray[i].top
+                        multStep[i] = 1
+                    },timeDelay - timeDelay / stepForContinuos
                 )
             }
         }
@@ -787,7 +856,7 @@
         #snake{
             width: 50px;
             height: 50px;
-            position: relative;
+            position: absolute;
             background-color: green;
             z-index: 10;
         }
