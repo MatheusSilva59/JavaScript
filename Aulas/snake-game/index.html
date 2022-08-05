@@ -391,6 +391,8 @@
             }
         }
         function collisionFood(){
+            ///////////////////////WORKING HERE
+            redeclareConst()
 
             if (snakePosGet.top === foodPosGet.top && snakePosGet.left === foodPosGet.left){
 
@@ -491,7 +493,7 @@
                 xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
 
                 multStep[i] = 1
-
+                
                 if (i % 2 === 0){
 
                     x.p1 = xy.left
@@ -576,9 +578,9 @@
                         bodySetStyle[i].style.width = '60px'
                         bodySetStyle[i].style.height = '40px'
 
-                        continuosBody('left', i, left)
+                        //continuosBody('left', i, left)
 
-                        //bodySet[i].style.left = bodyArray[i].left
+                        bodySet[i].style.left = bodyArray[i].left
 
                         arrayStatus[i] = 'left'
                         //console.log('LEFT')
@@ -590,9 +592,9 @@
                         bodySetStyle[i].style.width = '40px'
                         bodySetStyle[i].style.height = '60px'
 
-                        continuosBody('top', i, top)
+                        //continuosBody('top', i, top)
 
-                        //bodySet[i].style.top = bodyArray[i].top
+                        bodySet[i].style.top = bodyArray[i].top
 
                         arrayStatus[i] = 'top'
                         //console.log('TOP')
@@ -602,64 +604,64 @@
                     }
 
 
-                    if (i === 0){
+                    // if (i === 0){
 
-                        if (topPos + stepToCSS != xy.top && arrayStatus[i] === 'left'){
-                            //bodySetStyle[i].style.height = '60px'
-                            //bodySetStyle[i].style.backgroundColor = 'red'
+                    //     if (topPos + stepToCSS != xy.top && arrayStatus[i] === 'left'){
+                    //         //bodySetStyle[i].style.height = '60px'
+                    //         //bodySetStyle[i].style.backgroundColor = 'red'
 
-                        }
-                        else if(leftPos + stepToCSS != xy.left && arrayStatus[i] === 'top'){
-                            //bodySetStyle[i].style.width = '60px'
-                            //bodySetStyle[i].style.backgroundColor = 'white'
+                    //     }
+                    //     else if(leftPos + stepToCSS != xy.left && arrayStatus[i] === 'top'){
+                    //         //bodySetStyle[i].style.width = '60px'
+                    //         //bodySetStyle[i].style.backgroundColor = 'white'
    
-                        }
+                    //     }
 
-                        if (arrayStatus[i] === 'left'){
-                            if (topPos > clearUn(xy.top)){
-                                if (leftPos > clearUn(xy.left)){
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 0, 5, -5, bodyArray.length)
-                                    //bodySetStyle[i].style.backgroundColor = 'white'
-                                }
-                                else{
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 270, -5, -5, bodyArray.length)
-                                    //bodySetStyle[i].style.backgroundColor = 'green'
-                                }
-                            }
-                            else if(topPos < clearUn(xy.top)){
-                                if (leftPos < clearUn(xy.left)){
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 180, -5, 5, bodyArray.length)
-                                    //bodySetStyle[i].style.backgroundColor = 'red'
-                                }
-                                else{
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 90, 5, 5, bodyArray.length)
-                                    //bodySetStyle[i].style.backgroundColor = 'blue'
-                                }
-                            }
-                        }
-                        else{
-                            if (leftPos > clearUn(xy.left)){
-                                if (topPos > clearUn(xy.top)){
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 180, -5, 5, bodyArray.length)
-                                    //bodySetStyle[i].style.backgroundColor = 'orange'
-                                }
-                                else{
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 270, -5, -5, bodyArray.length)
-                                    //bodySetStyle[i].style.backgroundColor = 'purple'
-                                }
-                            }
-                            else if(leftPos < clearUn(xy.left)){
-                                if (topPos < clearUn(xy.top)){
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 0, 5, -5, bodyArray.length)
-                                    //bodySetStyle[i].style.backgroundColor = 'darkred'
-                                }
-                                else{
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 90, 5, 5, bodyArray.length)
-                                    //bodySetStyle[i].style.backgroundColor = 'lightblue'
-                                }
-                            }
-                        }
-                    }
+                    //     if (arrayStatus[i] === 'left'){
+                    //         if (topPos > clearUn(xy.top)){
+                    //             if (leftPos > clearUn(xy.left)){
+                    //                 drawFillet(bodyArray[i].top, bodyArray[i].left, 0, 5, -5, bodyArray.length)
+                    //                 //bodySetStyle[i].style.backgroundColor = 'white'
+                    //             }
+                    //             else{
+                    //                 drawFillet(bodyArray[i].top, bodyArray[i].left, 270, -5, -5, bodyArray.length)
+                    //                 //bodySetStyle[i].style.backgroundColor = 'green'
+                    //             }
+                    //         }
+                    //         else if(topPos < clearUn(xy.top)){
+                    //             if (leftPos < clearUn(xy.left)){
+                    //                 drawFillet(bodyArray[i].top, bodyArray[i].left, 180, -5, 5, bodyArray.length)
+                    //                 //bodySetStyle[i].style.backgroundColor = 'red'
+                    //             }
+                    //             else{
+                    //                 drawFillet(bodyArray[i].top, bodyArray[i].left, 90, 5, 5, bodyArray.length)
+                    //                 //bodySetStyle[i].style.backgroundColor = 'blue'
+                    //             }
+                    //         }
+                    //     }
+                    //     else{
+                    //         if (leftPos > clearUn(xy.left)){
+                    //             if (topPos > clearUn(xy.top)){
+                    //                 drawFillet(bodyArray[i].top, bodyArray[i].left, 180, -5, 5, bodyArray.length)
+                    //                 //bodySetStyle[i].style.backgroundColor = 'orange'
+                    //             }
+                    //             else{
+                    //                 drawFillet(bodyArray[i].top, bodyArray[i].left, 270, -5, -5, bodyArray.length)
+                    //                 //bodySetStyle[i].style.backgroundColor = 'purple'
+                    //             }
+                    //         }
+                    //         else if(leftPos < clearUn(xy.left)){
+                    //             if (topPos < clearUn(xy.top)){
+                    //                 drawFillet(bodyArray[i].top, bodyArray[i].left, 0, 5, -5, bodyArray.length)
+                    //                 //bodySetStyle[i].style.backgroundColor = 'darkred'
+                    //             }
+                    //             else{
+                    //                 drawFillet(bodyArray[i].top, bodyArray[i].left, 90, 5, 5, bodyArray.length)
+                    //                 //bodySetStyle[i].style.backgroundColor = 'lightblue'
+                    //             }
+                    //         }
+                    //     }
+                    //}
                 }
             }
         }
@@ -675,6 +677,11 @@
                 bodySet[i].style.top = (clearUn(bodyArray[i].top) + (step) - a*multStep[i]) + stepToCSS
             }
             multStep[i]++
+            if (a*multStep[i] >= stepToCalc){
+                clearInterval(window ["intervalContinuosBody" + i])
+                bodySet[i].style.top = bodyArray[i].top
+                multStep[i] = 1
+            }
         }
         function continuosBodyLeft(i, left){
 
@@ -685,6 +692,11 @@
                 bodySet[i].style.left = (clearUn(bodyArray[i].left) + (step) - a*multStep[i]) + stepToCSS
             }
             multStep[i]++
+            if (a*multStep[i] >= stepToCalc){
+                clearInterval(window ["intervalContinuosBody" + i])
+                bodySet[i].style.left = bodyArray[i].left
+                multStep[i] = 1
+            }
         }
         var isExecutingContinuosBody = false
         var intervalContinuosBody
@@ -699,13 +711,6 @@
                         continuosBodyLeft(i, xy)
                     },timeDelay / stepForContinuos
                 )
-                setTimeout(
-                    function(){
-                        clearInterval(window ["intervalContinuosBody" + i])
-                        bodySet[i].style.left = bodyArray[i].left
-                        multStep[i] = 1
-                    }, timeDelay - timeDelay / stepForContinuos
-                )
             }
             else{
                 clearInterval(window ["intervalContinuosBody" + i])
@@ -713,13 +718,6 @@
                     function(){
                         continuosBodyTop(i, xy)
                     },timeDelay / stepForContinuos
-                )
-                setTimeout(
-                    function(){
-                        clearInterval(window ["intervalContinuosBody" + i])
-                        bodySet[i].style.top = bodyArray[i].top
-                        multStep[i] = 1
-                    },timeDelay - timeDelay / stepForContinuos
                 )
             }
         }
