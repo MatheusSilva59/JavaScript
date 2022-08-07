@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,8 +8,11 @@
     <title>Snake Game</title>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
 
     <!-- fontawesome -->
     <script src="https://kit.fontawesome.com/490ac8585b.js" crossorigin="anonymous"></script>
@@ -22,13 +26,13 @@
         var leftPos = 0
         var topPos = 0
         var timeDelay = 150
-        
+
         var isMoving
         var lastInput
 
         var actualDirection = null
 
-        var ms = timeDelay/10
+        var ms = timeDelay / 10
         var temp = null
         var timeInputs
         var timeBetweenInputs = 0
@@ -52,37 +56,36 @@
         var arrayKeys = new Array()
         var arrayBody = new Array()
 
-        document.onkeydown = function(asd){
-            if ((asd.key == 'a' || asd.key == 'w' || asd.key == 's' || asd.key == 'd') && (counter > timeBetweenInputs || firstKey === false)){
-
-                //notExecuting()
+        var moveKeys = /[wsad]/i
+        document.onkeydown = function (asd) {
+            if (asd.key.match(moveKeys)) {
                 moveSnake(asd.key)
                 firstKey = true
 
                 counter = 0
-                if (numberKeysDown % 2 === 0){ //Contador para evitar dupla inserção de teclas
-                    if (timeInputs === undefined){
+                if (numberKeysDown % 2 === 0) { //Contador para evitar dupla inserção de teclas
+                    if (timeInputs === undefined) {
                         timeInputs = setInterval(
-                            function(){
+                            function () {
                                 counter++
                                 document.getElementById('h1-nav').innerHTML = counter
-                            },1
+                            }, 1
                         )
                     }
                 }
 
                 numberKeysDown++
             }
-            else if (asd.key == 'p'){
-                if (isMoving != undefined){
+            else if (asd.key == 'p') {
+                if (isMoving != undefined) {
                     window.cancelAnimationFrame(isMoving)
                     isMoving = undefined
                 }
-                else{
+                else {
                     moveSnake(asd.key)
                 }
             }
-            else if(asd.key == 'm'){
+            else if (asd.key == 'm') {
                 singleInput = singleInput === false ? true : false
             }
 
@@ -93,17 +96,17 @@
         var isLeft = false
         var isValid = false
 
-        function notExecuting(){
+        function notExecuting() {
             isExecutingW = false
             isExecutingS = false
             isExecutingA = false
             isExecutingD = false
         }
-        function isExecuting(){
-            if (isExecutingW === true || isExecutingS === true || isExecutingA === true || isExecutingD === true || isExecutingContinuos === true){
+        function isExecuting() {
+            if (isExecutingW === true || isExecutingS === true || isExecutingA === true || isExecutingD === true || isExecutingContinuos === true) {
                 return true
             }
-            else{
+            else {
                 return false
             }
         }
@@ -118,44 +121,44 @@
         var lastPosTopSnake
         var lastPosLeftSnake
         var endCycle = 0
-        var statusDirection = {x: 'none', y: 'none', lastX: 'none', lastY: 'none'}
+        var statusDirection = { x: 'none', y: 'none', lastX: 'none', lastY: 'none' }
 
-        function canMove(firstTarget, secondTarget, operation){
+        function canMove(firstTarget, secondTarget, operation) {
 
-            arrayLastPositions.push({left: leftPos, top: topPos})
+            arrayLastPositions.push({ left: leftPos, top: topPos })
 
             lengthBody = score === 0 ? lengthBody : 10 * (score + 1)
 
             let indexLocal = lengthBody - 11 < 0 ? 0 : lengthBody - 11
 
 
-            if (arrayLastPositions.length === lengthBody || isEating === true){ //Continuos
+            if (arrayLastPositions.length === lengthBody || isEating === true) { //Continuos
 
-                if (indexLocal != 0 && arrayLastPositions.length === lengthBody){arrayLastPositions.shift(); isEating = false}
+                if (indexLocal != 0 && arrayLastPositions.length === lengthBody) { arrayLastPositions.shift(); isEating = false }
                 lastPosLeft = arrayLastPositions[indexLocal].left
                 lastPosTop = arrayLastPositions[indexLocal].top
-                if (indexLocal === 0 && arrayLastPositions.length === lengthBody){arrayLastPositions.shift()}
+                if (indexLocal === 0 && arrayLastPositions.length === lengthBody) { arrayLastPositions.shift() }
             }
 
 
-            if (bodySet.length === 0){
+            if (bodySet.length === 0) {
                 lastPosBodyLeft = lastPosLeft
                 lastPosBodyTop = lastPosTop
             }
 
-            if ( operation == '+'){
-                if(firstTarget == 'leftPos'){
+            if (operation == '+') {
+                if (firstTarget == 'leftPos') {
                     leftPos += step
                 }
-                else{
+                else {
                     topPos += step
                 }
             }
-            else{
-                if(firstTarget == 'leftPos'){
+            else {
+                if (firstTarget == 'leftPos') {
                     leftPos -= step
                 }
-                else{
+                else {
                     topPos -= step
                 }
             }
@@ -163,126 +166,110 @@
             lastPosLeftSnake = lastPosLeftSnake === undefined ? leftPos : lastPosLeftSnake
             lastPosTopSnake = lastPosTopSnake === undefined ? topPos : lastPosTopSnake
 
-            filletBodyApply()
+            if (hasBody) { filletBodyApply() }
 
             colissionBody()
 
-            if (leaveMap()){
+            if (leaveMap()) {
                 clearAllInterval()
                 window.cancelAnimationFrame(isMoving)
             }
-            else if (isCollidingBody === false && isExecutingContinuos === false){
+            else if (isCollidingBody === false && isExecutingContinuos === false) {
 
                 snakePos = document.getElementById('snake').style
 
-                if(secondTarget === true){
-                    //continuosMovement('left')
+                if (secondTarget === true) {
                     snakePos.left = leftPos + stepToCSS
                 }
-                else{
-                    //continuosMovement('top')
+                else {
                     snakePos.top = topPos + stepToCSS
                 }
 
-                //bodySnakeApply()
-
-                //Adiciona posição à lista de banimento de posicionamento para a comida, pois está em uso
-                indexThereSomething.push(coordToIndex(Math.round(leftPos/50)*50, Math.round(topPos/50)*50))
+                if (leftPos % 50 === 0 && topPos % 50 === 0) {
+                    //Adiciona posição à lista de banimento de posicionamento para a comida, pois está em uso
+                    indexThereSomething.push(coordToIndex(Math.round(leftPos / 50) * 50, Math.round(topPos / 50) * 50))
+                    console.log(indexThereSomething)
+                }
             }
         }
 
 
-        function defaultMove(){
+        function defaultMove() {
 
-            if (arrayKeys.length != 0){
-                whichDirection(arrayKeys[0])
-                arrayKeys.shift()
-            }
+            if (leftPos % 50 === 0 && topPos % 50 === 0) {
+                if (arrayKeys.length != 0) {
+                    whichDirection(arrayKeys[0])
+                    arrayKeys.shift()
+                }
 
 
-            if (arrayLastKeys.length != 0 && leftPos % 50 === 0 && topPos % 50 === 0){
-                whichDirection(arrayLastKeys[0])
-                arrayLastKeys.shift()
+                if (arrayLastKeys.length != 0) {
+                    whichDirection(arrayLastKeys[0])
+                    arrayLastKeys.shift()
+                }
             }
 
             notExecuting()
 
-            //clearInterval(intervalContinuos)
-
             canMove(posString, isLeft, operationString)
-            
 
-            if (leaveMap() === false && isCollidingBody === false){
+
+            if (leaveMap() === false && isCollidingBody === false) {
 
                 bodySnakeApply()
 
                 collisionFood()
-                
-                if (leftPos % 50 === 0 && topPos % 50 === 0){
-                    
-                }
 
                 snakeConectionFunc()
 
-                if (hasBody === false){
+                if (hasBody === false) {
                     indexThereSomething.shift()
                     //console.log(indexThereSomething)
                 }
-                if (singleInput === false){isMoving = window.requestAnimationFrame(defaultMove)}
-                else if(repeat < stepToCalc - 5){
+                if (singleInput === false) { isMoving = window.requestAnimationFrame(defaultMove) }
+                else if (repeat < stepToCalc - 5) {
                     window.requestAnimationFrame(defaultMove)
                     //console.log('BBBBB: ' + repeat)
                     repeat += step
                 }
             }
 
-
-            //document.getElementById('map').innerHTML += '<span class="way" style="left:' + lastPosLeft + stepToCSS +'; top: ' + lastPosTop + stepToCSS +'"></span>'
-            //redeclareConst()
-
-
         }
+
         var repeat = 0
         var arrayLastKeys = new Array()
-        function moveSnake(directionLocal){
 
-            if (leftPos % 50 === 0 && topPos % 50 === 0){
-                if (arrayLastKeys.length === 0){
+        function moveSnake(directionLocal) {
+
+            if (leftPos % 50 === 0 && topPos % 50 === 0) {
+                if (arrayLastKeys.length === 0) {
                     whichDirection(directionLocal)
                 }
             }
-            else{
+            else {
                 arrayLastKeys.push(directionLocal)
             }
 
-            if (singleInput === true){
+            if (singleInput === true) {
                 repeat = 0
                 defaultMove()
             }
-            else{
-                if (isMoving === undefined){
-                    if (isValid === true){
-
+            else {
+                if (isMoving === undefined) {
+                    if (isValid === true) {
                         isMoving = window.requestAnimationFrame(defaultMove)
-
-                        // isMoving = setInterval(
-                        //     function(){
-                        //         defaultMove()
-                        //     },
-                        //     timeDelay
-                        // )
                     }
                 }
             }
         }
 
-        function whichDirection(direction){
+        function whichDirection(direction) {
             //console.log('DIRECTION: ' + direction)
             //console.log('arrayKEYS: ' + arrayKeys)
-            switch (direction){
+            switch (direction) {
 
                 case 'w':
-                    if (actualDirection != 's' && isExecuting() === false){
+                    if (actualDirection != 's' && isExecuting() === false) {
                         isExecutingW = true
                         posString = 'topPos'
                         operationString = '-'
@@ -291,7 +278,7 @@
                         //console.log('W')
                         isValid = true
                     }
-                    else{
+                    else {
                         isValid = false
                         //console.log('W')
                         arrayKeys.push(direction)
@@ -299,7 +286,7 @@
                     break
 
                 case 's':
-                    if (actualDirection != 'w' && isExecuting() === false){
+                    if (actualDirection != 'w' && isExecuting() === false) {
                         isExecutingS = true
                         posString = 'topPos'
                         operationString = '+'
@@ -308,7 +295,7 @@
                         //console.log('S')
                         isValid = true
                     }
-                    else{
+                    else {
                         isValid = false
                         //console.log('S')
                         arrayKeys.push(direction)
@@ -316,7 +303,7 @@
                     break
 
                 case 'a':
-                    if (actualDirection != 'd' && isExecuting() === false){
+                    if (actualDirection != 'd' && isExecuting() === false) {
                         isExecutingA = true
                         posString = 'leftPos'
                         operationString = '-'
@@ -325,15 +312,15 @@
                         //console.log('A')
                         isValid = true
                     }
-                    else{
+                    else {
                         isValid = false
                         //console.log('A')
                         arrayKeys.push(direction)
                     }
                     break
-                
+
                 case 'd':
-                    if (actualDirection != 'a' && isExecuting() === false){
+                    if (actualDirection != 'a' && isExecuting() === false) {
                         isExecutingD = true
                         posString = 'leftPos'
                         operationString = '+'
@@ -342,76 +329,77 @@
                         //console.log('D')
                         isValid = true
                     }
-                    else{
+                    else {
                         isValid = false
                         //console.log('D')
                         arrayKeys.push(direction)
                     }
-                    break              
+                    break
             }
         }
-        function clearAllInterval(){
+        function clearAllInterval() {
             clearInterval(temp)
             clearInterval(timeInputs)
         }
-        function leaveMap(){
-            if (leftPos < 0 || leftPos > 1400 - stepToCalc || topPos < 0 || topPos > 600 - stepToCalc){ 
+        function leaveMap() {
+            if (leftPos < 0 || leftPos > 1400 - stepToCalc || topPos < 0 || topPos > 600 - stepToCalc) {
                 return true
-            } 
-            else{
+            }
+            else {
                 return false
             }
         }
 
         var isCollidingBody = false
 
-        function colissionBody(){
+        function colissionBody() {
 
-            if (hasBody === true){
+            if (hasBody === true) {
 
                 bodySnakeComputed()
 
-                //console.log('leftPos: ' + leftPos % 50)
-                //console.log('topPos: ' + topPos % 50)
+                if (bodySet.length > 2) {
+                    for (let i = 0; i < bodySet.length; i++) {
 
-                if(leftPos % 50 === 0 && topPos % 50 === 0){
-                    for (let i = 0; i < bodySet.length; i++){
 
-                        console.log('bodyArray.LEFT: ' + bodyArray[i].left)
-                        console.log('bodyArray.TOP: ' + bodyArray[i].top)
-                        console.log('leftPos: ' + leftPos)
-                        console.log('topPos: ' + topPos)
-
-                        if (bodyArray[i].left === leftPos && bodyArray[i].top === topPos){
-
-                            isCollidingBody = true
-                            break
-                            //isMoving = undefined
+                        if (i != bodySet.length - 1) {
+                            if (positiveNumber(bodyArray[i].left - roundByDirection(leftPos)) < 50 &&
+                                positiveNumber(bodyArray[i].top - roundByDirection(topPos)) < 50) {
+                                isCollidingBody = true
+                                break
+                            }
+                        }
+                        else {
+                            if (positiveNumber(bodyArray[i - 1].left - roundByDirection(leftPos)) < 50 &&
+                                positiveNumber(bodyArray[i - 1].top - roundByDirection(topPos)) < 50) {
+                                isCollidingBody = true
+                                break
+                            }
                         }
                     }
                 }
             }
         }
-        function collisionFood(){
+        function collisionFood() {
             redeclareConst()
 
-            if (snakePosGet.top === foodPosGet.top && snakePosGet.left === foodPosGet.left){
+            if (snakePosGet.top === foodPosGet.top && snakePosGet.left === foodPosGet.left) {
 
                 randomPosition()
 
                 hasBody = true
 
-                document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + lastPosBodyLeft + stepToCSS +'; top: ' + lastPosBodyTop + stepToCSS +'"><span class="snake-body-style"></span></span>'
+                document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + lastPosBodyLeft + stepToCSS + '; top: ' + lastPosBodyTop + stepToCSS + '"><span class="snake-body-style"></span></span>'
 
                 redeclareConst()
                 drawAll()
 
                 isEating = true
                 score++
-            }  
+            }
 
         }
-        function redeclareConst(){
+        function redeclareConst() {
             snakePos = document.getElementById('snake').style
             snakeConection = document.getElementById('snake-conection').style
             foodPos = document.getElementById('food').style
@@ -423,75 +411,73 @@
         var mapHeight
         var allPos = []
         var allIndex = []
-        function initiate(){
+        function initiate() {
 
             mapWidth = 700 - stepToCalc
             mapHeight = 600 - stepToCalc
 
             let i = 0
 
-            for (let x = 0; x <= mapWidth; x += stepToCalc){
-                    for (let y = 0; y <= mapHeight; y += stepToCalc){
-                        allPos.push({left: x, top: y})
-                        allIndex.push(i)
-                        i++
+            for (let x = 0; x <= mapWidth; x += stepToCalc) {
+                for (let y = 0; y <= mapHeight; y += stepToCalc) {
+                    allPos.push({ left: x, top: y })
+                    allIndex.push(i)
+                    i++
                 }
             }
             //console.log(allPos)
         }
 
-        function checkThereSomething(value){
-            
+        function checkThereSomething(value) {
+
             let there = false
 
-            for (let i = 0; i < indexThereSomething.length; i++){
-                if (indexThereSomething[i] === value){
+            for (let i = 0; i < indexThereSomething.length; i++) {
+                if (indexThereSomething[i] === value) {
                     there = true
                     break
                 }
             }
-            
-            if (there === false){return value}
+            if (there === false) { return value }
         }
 
-        function randomNumber(){
+        function randomNumber() {
 
             let tempAllIndex = allIndex.filter(checkThereSomething)
 
             let value = tempAllIndex[Math.floor(Math.random() * tempAllIndex.length)]
-            //console.log(tempAllIndex)
+            console.log(tempAllIndex)
             //console.log(value)
             return value
         }
-        
+
         var indexThereSomething = []
 
-        function randomPosition(){
+        function randomPosition() {
 
 
-            // let index = randomNumber()
-            // foodPos.left = allPos[index].left + stepToCSS
-            // foodPos.top = allPos[index].top + stepToCSS
+            let index = randomNumber()
+            foodPos.left = allPos[index].left + stepToCSS
+            foodPos.top = allPos[index].top + stepToCSS
 
-            var x = Math.floor(Math.random() * (7*2)) * 50
-            var y = Math.floor(Math.random() * (6*2)) * 50
+            // var x = Math.floor(Math.random() * (7 * 2)) * 50
+            // var y = Math.floor(Math.random() * (6 * 2)) * 50
 
+            // foodPos.left = x + stepToCSS
+            // foodPos.top = y + stepToCSS
 
-            foodPos.left = x + stepToCSS
-            foodPos.top = y + stepToCSS
-            
         }
 
-        function coordToIndex(left, top){
+        function coordToIndex(left, top) {
 
-            let x1 = left/50*12
-            let y1 = top/50
+            let x1 = left / 50 * 12
+            let y1 = top / 50
             let temp
 
-            if (y1 == 0){
+            if (y1 == 0) {
                 temp = x1
             }
-            else{
+            else {
                 temp = Number(x1 + y1)
             }
 
@@ -504,64 +490,101 @@
 
         var hasBody = false
         var indexToCalculateFillet = 0
-        function bodySnakeComputed(){
+        function bodySnakeComputed() {
 
-            let x = {p1: 0, p2: 0}
-            let y = {p1: 0, p2: 0}
-            let xy
+            for (let i = 0; i < bodySet.length; i++) {
 
-            for (let i = 0; i < bodySet.length; i++){
 
-                
-               if (i != bodySet.length - 1){
+                if (i != bodySet.length - 1) {
                     bodyArray[i] = arrayLastPositions[lengthBody - (10 * i) - 11]
-               }
-               else{
+                }
+                else {
                     bodyArray[i] = arrayLastPositions[9]
                     lastPosBodyLeft = roundValue(arrayLastPositions[0].left)
                     lastPosBodyTop = roundValue(arrayLastPositions[0].top)
-               }
-                
-               if (i === 1){
+                    
+                    //HERE
+                    if (leftPos % 50 === 0 && topPos % 50 === 0 && 8 > 12) {
+                        console.log('INDEX: ' + indexThereSomething[0])
+                        if (bodyArray[i].left === allPos[indexThereSomething[0]].left &&
+                            bodyArray[i].top === allPos[indexThereSomething[0]].top) {
+                            console.log("CARALHO")
+                            indexThereSomething.shift()
+                        }
+                    }
+                }
+
+                if (i === 1) {
                     indexToCalculateFillet = lengthBody - (10 * i) - 11
-               }
+                }
             }
         }
 
-        function clearUn(value){ 
+        function clearUn(value) {
             return Number(value.replace('px', ''))
         }
 
-        function roundValue(value){
-            return Math.round(value/50)*50
+        function roundValue(value) {
+            return Math.round(value / 50) * 50
         }
 
-        function filletBodyApply(){
-            if (lastPosLeftSnake != leftPos && endCycle === 0 && bodySet.length > 0){
+        function positiveNumber(value) {
+            if (value < 0) {
+                return value * -1
+            }
+            else {
+                return value
+            }
+        }
+
+        function roundByDirection(value) {
+
+            let a
+
+            switch (actualDirection) {
+                case 'w':
+                    a = Math.floor(value / 50) * 50
+                    break
+                case 's':
+                    a = Math.ceil(value / 50) * 50
+                    break
+                case 'a':
+                    a = Math.floor(value / 50) * 50
+                    break
+                case 'd':
+                    a = Math.ceil(value / 50) * 50
+                    break
+            }
+            return a
+        }
+
+
+        function filletBodyApply() {
+            if (lastPosLeftSnake != leftPos && endCycle === 0 && bodySet.length > 0) {
                 endCycle++
-                if (statusDirection.lastY != topPos){
-                    if (lastPosLeftSnake > leftPos){
+                if (statusDirection.lastY != topPos) {
+                    if (lastPosLeftSnake > leftPos) {
                         //console.log('INDO PARA ESQUERDA')
-                        if(statusDirection.y === 'top'){
+                        if (statusDirection.y === 'top') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
                             //snakePos.backgroundColor = 'red'
                             statusDirection.lastY = topPos
                         }
-                        else if(statusDirection.y === 'bottom'){
+                        else if (statusDirection.y === 'bottom') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
                             //snakePos.backgroundColor = 'blue'
                             statusDirection.lastY = topPos
                         }
-                    statusDirection.x = 'left'
-                }
-                else if(lastPosLeftSnake < leftPos){
+                        statusDirection.x = 'left'
+                    }
+                    else if (lastPosLeftSnake < leftPos) {
                         //console.log("INDO PARA DIREITA")
-                        if(statusDirection.y === 'top'){
+                        if (statusDirection.y === 'top') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
                             //snakePos.backgroundColor = 'orange'
                             statusDirection.lastY = topPos
                         }
-                        else if(statusDirection.y === 'bottom'){
+                        else if (statusDirection.y === 'bottom') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
                             //snakePos.backgroundColor = 'white'
                             statusDirection.lastY = topPos
@@ -569,36 +592,36 @@
                         statusDirection.x = 'right'
                     }
                 }
-                
+
                 lastPosLeftSnake = leftPos
             }
-            else if (lastPosTopSnake != topPos && endCycle === 0 && bodySet.length > 0){
+            else if (lastPosTopSnake != topPos && endCycle === 0 && bodySet.length > 0) {
                 endCycle++
                 //console.log('TOP DIFERENTE')
 
-                if(statusDirection.lastX != leftPos){
-                    if (lastPosTopSnake > topPos){
+                if (statusDirection.lastX != leftPos) {
+                    if (lastPosTopSnake > topPos) {
                         //console.log('INDO PARA CIMA')
-                        if(statusDirection.x === 'left'){
+                        if (statusDirection.x === 'left') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
                             //snakePos.backgroundColor = 'lightblue'
                             statusDirection.lastX = leftPos
                         }
-                        else if(statusDirection.x === 'right'){
+                        else if (statusDirection.x === 'right') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
                             //snakePos.backgroundColor = 'darkred'
                             statusDirection.lastX = leftPos
                         }
                         statusDirection.y = 'top'
                     }
-                    else if(lastPosTopSnake < topPos){
+                    else if (lastPosTopSnake < topPos) {
                         //console.log('INDO PARA BAIXO')
-                        if(statusDirection.x === 'left'){
+                        if (statusDirection.x === 'left') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
                             //snakePos.backgroundColor = 'green'
                             statusDirection.lastX = leftPos
                         }
-                        else if(statusDirection.x === 'right'){
+                        else if (statusDirection.x === 'right') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
                             //snakePos.backgroundColor = 'purple'
                             statusDirection.lastX = leftPos
@@ -609,8 +632,8 @@
                 lastPosTopSnake = topPos
             }
 
-            if (endCycle != 0){
-                if (leftPos % 50 === 0 && topPos % 50 === 0){
+            if (endCycle != 0) {
+                if (leftPos % 50 === 0 && topPos % 50 === 0) {
                     endCycle = 0
                     lastPosLeftSnake = leftPos
                     lastPosTopSnake = topPos
@@ -618,36 +641,36 @@
             }
         }
 
-        function bodySnakeApply(){
+        function bodySnakeApply() {
 
             let xy
 
-            if (isCollidingBody === false){
+            if (isCollidingBody === false) {
 
-                for (let i = 0; i < bodySet.length; i++){
+                for (let i = 0; i < bodySet.length; i++) {
 
                     xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
-    
-                    if (bodyArray[i].left != clearUn(xy.left) && bodyArray[i].top == clearUn(xy.top)){
+
+                    if (bodyArray[i].left != clearUn(xy.left) && bodyArray[i].top == clearUn(xy.top)) {
                         bodySetStyle[i].style.width = '60px'
                         bodySetStyle[i].style.height = '40px'
                         bodySet[i].style.left = bodyArray[i].left + stepToCSS
                     }
 
-                    if(bodyArray[i].top != clearUn(xy.top) && bodyArray[i].left == clearUn(xy.left)){
+                    if (bodyArray[i].top != clearUn(xy.top) && bodyArray[i].left == clearUn(xy.left)) {
                         bodySetStyle[i].style.width = '40px'
                         bodySetStyle[i].style.height = '60px'
                         bodySet[i].style.top = bodyArray[i].top + stepToCSS
                     }
 
-                    if (filletPosition.length != 0 && i === bodySet.length - 1){
+                    if (filletPosition.length != 0 && i === bodySet.length - 1) {
 
-                        if (bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left){
+                        if (bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
                             setTimeout(
-                                function(){
+                                function () {
                                     let fillet = document.getElementsByClassName('fillet')[0]
-                                    if(leaveMap() === false && isCollidingBody === false){fillet.remove()}
-                                }, timeDelay + 200
+                                    if (leaveMap() === false && isCollidingBody === false) { fillet.remove() }
+                                }, timeDelay + 100
                             )
                             filletPosition.shift()
                         }
@@ -658,7 +681,7 @@
 
         var filletPosition = []
 
-        function drawFillet(posTop, posLeft, rotate, transX, transY, time){
+        function drawFillet(posTop, posLeft, rotate, transX, transY, time) {
 
             document.getElementById('map').innerHTML += '<canvas class="fillet" width=50px height=50px></canvas>'
 
@@ -667,9 +690,9 @@
             let filletLocal = document.getElementsByClassName('fillet')[document.getElementsByClassName('fillet').length - 1]
             let timing
 
-            timing = bodyArray.length * timeDelay + timeDelay/2
+            timing = bodyArray.length * timeDelay + timeDelay / 2
 
-            filletPosition.push({left: posLeft, top: posTop})
+            filletPosition.push({ left: posLeft, top: posTop })
 
 
             filletLocal.style.left = (posLeft + transX) + stepToCSS
@@ -686,22 +709,22 @@
             //     }, timing
             // )
 
-            
+
             redeclareConst()
         }
 
-        function drawAll(){
-            for (let x = 0; x < document.getElementsByClassName('fillet').length; x++){
+        function drawAll() {
+            for (let x = 0; x < document.getElementsByClassName('fillet').length; x++) {
                 let fillet = document.getElementsByClassName('fillet')[x]
                 let ctx = fillet.getContext('2d')
 
-                if (fillet.getContext){
+                if (fillet.getContext) {
                     ctx.fillStyle = 'gray'
                     ctx.beginPath();
-                    ctx.lineTo(50,0)
-                    ctx.lineTo(50,50)
-                    ctx.lineTo(40,50)
-                    ctx.arc(0, 50, 40, 0*(Math.PI/180), 270*(Math.PI/180), true)
+                    ctx.lineTo(50, 0)
+                    ctx.lineTo(50, 50)
+                    ctx.lineTo(40, 50)
+                    ctx.arc(0, 50, 40, 0 * (Math.PI / 180), 270 * (Math.PI / 180), true)
                     ctx.lineTo(0, 0)
                     ctx.fill()
 
@@ -717,52 +740,52 @@
         }
 
         var lastKey
-        function snakeConectionFunc(){
-            
+        function snakeConectionFunc() {
+
             //snakeConection.display = 'none'
             let kls = 0
-            
-            if (lastKey != actualDirection){
-                switch (actualDirection){
+
+            if (lastKey != actualDirection) {
+                switch (actualDirection) {
                     case 'w':
                         setTimeout(
-                                    function(){
-                                        snakeConection.transform = 'rotate(0deg)'
-                                        snakeConection.top = '50px'
-                                        snakeConection.left = '5px'
-                                        if (hasBody && actualDirection === 'w'){snakeConection.display = 'block'}
-                                    }, kls
-                            )
+                            function () {
+                                snakeConection.transform = 'rotate(0deg)'
+                                snakeConection.top = '50px'
+                                snakeConection.left = '5px'
+                                if (hasBody && actualDirection === 'w') { snakeConection.display = 'block' }
+                            }, kls
+                        )
                         break
                     case 's':
                         setTimeout(
-                                    function(){
-                                        snakeConection.transform = 'rotate(0deg)'
-                                        snakeConection.top = '-10px'
-                                        snakeConection.left = '5px'
-                                        if (hasBody && actualDirection === 's'){snakeConection.display = 'block'}
-                                    }, kls
-                            )
+                            function () {
+                                snakeConection.transform = 'rotate(0deg)'
+                                snakeConection.top = '-10px'
+                                snakeConection.left = '5px'
+                                if (hasBody && actualDirection === 's') { snakeConection.display = 'block' }
+                            }, kls
+                        )
                         break
                     case 'a':
                         setTimeout(
-                                    function(){ 
-                                        snakeConection.transform = 'rotate(90deg)'
-                                        snakeConection.top = '20px'
-                                        snakeConection.left = '35px'
-                                        if (hasBody && actualDirection === 'a'){snakeConection.display = 'block'}
-                                    }, kls
-                            )
+                            function () {
+                                snakeConection.transform = 'rotate(90deg)'
+                                snakeConection.top = '20px'
+                                snakeConection.left = '35px'
+                                if (hasBody && actualDirection === 'a') { snakeConection.display = 'block' }
+                            }, kls
+                        )
                         break
                     case 'd':
                         setTimeout(
-                                    function(){     
-                                        snakeConection.transform = 'rotate(90deg)'
-                                        snakeConection.top = '20px'
-                                        snakeConection.left = '-25px'
-                                        if (hasBody && actualDirection === 'd'){snakeConection.display = 'block'}
-                                    }, kls
-                            )
+                            function () {
+                                snakeConection.transform = 'rotate(90deg)'
+                                snakeConection.top = '20px'
+                                snakeConection.left = '-25px'
+                                if (hasBody && actualDirection === 'd') { snakeConection.display = 'block' }
+                            }, kls
+                        )
                         break
                 }
                 lastKey = actualDirection
@@ -771,88 +794,101 @@
     </script>
 
     <style>
-        body, html{
+        body,
+        html {
             z-index: 10;
         }
-        .nav{
+
+        .nav {
             width: 1400px;
             height: 150px;
             background-color: lightgray;
             z-index: 11;
         }
-        #map{
+
+        #map {
             width: 1400px;
             height: 600px;
             background-color: gray;
             position: relative;
         }
-        #snake{
+
+        #snake {
             width: 50px;
             height: 50px;
             position: absolute;
         }
-        #snake-head{
+
+        #snake-head {
             width: 50px;
             height: 50px;
             position: absolute;
             background-color: green;
             z-index: 10;
         }
-        #snake-conection{
+
+        #snake-conection {
             width: 40px;
             height: 10px;
             background-color: rgb(38, 8, 189);
             position: absolute;
-            display: none; 
+            display: none;
         }
-        .snake-body{
+
+        .snake-body {
             width: 50px;
             height: 50px;
             position: absolute;
         }
-        .snake-body-style{
+
+        .snake-body-style {
             width: 50px;
             height: 50px;
             background-color: rgb(38, 8, 189);
             position: absolute;
             z-index: 0;
         }
-        .food{
+
+        .food {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            background-color: red;
+            z-index: 6;
+        }
+
+        .way {
             width: 50px;
             height: 50px;
             position: absolute;
             background-color: red;
         }
-        .way{
-            width: 50px;
-            height: 50px;
-            position: absolute;
-            background-color: red;
-        }
-        .fillet{
+
+        .fillet {
             position: absolute;
             z-index: 5;
         }
     </style>
 </head>
+
 <body>
 
-    
+
     <main class="d-flex justify-content-center flex-wrap">
         <div class="nav d-block">
 
-    
+
 
             <h1 id="h1-nav"></h1>
             <h2 id="h2-nav"></h2>
         </div>
         <div id="map">
-    
+
             <div id="snake">
                 <span id="snake-head"></span>
                 <span id="snake-conection"></span>
             </div>
-            
+
             <div class="food" id="food"></div>
 
         </div>
@@ -872,4 +908,5 @@
         randomPosition() //Alterar posição da comida inicial
     </script>
 </body>
+
 </html>
