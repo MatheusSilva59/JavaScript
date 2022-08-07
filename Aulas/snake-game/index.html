@@ -114,6 +114,9 @@
         var arrayLastPositions = new Array()
         var lengthBody = 10
         var isEating = false
+
+        
+
         function canMove(firstTarget, secondTarget, operation){
 
             arrayLastPositions.push({left: leftPos, top: topPos})
@@ -172,6 +175,9 @@
                 }
             }
 
+
+
+
             colissionBody()
 
             if (leaveMap()){
@@ -198,67 +204,6 @@
             }
         }
 
-        function continuosLeft(){
-            if (actualDirection === 'd'){
-                snakePos.left = leftPos - (stepToCalc) + a*b + stepToCSS
-            }
-            else{
-                snakePos.left = leftPos + (stepToCalc) - a*b + stepToCSS
-            }
-            b++
-            //console.log(a)
-            if (a*b === stepToCalc){
-                clearInterval(intervalContinuos)
-                intervalContinuos = undefined
-                snakePos.left = leftPos + stepToCSS
-                isExecutingContinuos = false
-                b = 1
-            }
-        }
-        function continuosTop(){
-            if (actualDirection === 's'){
-                snakePos.top = topPos - (stepToCalc) + a*b + stepToCSS
-            }
-            else{
-                snakePos.top = topPos + (stepToCalc) - a*b + stepToCSS
-            }
-            b++
-            if (a*b >= stepToCalc){
-                clearInterval(intervalContinuos)
-                intervalContinuos = undefined
-                snakePos.top = topPos + stepToCSS
-                isExecutingContinuos = false
-                b = 1
-            }
-        }
-
-        var stepForContinuos = 10
-        var intervalContinuos 
-        
-        var a = stepToCalc / stepForContinuos
-        var b = 1
-
-        function continuosMovement(directionLocal){
-
-            //console.log(c)
-
-            isExecutingContinuos = true
-            if (directionLocal === 'left'){
-                intervalContinuos = setInterval(
-                    function(){
-                        continuosLeft()
-                    },timeDelay / stepForContinuos
-                )
-            }
-            else{
-                intervalContinuos = setInterval(
-                    function(){
-                        continuosTop()
-                    },timeDelay / stepForContinuos
-                )
-            }
-        }
-
 
         function defaultMove(){
 
@@ -277,6 +222,8 @@
 
             //clearInterval(intervalContinuos)
 
+
+
             canMove(posString, isLeft, operationString)
             
 
@@ -285,7 +232,7 @@
                 bodySnakeApply()
 
                 collisionFood()
-
+                
                 snakeConectionFunc()
 
                 if (hasBody === false){
@@ -576,12 +523,12 @@
                }
                else{
                     bodyArray[i] = arrayLastPositions[9]
-                    lastPosBodyLeft = lastPosLeft
-                    lastPosBodyTop = lastPosTop
+                    lastPosBodyLeft = roundValue(arrayLastPositions[0].left)
+                    lastPosBodyTop = roundValue(arrayLastPositions[0].top)
                }
                 
-               if (i === 3){
-                indexToCalculateFillet = lengthBody - (10 * i) - 11
+               if (i === 1){
+                    indexToCalculateFillet = lengthBody - (10 * i) - 11
                }
             }
         }
@@ -590,8 +537,12 @@
             return Number(value.replace('px', ''))
         }
 
+        function roundValue(value){
+            return Math.round(value/50)*50
+        }
 
         var arrayStatus = new Array()
+        var statusPos
 
         function bodySnakeApply(){
 
@@ -617,58 +568,43 @@
                     if (bodyArray[i].left != clearUn(xy.left) && bodyArray[i].top == clearUn(xy.top)){
                         bodySetStyle[i].style.width = '60px'
                         bodySetStyle[i].style.height = '40px'
-
-                        //continuosBody('left', i, left)
-
-                        //console.log('MOVENDO HORIZONTALMENTE')
                         bodySet[i].style.left = bodyArray[i].left + stepToCSS
                         arrayStatus[i] = 'left'
-                        //console.log('LEFT')
+                        statusPos = 'left'
                     }
-                    else{
 
-                        //bodySet[i].style.width = '50px'
-                    }
                     if(bodyArray[i].top != clearUn(xy.top) && bodyArray[i].left == clearUn(xy.left)){
                         bodySetStyle[i].style.width = '40px'
                         bodySetStyle[i].style.height = '60px'
-
-
-                        //continuosBody('top', i, top)
-
-                        //console.log('MOVENDO VERTICALMENTE')
                         bodySet[i].style.top = bodyArray[i].top + stepToCSS
                         arrayStatus[i] = 'top'
-                        //console.log('TOP')
+                        statusPos = 'top'
                     }
-                    else{
-  
-                        //bodySet[i].style.height = '50px'
+                    if (i === 0){
+                        console.log('----------------')
+                        console.log('topPOS: ' + topPos)
+                        console.log('leftPOS: ' + leftPos)
+                        console.log('ROUND topPOS: ' + roundValue(topPos))
+                        console.log('ROUND leftPOS: ' + roundValue(leftPos))
+                        console.log('----------------')
                     }
 
-                    if (i === 0 && leftPos % 50 === 0 && topPos % 50 === 0){
+                    if (i === 0 && 1 > 2){
+                        
+                       //console.log('TOPPOS: ' + topPos)
+                       //console.log('LEFTPOS: ' + leftPos) 
 
-                        if (topPos + stepToCSS != xy.top && arrayStatus[i] === 'left'){
-                            //bodySetStyle[i].style.height = '60px'
-                            //bodySetStyle[i].style.backgroundColor = 'red'
+                        //console.log(arrayLastPositions)
 
-                        }
-                        else if(leftPos + stepToCSS != xy.left && arrayStatus[i] === 'top'){
-                            //bodySetStyle[i].style.width = '60px'
-                            //bodySetStyle[i].style.backgroundColor = 'white'
-
-                        }
-
-                        if (arrayStatus[i] === 'left'){
+                        if (statusPos === 'left'){
                             // console.log('LEFT')
                             // console.log('leftPos: ' + leftPos)
-                            // console.log('array LEFT: ' + arrayLastPositions[0].left)
+                            // console.log('array LEFT: ' + arrayLastPositions[indexToCalculateFillet].left)
                             // console.log('topPos: ' + topPos)
-                            // console.log('array TOP: ' + arrayLastPositions[0].top)
+                            // console.log('array TOP: ' + arrayLastPositions[indexToCalculateFillet].top)
                             // console.log('lengthBody: ' + lengthBody)
-                            console.log(arrayLastPositions)
                             // console.log('LEFT')
-                            console.log(indexToCalculateFillet)
+                            // console.log(indexToCalculateFillet)
                             if (topPos > arrayLastPositions[indexToCalculateFillet].top){
                                 if (leftPos > arrayLastPositions[indexToCalculateFillet].left){
                                     drawFillet(bodyArray[i].top, bodyArray[i].left, 0, 5, -5, bodyArray.length)
@@ -685,7 +621,7 @@
                                     bodySetStyle[i].style.backgroundColor = 'red'
                                 }
                                 else{
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 90, 5, 5, bodyArray.length)
+                                    drawFillet(arrayLastPositions[arrayLastPositions.length - 1].top, arrayLastPositions[arrayLastPositions.length - 1].left, 90, 5, 5, bodyArray.length)
                                     bodySetStyle[i].style.backgroundColor = 'blue'
                                 }
                             }
@@ -693,9 +629,10 @@
                         else{
                             // console.log('TOP')
                             // console.log('leftPos: ' + leftPos)
-                            // console.log('array LEFT: ' + arrayLastPositions[lengthBody - 11].left)
+                            // console.log('array LEFT: ' + arrayLastPositions[indexToCalculateFillet].left)
                             // console.log('topPos: ' + topPos)
-                            // console.log('array TOP: ' + arrayLastPositions[lengthBody - 11].top)
+                            // console.log('array TOP: ' + arrayLastPositions[indexToCalculateFillet].top)
+                            // console.log(indexToCalculateFillet)
                             // console.log('TOP')
                             if (leftPos > arrayLastPositions[indexToCalculateFillet].left){
                                 if (topPos > arrayLastPositions[indexToCalculateFillet].top){
@@ -707,7 +644,7 @@
                                     bodySetStyle[i].style.backgroundColor = 'purple'
                                 }
                             }
-                            else if(leftPos < arrayLastPositions[0].left){
+                            else if(leftPos < arrayLastPositions[indexToCalculateFillet].left){
                                 if (topPos < arrayLastPositions[indexToCalculateFillet].top){
                                     drawFillet(bodyArray[i].top, bodyArray[i].left, 0, 5, -5, bodyArray.length)
                                     bodySetStyle[i].style.backgroundColor = 'darkred'
@@ -722,74 +659,19 @@
 
                     if (filletPosition.length != 0 && i === bodySet.length - 1){
 
-                        if (bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left){
-                            setTimeout(
-                                function(){
-                                    let fillet = document.getElementsByClassName('fillet')[0]
-                                    if(leaveMap() === false && isCollidingBody === false){fillet.remove()}
-                                }, timeDelay + 200
-                            )
-                            filletPosition.shift()
-                        }
+                        // if (bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left){
+                        //     setTimeout(
+                        //         function(){
+                        //             let fillet = document.getElementsByClassName('fillet')[0]
+                        //             if(leaveMap() === false && isCollidingBody === false){fillet.remove()}
+                        //         }, timeDelay + 200
+                        //     )
+                        //     filletPosition.shift()
+                        // }
                     }
                 }
             }
         }
-
-        function continuosBodyTop(i, top){
-            
-            if (clearUn(bodyArray[i].top) > clearUn(top)){
-                bodySet[i].style.top = ((clearUn(bodyArray[i].top)) - (step) + a*multStep[i]) + stepToCSS
-            }
-            else{
-                bodySet[i].style.top = (clearUn(bodyArray[i].top) + (step) - a*multStep[i]) + stepToCSS
-            }
-            multStep[i]++
-            if (a*multStep[i] >= stepToCalc){
-                clearInterval(window ["intervalContinuosBody" + i])
-                bodySet[i].style.top = bodyArray[i].top
-                multStep[i] = 1
-            }
-        }
-        function continuosBodyLeft(i, left){
-
-            if (clearUn(bodyArray[i].left) > clearUn(left)){
-                bodySet[i].style.left = (clearUn(bodyArray[i].left) - (step) + a*multStep[i]) + stepToCSS
-            }
-            else{
-                bodySet[i].style.left = (clearUn(bodyArray[i].left) + (step) - a*multStep[i]) + stepToCSS
-            }
-            multStep[i]++
-            if (a*multStep[i] >= stepToCalc){
-                clearInterval(window ["intervalContinuosBody" + i])
-                bodySet[i].style.left = bodyArray[i].left
-                multStep[i] = 1
-            }
-        }
-        var isExecutingContinuosBody = false
-        var intervalContinuosBody
-        function continuosBody(directionLocal, i, xy){
-
-            isExecutingContinuosBody = true
-            
-            if (directionLocal === 'left'){
-                clearInterval(window ["intervalContinuosBody" + i])
-                window ["intervalContinuosBody" + i] = setInterval(
-                    function(){
-                        continuosBodyLeft(i, xy)
-                    },timeDelay / stepForContinuos
-                )
-            }
-            else{
-                clearInterval(window ["intervalContinuosBody" + i])
-                window ["intervalContinuosBody" + i] = setInterval(
-                    function(){
-                        continuosBodyTop(i, xy)
-                    },timeDelay / stepForContinuos
-                )
-            }
-        }
-
 
         var filletPosition = []
 
