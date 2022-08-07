@@ -115,7 +115,10 @@
         var lengthBody = 10
         var isEating = false
 
-        
+        var lastPosTopSnake
+        var lastPosLeftSnake
+        var endCycle = 0
+        var statusDirection = {x: 'none', y: 'none', lastX: 'none', lastY: 'none'}
 
         function canMove(firstTarget, secondTarget, operation){
 
@@ -123,33 +126,15 @@
 
             lengthBody = score === 0 ? lengthBody : 10 * (score + 1)
 
-            // console.log('SCORE: ' + score)
-            // console.log('lengthBody: ' + lengthBody)
-            // console.log('bodyArray: ' + bodyArray.length)
-
             let indexLocal = lengthBody - 11 < 0 ? 0 : lengthBody - 11
 
-            //console.log('INDEX: ' + indexLocal)
 
             if (arrayLastPositions.length === lengthBody || isEating === true){ //Continuos
-                
-                //console.log(JSON.parse(JSON.stringify(arrayLastPositions)))
 
                 if (indexLocal != 0 && arrayLastPositions.length === lengthBody){arrayLastPositions.shift(); isEating = false}
                 lastPosLeft = arrayLastPositions[indexLocal].left
                 lastPosTop = arrayLastPositions[indexLocal].top
                 if (indexLocal === 0 && arrayLastPositions.length === lengthBody){arrayLastPositions.shift()}
-
-                //console.log(arrayLastPositions)
-
-                // console.log('INDEX APLICADO: ' + indexLocal)
-                // console.log('lastPosLeft: ' + lastPosLeft)
-                // console.log('lastPosTop: ' + lastPosTop)
-                // console.log(arrayLastPositions[indexLocal].top)
-                // console.log('AFTER SHIFT')
-            }
-            else{
-
             }
 
 
@@ -175,8 +160,10 @@
                 }
             }
 
+            lastPosLeftSnake = lastPosLeftSnake === undefined ? leftPos : lastPosLeftSnake
+            lastPosTopSnake = lastPosTopSnake === undefined ? topPos : lastPosTopSnake
 
-
+            filletBodyApply()
 
             colissionBody()
 
@@ -222,8 +209,6 @@
 
             //clearInterval(intervalContinuos)
 
-
-
             canMove(posString, isLeft, operationString)
             
 
@@ -233,6 +218,10 @@
 
                 collisionFood()
                 
+                if (leftPos % 50 === 0 && topPos % 50 === 0){
+                    
+                }
+
                 snakeConectionFunc()
 
                 if (hasBody === false){
@@ -362,13 +351,11 @@
             }
         }
         function clearAllInterval(){
-            clearInterval(isMoving)
             clearInterval(temp)
             clearInterval(timeInputs)
         }
         function leaveMap(){
-            if (leftPos < 0 || leftPos >= 1400 || topPos < 0 || topPos >= 600){ 
-                console.log('LEAVE MAP')
+            if (leftPos < 0 || leftPos > 1400 - stepToCalc || topPos < 0 || topPos > 600 - stepToCalc){ 
                 return true
             } 
             else{
@@ -384,17 +371,25 @@
 
                 bodySnakeComputed()
 
-                // for (let i = 0; i < bodySet.length; i++){
+                //console.log('leftPos: ' + leftPos % 50)
+                //console.log('topPos: ' + topPos % 50)
 
-                //     let xy = bodyArray
+                if(leftPos % 50 === 0 && topPos % 50 === 0){
+                    for (let i = 0; i < bodySet.length; i++){
 
-                //     if (xy[i].left === leftPos + stepToCSS && xy[i].top === topPos + stepToCSS){
+                        console.log('bodyArray.LEFT: ' + bodyArray[i].left)
+                        console.log('bodyArray.TOP: ' + bodyArray[i].top)
+                        console.log('leftPos: ' + leftPos)
+                        console.log('topPos: ' + topPos)
 
-                //         isCollidingBody = true
-                //         break
-                //         //isMoving = undefined
-                //     }
-                // }
+                        if (bodyArray[i].left === leftPos && bodyArray[i].top === topPos){
+
+                            isCollidingBody = true
+                            break
+                            //isMoving = undefined
+                        }
+                    }
+                }
             }
         }
         function collisionFood(){
@@ -541,133 +536,121 @@
             return Math.round(value/50)*50
         }
 
-        var arrayStatus = new Array()
-        var statusPos
+        function filletBodyApply(){
+            if (lastPosLeftSnake != leftPos && endCycle === 0 && bodySet.length > 0){
+                endCycle++
+                if (statusDirection.lastY != topPos){
+                    if (lastPosLeftSnake > leftPos){
+                        //console.log('INDO PARA ESQUERDA')
+                        if(statusDirection.y === 'top'){
+                            drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
+                            //snakePos.backgroundColor = 'red'
+                            statusDirection.lastY = topPos
+                        }
+                        else if(statusDirection.y === 'bottom'){
+                            drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
+                            //snakePos.backgroundColor = 'blue'
+                            statusDirection.lastY = topPos
+                        }
+                    statusDirection.x = 'left'
+                }
+                else if(lastPosLeftSnake < leftPos){
+                        //console.log("INDO PARA DIREITA")
+                        if(statusDirection.y === 'top'){
+                            drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
+                            //snakePos.backgroundColor = 'orange'
+                            statusDirection.lastY = topPos
+                        }
+                        else if(statusDirection.y === 'bottom'){
+                            drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
+                            //snakePos.backgroundColor = 'white'
+                            statusDirection.lastY = topPos
+                        }
+                        statusDirection.x = 'right'
+                    }
+                }
+                
+                lastPosLeftSnake = leftPos
+            }
+            else if (lastPosTopSnake != topPos && endCycle === 0 && bodySet.length > 0){
+                endCycle++
+                //console.log('TOP DIFERENTE')
+
+                if(statusDirection.lastX != leftPos){
+                    if (lastPosTopSnake > topPos){
+                        //console.log('INDO PARA CIMA')
+                        if(statusDirection.x === 'left'){
+                            drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
+                            //snakePos.backgroundColor = 'lightblue'
+                            statusDirection.lastX = leftPos
+                        }
+                        else if(statusDirection.x === 'right'){
+                            drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
+                            //snakePos.backgroundColor = 'darkred'
+                            statusDirection.lastX = leftPos
+                        }
+                        statusDirection.y = 'top'
+                    }
+                    else if(lastPosTopSnake < topPos){
+                        //console.log('INDO PARA BAIXO')
+                        if(statusDirection.x === 'left'){
+                            drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
+                            //snakePos.backgroundColor = 'green'
+                            statusDirection.lastX = leftPos
+                        }
+                        else if(statusDirection.x === 'right'){
+                            drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
+                            //snakePos.backgroundColor = 'purple'
+                            statusDirection.lastX = leftPos
+                        }
+                        statusDirection.y = 'bottom'
+                    }
+                }
+                lastPosTopSnake = topPos
+            }
+
+            if (endCycle != 0){
+                if (leftPos % 50 === 0 && topPos % 50 === 0){
+                    endCycle = 0
+                    lastPosLeftSnake = leftPos
+                    lastPosTopSnake = topPos
+                }
+            }
+        }
 
         function bodySnakeApply(){
 
-
             let xy
-            let top
-            let left
-            
 
             if (isCollidingBody === false){
 
                 for (let i = 0; i < bodySet.length; i++){
 
                     xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
-                    top = xy.top
-                    left = xy.left
-
-                    //console.log('LEFT: ' + '// ' + i + ' // ' + bodyArray[i].left + ' /// ' + clearUn(xy.left))
-                    //console.log('TOP: ' + '// ' + i + ' // ' + bodyArray[i].top + ' /// ' + clearUn(xy.top))
-
-
-
+    
                     if (bodyArray[i].left != clearUn(xy.left) && bodyArray[i].top == clearUn(xy.top)){
                         bodySetStyle[i].style.width = '60px'
                         bodySetStyle[i].style.height = '40px'
                         bodySet[i].style.left = bodyArray[i].left + stepToCSS
-                        arrayStatus[i] = 'left'
-                        statusPos = 'left'
                     }
 
                     if(bodyArray[i].top != clearUn(xy.top) && bodyArray[i].left == clearUn(xy.left)){
                         bodySetStyle[i].style.width = '40px'
                         bodySetStyle[i].style.height = '60px'
                         bodySet[i].style.top = bodyArray[i].top + stepToCSS
-                        arrayStatus[i] = 'top'
-                        statusPos = 'top'
-                    }
-                    if (i === 0){
-                        console.log('----------------')
-                        console.log('topPOS: ' + topPos)
-                        console.log('leftPOS: ' + leftPos)
-                        console.log('ROUND topPOS: ' + roundValue(topPos))
-                        console.log('ROUND leftPOS: ' + roundValue(leftPos))
-                        console.log('----------------')
-                    }
-
-                    if (i === 0 && 1 > 2){
-                        
-                       //console.log('TOPPOS: ' + topPos)
-                       //console.log('LEFTPOS: ' + leftPos) 
-
-                        //console.log(arrayLastPositions)
-
-                        if (statusPos === 'left'){
-                            // console.log('LEFT')
-                            // console.log('leftPos: ' + leftPos)
-                            // console.log('array LEFT: ' + arrayLastPositions[indexToCalculateFillet].left)
-                            // console.log('topPos: ' + topPos)
-                            // console.log('array TOP: ' + arrayLastPositions[indexToCalculateFillet].top)
-                            // console.log('lengthBody: ' + lengthBody)
-                            // console.log('LEFT')
-                            // console.log(indexToCalculateFillet)
-                            if (topPos > arrayLastPositions[indexToCalculateFillet].top){
-                                if (leftPos > arrayLastPositions[indexToCalculateFillet].left){
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 0, 5, -5, bodyArray.length)
-                                    bodySetStyle[i].style.backgroundColor = 'white'
-                                }
-                                else{
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 270, -5, -5, bodyArray.length)
-                                    bodySetStyle[i].style.backgroundColor = 'green'
-                                }
-                            }
-                            else if(topPos < arrayLastPositions[indexToCalculateFillet].top){
-                                if (leftPos < arrayLastPositions[indexToCalculateFillet].left){
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 180, -5, 5, bodyArray.length)
-                                    bodySetStyle[i].style.backgroundColor = 'red'
-                                }
-                                else{
-                                    drawFillet(arrayLastPositions[arrayLastPositions.length - 1].top, arrayLastPositions[arrayLastPositions.length - 1].left, 90, 5, 5, bodyArray.length)
-                                    bodySetStyle[i].style.backgroundColor = 'blue'
-                                }
-                            }
-                        }
-                        else{
-                            // console.log('TOP')
-                            // console.log('leftPos: ' + leftPos)
-                            // console.log('array LEFT: ' + arrayLastPositions[indexToCalculateFillet].left)
-                            // console.log('topPos: ' + topPos)
-                            // console.log('array TOP: ' + arrayLastPositions[indexToCalculateFillet].top)
-                            // console.log(indexToCalculateFillet)
-                            // console.log('TOP')
-                            if (leftPos > arrayLastPositions[indexToCalculateFillet].left){
-                                if (topPos > arrayLastPositions[indexToCalculateFillet].top){
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 180, -5, 5, bodyArray.length)
-                                    bodySetStyle[i].style.backgroundColor = 'orange'
-                                }
-                                else{
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 270, -5, -5, bodyArray.length)
-                                    bodySetStyle[i].style.backgroundColor = 'purple'
-                                }
-                            }
-                            else if(leftPos < arrayLastPositions[indexToCalculateFillet].left){
-                                if (topPos < arrayLastPositions[indexToCalculateFillet].top){
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 0, 5, -5, bodyArray.length)
-                                    bodySetStyle[i].style.backgroundColor = 'darkred'
-                                }
-                                else{
-                                    drawFillet(bodyArray[i].top, bodyArray[i].left, 90, 5, 5, bodyArray.length)
-                                    bodySetStyle[i].style.backgroundColor = 'lightblue'
-                                }
-                            }
-                        }
                     }
 
                     if (filletPosition.length != 0 && i === bodySet.length - 1){
 
-                        // if (bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left){
-                        //     setTimeout(
-                        //         function(){
-                        //             let fillet = document.getElementsByClassName('fillet')[0]
-                        //             if(leaveMap() === false && isCollidingBody === false){fillet.remove()}
-                        //         }, timeDelay + 200
-                        //     )
-                        //     filletPosition.shift()
-                        // }
+                        if (bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left){
+                            setTimeout(
+                                function(){
+                                    let fillet = document.getElementsByClassName('fillet')[0]
+                                    if(leaveMap() === false && isCollidingBody === false){fillet.remove()}
+                                }, timeDelay + 200
+                            )
+                            filletPosition.shift()
+                        }
                     }
                 }
             }
@@ -713,7 +696,7 @@
                 let ctx = fillet.getContext('2d')
 
                 if (fillet.getContext){
-                    ctx.fillStyle = 'black'
+                    ctx.fillStyle = 'gray'
                     ctx.beginPath();
                     ctx.lineTo(50,0)
                     ctx.lineTo(50,50)
@@ -736,7 +719,8 @@
         var lastKey
         function snakeConectionFunc(){
             
-            snakeConection.display = 'none'
+            //snakeConection.display = 'none'
+            let kls = 0
             
             if (lastKey != actualDirection){
                 switch (actualDirection){
@@ -747,7 +731,7 @@
                                         snakeConection.top = '50px'
                                         snakeConection.left = '5px'
                                         if (hasBody && actualDirection === 'w'){snakeConection.display = 'block'}
-                                    }, timeDelay / 1.4
+                                    }, kls
                             )
                         break
                     case 's':
@@ -757,7 +741,7 @@
                                         snakeConection.top = '-10px'
                                         snakeConection.left = '5px'
                                         if (hasBody && actualDirection === 's'){snakeConection.display = 'block'}
-                                    }, timeDelay / 1.4
+                                    }, kls
                             )
                         break
                     case 'a':
@@ -767,7 +751,7 @@
                                         snakeConection.top = '20px'
                                         snakeConection.left = '35px'
                                         if (hasBody && actualDirection === 'a'){snakeConection.display = 'block'}
-                                    }, timeDelay / 1.4
+                                    }, kls
                             )
                         break
                     case 'd':
@@ -777,7 +761,7 @@
                                         snakeConection.top = '20px'
                                         snakeConection.left = '-25px'
                                         if (hasBody && actualDirection === 'd'){snakeConection.display = 'block'}
-                                    }, timeDelay / 1.4
+                                    }, kls
                             )
                         break
                 }
@@ -806,6 +790,11 @@
             width: 50px;
             height: 50px;
             position: absolute;
+        }
+        #snake-head{
+            width: 50px;
+            height: 50px;
+            position: absolute;
             background-color: green;
             z-index: 10;
         }
@@ -826,6 +815,7 @@
             height: 50px;
             background-color: rgb(38, 8, 189);
             position: absolute;
+            z-index: 0;
         }
         .food{
             width: 50px;
@@ -859,6 +849,7 @@
         <div id="map">
     
             <div id="snake">
+                <span id="snake-head"></span>
                 <span id="snake-conection"></span>
             </div>
             
