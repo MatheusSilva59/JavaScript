@@ -68,7 +68,7 @@
                         timeInputs = setInterval(
                             function () {
                                 counter++
-                                document.getElementById('h1-nav').innerHTML = counter
+                                //document.getElementById('h1-nav').innerHTML = counter
                             }, 1
                         )
                     }
@@ -392,11 +392,13 @@
 
                 document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + lastPosBodyLeft + stepToCSS + '; top: ' + lastPosBodyTop + stepToCSS + '"><span class="snake-body-style"></span></span>'
 
+
                 redeclareConst()
                 drawAll()
 
                 isEating = true
                 score++
+                document.getElementById('h1-nav').innerHTML = score
             }
 
         }
@@ -414,7 +416,7 @@
         var allIndex = []
         function initiate() {
 
-            mapWidth = 700 - stepToCalc
+            mapWidth = 1400 - stepToCalc
             mapHeight = 600 - stepToCalc
 
             let i = 0
@@ -495,15 +497,6 @@
                 if (i != bodySet.length - 1) {
                     if (isEating) {
                         bodyArray[i] = arrayLastPositions[lengthBody - (10 * i) - 20 + auxIndexOthers]
-                        // console.log('--------------------------------')
-                        // console.log(JSON.parse(JSON.stringify(lengthBody)))
-                        // console.log(auxIndexOthers)
-                        // console.log(lengthBody - (10 * i) - 20 + auxIndexOthers)
-                        // console.log(JSON.parse(JSON.stringify(arrayLastPositions)))
-                        // console.log('bodyArray.left: ' + bodyArray[i].left)
-                        // console.log('bodyArray.top: ' + bodyArray[i].top)
-                        // console.log('AUX INDEX OTHERS: ' + auxIndexOthers)
-                        // console.log('--------------------------------')
                     }
                     else {
                         bodyArray[i] = arrayLastPositions[lengthBody - (10 * i) - 11]
@@ -514,12 +507,6 @@
                     if (isEating) {
                         auxIndexOthers++
                         bodyArray[i] = arrayLastPositions[auxIndexLast]
-                        // console.log('++++++++++++++++++++++++++++++++')
-                        // console.log(JSON.parse(JSON.stringify(arrayLastPositions)))
-                        // console.log('bodyArray.left: ' + bodyArray[i].left)
-                        // console.log('bodyArray.top: ' + bodyArray[i].top)
-                        // console.log('AUX INDEX LAST: ' + auxIndexLast)
-                        // console.log('++++++++++++++++++++++++++++++++')
                         if (auxIndexLast === 9) {
                             isEating = false
                             auxIndexLast = 0

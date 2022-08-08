@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+
+
+    <script>
+        var angleRotate = 0
+        var animation
+
+        function rotateSquare() {
+            animation = window.requestAnimationFrame(draw)
+        }
+
+        function draw() {
+            var ctx = canvas.getContext('2d')
+            if (canvas.getContext) {
+
+                ctx.clearRect(0, 0, 500, 500)
+
+                ctx.save()
+
+                //ctx.fillStyle = 'green'
+                //ctx.fillRect(50, 50, 100, 100)
+
+                ctx.rotate(45 * (Math.PI / 180))
+                ctx.translate(141.4214, 0)
+
+                ctx.save()
+                ctx.save()
+
+                ctx.rotate(angleRotate * (Math.PI / 180))
+                ctx.fillStyle = 'black'
+                ctx.fillRect(-50, -50, 100, 100)
+
+                ctx.restore()
+
+                ctx.rotate(-angleRotate * (Math.PI / 180))
+                ctx.fillStyle = 'red'
+                ctx.fillRect(-50, -50, 100, 100)
+
+                ctx.restore()
+
+                ctx.rotate((angleRotate + 60) * (Math.PI / 180))
+                ctx.fillStyle = 'green'
+                ctx.fillRect(-50, -50, 100, 100)
+
+                ctx.restore()
+            }
+            angleRotate += 5
+            rotateSquare()
+        }
+
+    </script>
+    <style>
+        body {
+            background-color: rgba(0, 0, 0, 0.732);
+        }
+
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex justify-content-center align-items-center">
+        <canvas width="500" height="500" id="canvas"></canvas>
+    </div>
+    <script>
+        var canvas = document.getElementById('canvas')
+        canvas.addEventListener('onload', rotateSquare())
+    </script>
+</body>
+
+</html>
