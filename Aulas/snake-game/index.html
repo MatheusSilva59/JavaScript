@@ -58,7 +58,7 @@
 
         var moveKeys = /[wsad]/i
         document.onkeydown = function (asd) {
-            if (asd.key.match(moveKeys)) {
+            if (asd.key.match(moveKeys) && asd.key.length === 1) {
                 moveSnake(asd.key)
                 firstKey = true
 
@@ -73,7 +73,6 @@
                         )
                     }
                 }
-
                 numberKeysDown++
             }
             else if (asd.key == 'p') {
@@ -188,7 +187,7 @@
                 if (leftPos % 50 === 0 && topPos % 50 === 0) {
                     //Adiciona posição à lista de banimento de posicionamento para a comida, pois está em uso
                     indexThereSomething.push(coordToIndex(Math.round(leftPos / 50) * 50, Math.round(topPos / 50) * 50))
-                    console.log(indexThereSomething)
+                    //console.log(indexThereSomething)
                 }
             }
         }
@@ -222,7 +221,8 @@
 
                 snakeConectionFunc()
 
-                if (hasBody === false) {
+                if (hasBody === false && indexThereSomething.length > 1) {
+                    //console.log('INDEX RETIRADO SE NÃO HAVER CORPO: ' + indexThereSomething[0])
                     indexThereSomething.shift()
                     //console.log(indexThereSomething)
                 }
@@ -381,6 +381,7 @@
             }
         }
         function collisionFood() {
+
             redeclareConst()
 
             if (snakePosGet.top === foodPosGet.top && snakePosGet.left === foodPosGet.left) {
@@ -425,7 +426,7 @@
                     i++
                 }
             }
-            //console.log(allPos)
+            console.log(allPos)
         }
 
         function checkThereSomething(value) {
@@ -446,7 +447,7 @@
             let tempAllIndex = allIndex.filter(checkThereSomething)
 
             let value = tempAllIndex[Math.floor(Math.random() * tempAllIndex.length)]
-            console.log(tempAllIndex)
+            //console.log(tempAllIndex)
             //console.log(value)
             return value
         }
@@ -459,12 +460,6 @@
             let index = randomNumber()
             foodPos.left = allPos[index].left + stepToCSS
             foodPos.top = allPos[index].top + stepToCSS
-
-            // var x = Math.floor(Math.random() * (7 * 2)) * 50
-            // var y = Math.floor(Math.random() * (6 * 2)) * 50
-
-            // foodPos.left = x + stepToCSS
-            // foodPos.top = y + stepToCSS
 
         }
 
@@ -490,29 +485,71 @@
 
         var hasBody = false
         var indexToCalculateFillet = 0
+        var auxIndexLast = 0
+        var auxIndexOthers = 0
+
         function bodySnakeComputed() {
 
             for (let i = 0; i < bodySet.length; i++) {
 
-
                 if (i != bodySet.length - 1) {
-                    bodyArray[i] = arrayLastPositions[lengthBody - (10 * i) - 11]
+                    if (isEating) {
+                        bodyArray[i] = arrayLastPositions[lengthBody - (10 * i) - 20 + auxIndexOthers]
+                        // console.log('--------------------------------')
+                        // console.log(JSON.parse(JSON.stringify(lengthBody)))
+                        // console.log(auxIndexOthers)
+                        // console.log(lengthBody - (10 * i) - 20 + auxIndexOthers)
+                        // console.log(JSON.parse(JSON.stringify(arrayLastPositions)))
+                        // console.log('bodyArray.left: ' + bodyArray[i].left)
+                        // console.log('bodyArray.top: ' + bodyArray[i].top)
+                        // console.log('AUX INDEX OTHERS: ' + auxIndexOthers)
+                        // console.log('--------------------------------')
+                    }
+                    else {
+                        bodyArray[i] = arrayLastPositions[lengthBody - (10 * i) - 11]
+                    }
+
                 }
                 else {
-                    bodyArray[i] = arrayLastPositions[9]
-                    lastPosBodyLeft = roundValue(arrayLastPositions[0].left)
-                    lastPosBodyTop = roundValue(arrayLastPositions[0].top)
-                    
-                    //HERE
-                    if (leftPos % 50 === 0 && topPos % 50 === 0 && 8 > 12) {
-                        console.log('INDEX: ' + indexThereSomething[0])
-                        if (bodyArray[i].left === allPos[indexThereSomething[0]].left &&
-                            bodyArray[i].top === allPos[indexThereSomething[0]].top) {
-                            console.log("CARALHO")
-                            indexThereSomething.shift()
+                    if (isEating) {
+                        auxIndexOthers++
+                        bodyArray[i] = arrayLastPositions[auxIndexLast]
+                        // console.log('++++++++++++++++++++++++++++++++')
+                        // console.log(JSON.parse(JSON.stringify(arrayLastPositions)))
+                        // console.log('bodyArray.left: ' + bodyArray[i].left)
+                        // console.log('bodyArray.top: ' + bodyArray[i].top)
+                        // console.log('AUX INDEX LAST: ' + auxIndexLast)
+                        // console.log('++++++++++++++++++++++++++++++++')
+                        if (auxIndexLast === 9) {
+                            isEating = false
+                            auxIndexLast = 0
+                            auxIndexOthers = 0
+                        }
+                        else {
+                            auxIndexLast++
                         }
                     }
+                    else {
+                        bodyArray[i] = arrayLastPositions[9]
+                    }
+
+                    lastPosBodyLeft = arrayLastPositions[0].left
+                    lastPosBodyTop = arrayLastPositions[0].top
+
+
+                    try {
+                        if (leftPos % 50 === 0 && topPos % 50 === 0) {
+
+                            if (bodyArray[i].left === allPos[indexThereSomething[1]].left &&
+                                bodyArray[i].top === allPos[indexThereSomething[1]].top) {
+
+                                indexThereSomething.shift()
+
+                            }
+                        }
+                    } catch { }
                 }
+
 
                 if (i === 1) {
                     indexToCalculateFillet = lengthBody - (10 * i) - 11
@@ -560,7 +597,7 @@
 
 
         function filletBodyApply() {
-            if (lastPosLeftSnake != leftPos && endCycle === 0 && bodySet.length > 0) {
+            if (lastPosLeftSnake != leftPos && endCycle === 0) {
                 endCycle++
                 if (statusDirection.lastY != topPos) {
                     if (lastPosLeftSnake > leftPos) {
@@ -651,6 +688,7 @@
 
                     xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
 
+
                     if (bodyArray[i].left != clearUn(xy.left) && bodyArray[i].top == clearUn(xy.top)) {
                         bodySetStyle[i].style.width = '60px'
                         bodySetStyle[i].style.height = '40px'
@@ -663,9 +701,16 @@
                         bodySet[i].style.top = bodyArray[i].top + stepToCSS
                     }
 
-                    if (filletPosition.length != 0 && i === bodySet.length - 1) {
+                    if (i === bodySet.length - 1) {
 
-                        if (bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
+                        if (filletPosition.length != 0 && bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
+
+                            setTimeout(
+                                function () {
+                                    let fill = document.getElementsByClassName('fill')[0]
+                                    if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
+                                }, timeDelay / 3
+                            )
                             setTimeout(
                                 function () {
                                     let fillet = document.getElementsByClassName('fillet')[0]
@@ -684,13 +729,13 @@
         function drawFillet(posTop, posLeft, rotate, transX, transY, time) {
 
             document.getElementById('map').innerHTML += '<canvas class="fillet" width=50px height=50px></canvas>'
+            document.getElementById('map').innerHTML += '<canvas class="fill" width=50px height=50px></canvas>'
 
             drawAll()
 
             let filletLocal = document.getElementsByClassName('fillet')[document.getElementsByClassName('fillet').length - 1]
-            let timing
+            let fillLocal = document.getElementsByClassName('fill')[document.getElementsByClassName('fill').length - 1]
 
-            timing = bodyArray.length * timeDelay + timeDelay / 2
 
             filletPosition.push({ left: posLeft, top: posTop })
 
@@ -699,22 +744,15 @@
             filletLocal.style.top = (posTop + transY) + stepToCSS
             filletLocal.style.transform = 'rotate(' + rotate + 'deg)'
 
-
-            // setTimeout(
-            //     function(){
-            //         let fillet = document.getElementsByClassName('fillet')[0]
-            //         if(leaveMap() === false && isCollidingBody === false){fillet.remove()}
-            //         filletPosition.shift()
-            //         contFillet--
-            //     }, timing
-            // )
-
+            fillLocal.style.left = posLeft + stepToCSS
+            fillLocal.style.top = posTop + stepToCSS
 
             redeclareConst()
         }
 
         function drawAll() {
             for (let x = 0; x < document.getElementsByClassName('fillet').length; x++) {
+
                 let fillet = document.getElementsByClassName('fillet')[x]
                 let ctx = fillet.getContext('2d')
 
@@ -727,15 +765,17 @@
                     ctx.arc(0, 50, 40, 0 * (Math.PI / 180), 270 * (Math.PI / 180), true)
                     ctx.lineTo(0, 0)
                     ctx.fill()
-
-                    // ctx.fillStyle = 'rgb(38, 8, 189'
-                    // ctx.beginPath()
-                    // ctx.moveTo(0, 10)
-                    // ctx.lineTo(0, 50)
-                    // ctx.lineTo(50, 50)
-                    // ctx.arc(0, 50, 40, 0*(Math.PI/180), 90*(Math.PI/180), true)
-                    // ctx.fill()
                 }
+
+                try {
+                    let fill = document.getElementsByClassName('fill')[x]
+                    let ctxFill = fill.getContext('2d')
+
+                    if (fill.getContext) {
+                        ctxFill.fillStyle = 'rgb(38, 8, 189)'
+                        ctxFill.fillRect(10, 10, 30, 30)
+                    }
+                } catch { }
             }
         }
 
@@ -845,6 +885,7 @@
             width: 50px;
             height: 50px;
             background-color: rgb(38, 8, 189);
+            /* transition-duration: .01s; */
             position: absolute;
             z-index: 0;
         }
@@ -867,6 +908,11 @@
         .fillet {
             position: absolute;
             z-index: 5;
+        }
+
+        .fill {
+            position: absolute;
+            z-index: 4;
         }
     </style>
 </head>
