@@ -165,7 +165,13 @@
             lastPosLeftSnake = lastPosLeftSnake === undefined ? leftPos : lastPosLeftSnake
             lastPosTopSnake = lastPosTopSnake === undefined ? topPos : lastPosTopSnake
 
-            if (hasBody) { filletBodyApply() }
+            if (hasBody) { 
+                filletBodyApply()
+            }
+            else{
+                lastPosLeftSnake = leftPos
+                lastPosTopSnake = topPos
+            }
 
             colissionBody()
 
@@ -380,7 +386,7 @@
                 }
             }
         }
-        function collisionFood() {
+        function collisionFood() { //Melhorar sistema de colisão com a comida, há falhas não frequentes
 
             redeclareConst()
 
@@ -404,6 +410,7 @@
         }
         function redeclareConst() {
             snakePos = document.getElementById('snake').style
+            snakeHead = document.getElementById('snake-head').style
             snakeConection = document.getElementById('snake-conection').style
             foodPos = document.getElementById('food').style
             snakePosGet = window.getComputedStyle(document.getElementById('snake'))
@@ -591,12 +598,12 @@
                         //console.log('INDO PARA ESQUERDA')
                         if (statusDirection.y === 'top') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
-                            //snakePos.backgroundColor = 'red'
+                            //snakeHead.backgroundColor = 'red'
                             statusDirection.lastY = topPos
                         }
                         else if (statusDirection.y === 'bottom') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
-                            //snakePos.backgroundColor = 'blue'
+                            //snakeHead.backgroundColor = 'blue'
                             statusDirection.lastY = topPos
                         }
                         statusDirection.x = 'left'
@@ -605,12 +612,12 @@
                         //console.log("INDO PARA DIREITA")
                         if (statusDirection.y === 'top') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
-                            //snakePos.backgroundColor = 'orange'
+                            //snakeHead.backgroundColor = 'orange'
                             statusDirection.lastY = topPos
                         }
                         else if (statusDirection.y === 'bottom') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
-                            //snakePos.backgroundColor = 'white'
+                            //snakeHead.backgroundColor = 'white'
                             statusDirection.lastY = topPos
                         }
                         statusDirection.x = 'right'
@@ -628,12 +635,12 @@
                         //console.log('INDO PARA CIMA')
                         if (statusDirection.x === 'left') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
-                            //snakePos.backgroundColor = 'lightblue'
+                            //snakeHead.backgroundColor = 'lightblue'
                             statusDirection.lastX = leftPos
                         }
                         else if (statusDirection.x === 'right') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
-                            //snakePos.backgroundColor = 'darkred'
+                            //snakeHead.backgroundColor = 'darkred'
                             statusDirection.lastX = leftPos
                         }
                         statusDirection.y = 'top'
@@ -642,12 +649,12 @@
                         //console.log('INDO PARA BAIXO')
                         if (statusDirection.x === 'left') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
-                            //snakePos.backgroundColor = 'green'
+                            //snakeHead.backgroundColor = 'darkgreen'
                             statusDirection.lastX = leftPos
                         }
                         else if (statusDirection.x === 'right') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
-                            //snakePos.backgroundColor = 'purple'
+                            //snakeHead.backgroundColor = 'purple'
                             statusDirection.lastX = leftPos
                         }
                         statusDirection.y = 'bottom'
@@ -930,6 +937,7 @@
     <script>
         var pressed = document.getElementById('pressed')
 
+        var snakeHead = document.getElementById('snake-head').style
         var snakePos = document.getElementById('snake').style
         var snakeConection = document.getElementById('snake-conection').style
 
