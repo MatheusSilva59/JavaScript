@@ -25,42 +25,94 @@
 
         function draw() {
             var ctx = canvas.getContext('2d')
+            let a = -50
+            if (angleRotate === 90) { angleRotate = 0 }
             if (canvas.getContext) {
 
                 ctx.clearRect(0, 0, 500, 500)
 
                 ctx.save()
 
-                //ctx.fillStyle = 'green'
-                //ctx.fillRect(50, 50, 100, 100)
+                //ctx.translate(125, 125)
 
+                ctx.scale(5, 5)
+                ctx.translate(0, 50)
                 ctx.rotate(45 * (Math.PI / 180))
-                ctx.translate(141.4214, 0)
 
-                ctx.save()
-                ctx.save()
+                ctx.beginPath()
 
-                ctx.rotate(angleRotate * (Math.PI / 180))
-                ctx.fillStyle = 'black'
-                ctx.fillRect(-50, -50, 100, 100)
+                ctx.arc(-4.26, -79.87 + a, 85, (90 - 2.87)*(Math.PI/180), (84.4262)*(Math.PI/180), true)
+
+                ctx.arc(2.06, -15.18 + a, 20, (90 - 5.5738)*(Math.PI/180), 61.8275*(Math.PI/180), true)
+
+                ctx.arc(17.17, 13.03 + a, 12, (180 + 61.8275)*(Math.PI/180), (180 + 113.7578)*(Math.PI/180))
+
+
+                ctx.arc(-18.29, 93.58 + a, 100, (180 + 113.7578)*(Math.PI/180), (180 + 130.3635)*(Math.PI/180))
+                 
+
+                ctx.arc(40, 25 + a, 10, (180 + 130.3635)*(Math.PI/180), 0*(Math.PI/180))
+
+                ctx.arc(40, 25 + a, 10, 0*(Math.PI/180), 49.6365*(Math.PI/180))
+
+                ctx.arc(-18.29, -43.58 + a, 100, (180 - 130.3635)*(Math.PI/180),(180 - 113.7578)*(Math.PI/180))
+
+                ctx.arc(17.17, 36.97 + a, 12, (180 - 113.7578)*(Math.PI/180), (180 - 61.8275)*(Math.PI/180))
+
+                ctx.arc(2.06, 65.18 + a, 20, (270 + 28.1725)*(Math.PI/180), (270 + 5.5738)*(Math.PI/180), true)
+
+                ctx.arc(-4.26, 129.87 + a, 85, (270 + 5.5738)*(Math.PI/180), (270 + 2.87)*(Math.PI/180), true)
+
+                ctx.lineTo(0, 5.02)
+
+                ctx.fill()
 
                 ctx.restore()
 
-                ctx.rotate(-angleRotate * (Math.PI / 180))
-                ctx.fillStyle = 'red'
-                ctx.fillRect(-50, -50, 100, 100)
-
-                ctx.restore()
-
-                ctx.rotate((angleRotate + 60) * (Math.PI / 180))
-                ctx.fillStyle = 'green'
-                ctx.fillRect(-50, -50, 100, 100)
-
-                ctx.restore()
             }
-            angleRotate += 5
+            angleRotate += 1
             rotateSquare()
         }
+        // 3 quadrados girando sob o mesmo eixo
+        // ctx.save()
+
+        // ctx.rotate(45 * (Math.PI / 180))
+        // ctx.translate(141.4214, 0)
+
+        // ctx.save()
+        // ctx.save()
+
+        // ctx.rotate(angleRotate * (Math.PI / 180))
+        // ctx.fillStyle = 'black'
+        // ctx.fillRect(-50, -50, 100, 100)
+
+        // ctx.restore()
+
+        // ctx.rotate(-angleRotate * (Math.PI / 180))
+        // ctx.fillStyle = 'red'
+        // ctx.fillRect(-50, -50, 100, 100)
+
+        // ctx.restore()
+
+        // ctx.rotate((angleRotate + 60) * (Math.PI / 180))
+        // ctx.fillStyle = 'green'
+        // ctx.fillRect(-50, -50, 100, 100)
+
+        // ctx.restore()
+
+        //Animation fim
+
+        // ctx.rotate(angleRotate * (Math.PI / 180))
+
+        // ctx.fillStyle = 'green'
+        // ctx.beginPath()
+        // ctx.moveTo(0, 0)
+        // ctx.lineTo(20, 0)
+        // ctx.lineTo(20, 40)
+        // ctx.lineTo(0, 40)
+        // ctx.arc(0, 20, 20, 90 * (Math.PI / 180), 270 * (Math.PI / 180), true)
+
+        // ctx.fill()
 
     </script>
     <style>

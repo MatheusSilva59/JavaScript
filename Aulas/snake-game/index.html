@@ -165,10 +165,10 @@
             lastPosLeftSnake = lastPosLeftSnake === undefined ? leftPos : lastPosLeftSnake
             lastPosTopSnake = lastPosTopSnake === undefined ? topPos : lastPosTopSnake
 
-            if (hasBody) { 
+            if (hasBody) {
                 filletBodyApply()
             }
-            else{
+            else {
                 lastPosLeftSnake = leftPos
                 lastPosTopSnake = topPos
             }
@@ -410,11 +410,12 @@
         }
         function redeclareConst() {
             snakePos = document.getElementById('snake').style
-            snakeHead = document.getElementById('snake-head').style
+            canvasHead = document.getElementById('snake-head')
             snakeConection = document.getElementById('snake-conection').style
             foodPos = document.getElementById('food').style
             snakePosGet = window.getComputedStyle(document.getElementById('snake'))
             foodPosGet = window.getComputedStyle(document.getElementById('food'))
+
         }
 
         var mapWidth
@@ -738,13 +739,15 @@
             filletLocal.style.top = (posTop + transY) + stepToCSS
             filletLocal.style.transform = 'rotate(' + rotate + 'deg)'
 
-            fillLocal.style.left = posLeft + stepToCSS
-            fillLocal.style.top = posTop + stepToCSS
+            fillLocal.style.left = (posLeft + transX) + stepToCSS
+            fillLocal.style.top = (posTop + transY) + stepToCSS
 
             redeclareConst()
+            drawHead()
         }
 
         function drawAll() {
+            drawHead()
             for (let x = 0; x < document.getElementsByClassName('fillet').length; x++) {
 
                 let fillet = document.getElementsByClassName('fillet')[x]
@@ -771,8 +774,32 @@
                     }
                 } catch { }
             }
+
         }
 
+        function drawHead() {
+            let ctxHead = canvasHead.getContext('2d')
+            if (canvasHead.getContext) {
+                ctxHead.clearRect(0, 0, 70, 70)
+                ctxHead.save()
+                ctxHead.translate(5, 5)
+                ctxHead.fillStyle = 'rgb(38, 8, 189)'
+                ctxHead.beginPath()
+                ctxHead.arc(-4.26, -79.87, 85, (90 - 2.87) * (Math.PI / 180), (84.4262) * (Math.PI / 180), true)
+                ctxHead.arc(2.06, -15.18, 20, (90 - 5.5738) * (Math.PI / 180), 61.8275 * (Math.PI / 180), true)
+                ctxHead.arc(17.17, 13.03, 12, (180 + 61.8275) * (Math.PI / 180), (180 + 113.7578) * (Math.PI / 180))
+                ctxHead.arc(-18.29, 93.58, 100, (180 + 113.7578) * (Math.PI / 180), (180 + 130.3635) * (Math.PI / 180))
+                ctxHead.arc(40, 25, 10, (180 + 130.3635) * (Math.PI / 180), 0 * (Math.PI / 180))
+                ctxHead.arc(40, 25, 10, 0 * (Math.PI / 180), 49.6365 * (Math.PI / 180))
+                ctxHead.arc(-18.29, -43.58, 100, (180 - 130.3635) * (Math.PI / 180), (180 - 113.7578) * (Math.PI / 180))
+                ctxHead.arc(17.17, 36.97, 12, (180 - 113.7578) * (Math.PI / 180), (180 - 61.8275) * (Math.PI / 180))
+                ctxHead.arc(2.06, 65.18, 20, (270 + 28.1725) * (Math.PI / 180), (270 + 5.5738) * (Math.PI / 180), true)
+                ctxHead.arc(-4.26, 129.87, 85, (270 + 5.5738) * (Math.PI / 180), (270 + 2.87) * (Math.PI / 180), true)
+                ctxHead.lineTo(0, 5.02)
+                ctxHead.fill()
+                ctxHead.restore()
+            }
+        }
         var lastKey
         function snakeConectionFunc() {
 
@@ -854,10 +881,9 @@
         }
 
         #snake-head {
-            width: 50px;
-            height: 50px;
             position: absolute;
-            background-color: green;
+            /* background-color: rgb(38, 8, 189); */
+            transform: translate(-5px, -5px);
             z-index: 10;
         }
 
@@ -916,16 +942,13 @@
 
     <main class="d-flex justify-content-center flex-wrap">
         <div class="nav d-block">
-
-
-
             <h1 id="h1-nav"></h1>
             <h2 id="h2-nav"></h2>
         </div>
         <div id="map">
 
             <div id="snake">
-                <span id="snake-head"></span>
+                <canvas width="60px" height="60px" id="snake-head"></canvas>
                 <span id="snake-conection"></span>
             </div>
 
@@ -937,7 +960,10 @@
     <script>
         var pressed = document.getElementById('pressed')
 
-        var snakeHead = document.getElementById('snake-head').style
+        var canvasHead = document.getElementById('snake-head')
+
+        canvasHead.addEventListener('onload', drawHead())
+
         var snakePos = document.getElementById('snake').style
         var snakeConection = document.getElementById('snake-conection').style
 
