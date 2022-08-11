@@ -25,7 +25,7 @@
 
         function draw() {
             var ctx = canvas.getContext('2d')
-            let a = -50
+            let a = 0
             if (angleRotate === 90) { angleRotate = 0 }
             if (canvas.getContext) {
 
@@ -36,8 +36,8 @@
                 //ctx.translate(125, 125)
 
                 ctx.scale(5, 5)
-                ctx.translate(0, 50)
-                ctx.rotate(45 * (Math.PI / 180))
+                ctx.translate(50, 50)
+                ctx.rotate(180 * (Math.PI / 180))
 
                 ctx.beginPath()
 

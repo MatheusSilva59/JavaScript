@@ -165,21 +165,21 @@
             lastPosLeftSnake = lastPosLeftSnake === undefined ? leftPos : lastPosLeftSnake
             lastPosTopSnake = lastPosTopSnake === undefined ? topPos : lastPosTopSnake
 
-            if (hasBody) {
-                filletBodyApply()
-            }
-            else {
-                lastPosLeftSnake = leftPos
-                lastPosTopSnake = topPos
-            }
-
             colissionBody()
 
             if (leaveMap()) {
                 clearAllInterval()
                 window.cancelAnimationFrame(isMoving)
             }
-            else if (isCollidingBody === false && isExecutingContinuos === false) {
+            else if (isCollidingBody === false) {
+
+                if (hasBody) {
+                    filletBodyApply()
+                }
+                else {
+                    lastPosLeftSnake = leftPos
+                    lastPosTopSnake = topPos
+                }
 
                 snakePos = document.getElementById('snake').style
 
@@ -398,13 +398,14 @@
 
                 document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + lastPosBodyLeft + stepToCSS + '; top: ' + lastPosBodyTop + stepToCSS + '"><span class="snake-body-style"></span></span>'
 
-
-                redeclareConst()
-                drawAll()
-
                 isEating = true
                 score++
                 document.getElementById('h1-nav').innerHTML = score
+
+                
+                redeclareConst()
+                drawAll()
+                drawHead()
             }
 
         }
@@ -415,7 +416,6 @@
             foodPos = document.getElementById('food').style
             snakePosGet = window.getComputedStyle(document.getElementById('snake'))
             foodPosGet = window.getComputedStyle(document.getElementById('food'))
-
         }
 
         var mapWidth
@@ -436,7 +436,7 @@
                     i++
                 }
             }
-            console.log(allPos)
+            //console.log(allPos)
         }
 
         function checkThereSomething(value) {
@@ -596,7 +596,7 @@
                 endCycle++
                 if (statusDirection.lastY != topPos) {
                     if (lastPosLeftSnake > leftPos) {
-                        //console.log('INDO PARA ESQUERDA')
+                        console.log('INDO PARA ESQUERDA')
                         if (statusDirection.y === 'top') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'red'
@@ -607,10 +607,11 @@
                             //snakeHead.backgroundColor = 'blue'
                             statusDirection.lastY = topPos
                         }
+                        drawHead(180, 50, 50)
                         statusDirection.x = 'left'
                     }
                     else if (lastPosLeftSnake < leftPos) {
-                        //console.log("INDO PARA DIREITA")
+                        console.log("INDO PARA DIREITA")
                         if (statusDirection.y === 'top') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'orange'
@@ -621,6 +622,7 @@
                             //snakeHead.backgroundColor = 'white'
                             statusDirection.lastY = topPos
                         }
+                        drawHead(0, 0, 0)
                         statusDirection.x = 'right'
                     }
                 }
@@ -633,7 +635,7 @@
 
                 if (statusDirection.lastX != leftPos) {
                     if (lastPosTopSnake > topPos) {
-                        //console.log('INDO PARA CIMA')
+                        console.log('INDO PARA CIMA')
                         if (statusDirection.x === 'left') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'lightblue'
@@ -644,10 +646,11 @@
                             //snakeHead.backgroundColor = 'darkred'
                             statusDirection.lastX = leftPos
                         }
+                        drawHead(-90, 0, 50)
                         statusDirection.y = 'top'
                     }
                     else if (lastPosTopSnake < topPos) {
-                        //console.log('INDO PARA BAIXO')
+                        console.log('INDO PARA BAIXO')
                         if (statusDirection.x === 'left') {
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'darkgreen'
@@ -658,6 +661,7 @@
                             //snakeHead.backgroundColor = 'purple'
                             statusDirection.lastX = leftPos
                         }
+                        drawHead(90, 50, 0)
                         statusDirection.y = 'bottom'
                     }
                 }
@@ -743,11 +747,10 @@
             fillLocal.style.top = (posTop + transY) + stepToCSS
 
             redeclareConst()
-            drawHead()
         }
 
         function drawAll() {
-            drawHead()
+            //drawHead()
             for (let x = 0; x < document.getElementsByClassName('fillet').length; x++) {
 
                 let fillet = document.getElementsByClassName('fillet')[x]
@@ -769,21 +772,33 @@
                     let ctxFill = fill.getContext('2d')
 
                     if (fill.getContext) {
-                        ctxFill.fillStyle = 'rgb(38, 8, 189)'
+                        ctxFill.fillStyle = 'green'
                         ctxFill.fillRect(10, 10, 30, 30)
                     }
                 } catch { }
             }
 
         }
+        var angleHead = 0
+        var transXSnake = 0
+        var transYSnake = 0
+        function drawHead(angle, translateX, translateY, type) {
+            
+            if (angle != undefined){
+                angleHead = angle
+                transXSnake = translateX
+                transYSnake = translateY
+            }
 
-        function drawHead() {
             let ctxHead = canvasHead.getContext('2d')
             if (canvasHead.getContext) {
-                ctxHead.clearRect(0, 0, 70, 70)
+                ctxHead.clearRect(0, 0, 60, 60)
                 ctxHead.save()
-                ctxHead.translate(5, 5)
-                ctxHead.fillStyle = 'rgb(38, 8, 189)'
+                ctxHead.translate(5 + transXSnake, 5 + transYSnake)
+                ctxHead.fillStyle = 'green'//'rgb(38, 8, 189)'
+
+                ctxHead.rotate(angleHead*(Math.PI / 180))
+
                 ctxHead.beginPath()
                 ctxHead.arc(-4.26, -79.87, 85, (90 - 2.87) * (Math.PI / 180), (84.4262) * (Math.PI / 180), true)
                 ctxHead.arc(2.06, -15.18, 20, (90 - 5.5738) * (Math.PI / 180), 61.8275 * (Math.PI / 180), true)
@@ -834,6 +849,7 @@
                                 snakeConection.transform = 'rotate(90deg)'
                                 snakeConection.top = '20px'
                                 snakeConection.left = '35px'
+
                                 if (hasBody && actualDirection === 'a') { snakeConection.display = 'block' }
                             }, kls
                         )
@@ -844,6 +860,7 @@
                                 snakeConection.transform = 'rotate(90deg)'
                                 snakeConection.top = '20px'
                                 snakeConection.left = '-25px'
+
                                 if (hasBody && actualDirection === 'd') { snakeConection.display = 'block' }
                             }, kls
                         )
@@ -890,7 +907,7 @@
         #snake-conection {
             width: 40px;
             height: 10px;
-            background-color: rgb(38, 8, 189);
+            background-color: green;
             position: absolute;
             display: none;
         }
@@ -904,10 +921,10 @@
         .snake-body-style {
             width: 50px;
             height: 50px;
-            background-color: rgb(38, 8, 189);
+            background-color: green;
             /* transition-duration: .01s; */
             position: absolute;
-            z-index: 0;
+            z-index: 1;
         }
 
         .food {
