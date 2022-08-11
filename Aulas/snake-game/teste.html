@@ -26,7 +26,7 @@
         function draw() {
             var ctx = canvas.getContext('2d')
             let a = 0
-            if (angleRotate === 90) { angleRotate = 0 }
+            if (angleRotate === -180) { angleRotate = 0 }
             if (canvas.getContext) {
 
                 ctx.clearRect(0, 0, 500, 500)
@@ -37,7 +37,7 @@
 
                 ctx.scale(5, 5)
                 ctx.translate(50, 50)
-                ctx.rotate(180 * (Math.PI / 180))
+                ctx.rotate(angleRotate * (Math.PI / 180))
 
                 ctx.beginPath()
 
@@ -70,7 +70,7 @@
                 ctx.restore()
 
             }
-            angleRotate += 1
+            angleRotate -= 1
             rotateSquare()
         }
         // 3 quadrados girando sob o mesmo eixo

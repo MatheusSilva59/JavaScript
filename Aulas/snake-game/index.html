@@ -190,6 +190,10 @@
                     snakePos.top = topPos + stepToCSS
                 }
 
+                if (isHeadAnimation) {
+                    drawHead(lastAnimationHead.angle, lastAnimationHead.transX, lastAnimationHead.transY, lastAnimationHead.type)
+                }
+
                 if (leftPos % 50 === 0 && topPos % 50 === 0) {
                     //Adiciona posição à lista de banimento de posicionamento para a comida, pois está em uso
                     indexThereSomething.push(coordToIndex(Math.round(leftPos / 50) * 50, Math.round(topPos / 50) * 50))
@@ -402,10 +406,10 @@
                 score++
                 document.getElementById('h1-nav').innerHTML = score
 
-                
+
                 redeclareConst()
                 drawAll()
-                drawHead()
+                drawHead(lastAnimationHead.angle, lastAnimationHead.transX, lastAnimationHead.transY, lastAnimationHead.type)
             }
 
         }
@@ -424,7 +428,7 @@
         var allIndex = []
         function initiate() {
 
-            mapWidth = 1400 - stepToCalc
+            mapWidth = 700 - stepToCalc
             mapHeight = 600 - stepToCalc
 
             let i = 0
@@ -590,6 +594,11 @@
             return a
         }
 
+        function absoluteValue(a, b) {
+            a = positiveNumber(a)
+            b = positiveNumber(b)
+            return positiveNumber(a - b)
+        }
 
         function filletBodyApply() {
             if (lastPosLeftSnake != leftPos && endCycle === 0) {
@@ -598,31 +607,33 @@
                     if (lastPosLeftSnake > leftPos) {
                         console.log('INDO PARA ESQUERDA')
                         if (statusDirection.y === 'top') {
+                            drawHead(-180, 50, 0, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'red'
                             statusDirection.lastY = topPos
                         }
                         else if (statusDirection.y === 'bottom') {
+                            drawHead(180, 0, 50, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'blue'
                             statusDirection.lastY = topPos
                         }
-                        drawHead(180, 50, 50)
                         statusDirection.x = 'left'
                     }
                     else if (lastPosLeftSnake < leftPos) {
-                        console.log("INDO PARA DIREITA")
+                        //console.log("INDO PARA DIREITA")
                         if (statusDirection.y === 'top') {
+                            drawHead(0, 0, -50, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'orange'
                             statusDirection.lastY = topPos
                         }
                         else if (statusDirection.y === 'bottom') {
+                            drawHead(0, -50, 0, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'white'
                             statusDirection.lastY = topPos
                         }
-                        drawHead(0, 0, 0)
                         statusDirection.x = 'right'
                     }
                 }
@@ -635,33 +646,35 @@
 
                 if (statusDirection.lastX != leftPos) {
                     if (lastPosTopSnake > topPos) {
-                        console.log('INDO PARA CIMA')
+                        //console.log('INDO PARA CIMA')
                         if (statusDirection.x === 'left') {
+                            drawHead(270, -50, 0, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'lightblue'
                             statusDirection.lastX = leftPos
                         }
                         else if (statusDirection.x === 'right') {
+                            drawHead(-90, 0, 50, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'darkred'
                             statusDirection.lastX = leftPos
                         }
-                        drawHead(-90, 0, 50)
                         statusDirection.y = 'top'
                     }
                     else if (lastPosTopSnake < topPos) {
-                        console.log('INDO PARA BAIXO')
+                        //console.log('INDO PARA BAIXO')
                         if (statusDirection.x === 'left') {
+                            drawHead(-270, 0, -50, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'darkgreen'
                             statusDirection.lastX = leftPos
                         }
                         else if (statusDirection.x === 'right') {
+                            drawHead(90, 50, 0, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'purple'
                             statusDirection.lastX = leftPos
                         }
-                        drawHead(90, 50, 0)
                         statusDirection.y = 'bottom'
                     }
                 }
@@ -780,25 +793,78 @@
 
         }
         var angleHead = 0
+        var lastAngleHead = 0
+        var lastType
         var transXSnake = 0
         var transYSnake = 0
+        var limitTranslate = 0
+        var isOrigin = false
+
+        var isHeadAnimation = false
+        var lastAnimationHead = { angle: 0, transX: 0, transY: 0, type: 'none' }
         function drawHead(angle, translateX, translateY, type) {
-            
-            if (angle != undefined){
-                angleHead = angle
-                transXSnake = translateX
-                transYSnake = translateY
+
+            lastAnimationHead.angle = angle
+            lastAnimationHead.transX = translateX
+            lastAnimationHead.transY = translateY
+            lastAnimationHead.type = type
+
+            if (lastType != type && lastType != undefined && lastAngleHead != 0) {
+
+                if (type === '-') {
+                    angleHead -= 360
+                    lastAngleHead -= 360
+                }
+                else {
+                    angleHead += 360
+                    lastAngleHead += 360
+                }
+                console.log('ANGLEHEAD: ' + angleHead)
+            }
+
+            lastType = lastType === type ? lastType : type
+            type = type === '-' ? -1 : 1
+
+            if (angle === 0 && positiveNumber(angleHead) >= 270) {
+                angle = 360 * type
+                isOrigin = true
+            }
+
+            if (angle != angleHead) {
+                isHeadAnimation = true
+            }
+            else {
+                isHeadAnimation = false
+                lastAngleHead = angle
+                if (isOrigin) {
+                    angleHead = 0
+                    lastAngleHead = 0
+                    isOrigin = false
+                    console.log('-------------------------')
+                    console.log('lastAngleHead: ' + lastAngleHead)
+                    console.log('angleHead: ' + angleHead)
+                    console.log('-------------------------')
+                }
+            }
+
+            if (angle != undefined && isHeadAnimation == true) {
+                angleHead += ((absoluteValue(lastAngleHead, angle)) * type) / 10
+                transXSnake += translateX / 10
+                transYSnake += translateY / 10
+                console.log('angleHead: ' + angleHead)
+                console.log('transX: ' + transXSnake)
+                console.log('transY: ' + transYSnake)
             }
 
             let ctxHead = canvasHead.getContext('2d')
+
             if (canvasHead.getContext) {
                 ctxHead.clearRect(0, 0, 60, 60)
                 ctxHead.save()
                 ctxHead.translate(5 + transXSnake, 5 + transYSnake)
-                ctxHead.fillStyle = 'green'//'rgb(38, 8, 189)'
 
-                ctxHead.rotate(angleHead*(Math.PI / 180))
-
+                ctxHead.rotate(angleHead * (Math.PI / 180))
+                ctxHead.fillStyle = 'red'//'rgb(38, 8, 189)'
                 ctxHead.beginPath()
                 ctxHead.arc(-4.26, -79.87, 85, (90 - 2.87) * (Math.PI / 180), (84.4262) * (Math.PI / 180), true)
                 ctxHead.arc(2.06, -15.18, 20, (90 - 5.5738) * (Math.PI / 180), 61.8275 * (Math.PI / 180), true)
@@ -814,6 +880,8 @@
                 ctxHead.fill()
                 ctxHead.restore()
             }
+
+
         }
         var lastKey
         function snakeConectionFunc() {
