@@ -415,7 +415,10 @@
         }
         function redeclareConst() {
             snakePos = document.getElementById('snake').style
-            canvasHead = document.getElementById('snake-head')
+
+            snakeHead = document.getElementById('snake-head')
+            canvasHead = document.getElementById('canvas-head')
+
             snakeConection = document.getElementById('snake-conection').style
             foodPos = document.getElementById('food').style
             snakePosGet = window.getComputedStyle(document.getElementById('snake'))
@@ -607,13 +610,13 @@
                     if (lastPosLeftSnake > leftPos) {
                         console.log('INDO PARA ESQUERDA')
                         if (statusDirection.y === 'top') {
-                            drawHead(-180, 50, 0, '-')
+                            drawHead(-180, 5, 5, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'red'
                             statusDirection.lastY = topPos
                         }
                         else if (statusDirection.y === 'bottom') {
-                            drawHead(180, 0, 50, '+')
+                            drawHead(180, 5, 5, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'blue'
                             statusDirection.lastY = topPos
@@ -623,13 +626,13 @@
                     else if (lastPosLeftSnake < leftPos) {
                         //console.log("INDO PARA DIREITA")
                         if (statusDirection.y === 'top') {
-                            drawHead(0, 0, -50, '+')
+                            drawHead(0, -5, -5, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'orange'
                             statusDirection.lastY = topPos
                         }
                         else if (statusDirection.y === 'bottom') {
-                            drawHead(0, -50, 0, '-')
+                            drawHead(0, -5, -5, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'white'
                             statusDirection.lastY = topPos
@@ -648,13 +651,13 @@
                     if (lastPosTopSnake > topPos) {
                         //console.log('INDO PARA CIMA')
                         if (statusDirection.x === 'left') {
-                            drawHead(270, -50, 0, '+')
+                            drawHead(270, -5, 5, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'lightblue'
                             statusDirection.lastX = leftPos
                         }
                         else if (statusDirection.x === 'right') {
-                            drawHead(-90, 0, 50, '-')
+                            drawHead(-90, -5, 5, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
                             //snakeHead.backgroundColor = 'darkred'
                             statusDirection.lastX = leftPos
@@ -664,13 +667,13 @@
                     else if (lastPosTopSnake < topPos) {
                         //console.log('INDO PARA BAIXO')
                         if (statusDirection.x === 'left') {
-                            drawHead(-270, 0, -50, '-')
+                            drawHead(-270, 5, -5, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'darkgreen'
                             statusDirection.lastX = leftPos
                         }
                         else if (statusDirection.x === 'right') {
-                            drawHead(90, 50, 0, '+')
+                            drawHead(90, 5, -5, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
                             //snakeHead.backgroundColor = 'purple'
                             statusDirection.lastX = leftPos
@@ -802,12 +805,14 @@
 
         var isHeadAnimation = false
         var lastAnimationHead = { angle: 0, transX: 0, transY: 0, type: 'none' }
-        function drawHead(angle, translateX, translateY, type) {
+        function drawHead(angle, translateX = -5, translateY = -5, type) {
 
             lastAnimationHead.angle = angle
             lastAnimationHead.transX = translateX
             lastAnimationHead.transY = translateY
             lastAnimationHead.type = type
+
+            snakeHead = document.getElementById('snake-head')
 
             if (lastType != type && lastType != undefined && lastAngleHead != 0) {
 
@@ -819,7 +824,6 @@
                     angleHead += 360
                     lastAngleHead += 360
                 }
-                console.log('ANGLEHEAD: ' + angleHead)
             }
 
             lastType = lastType === type ? lastType : type
@@ -836,35 +840,28 @@
             else {
                 isHeadAnimation = false
                 lastAngleHead = angle
+                //canvasHead.style.transformOrigin = 'center center'
                 if (isOrigin) {
                     angleHead = 0
                     lastAngleHead = 0
                     isOrigin = false
-                    console.log('-------------------------')
-                    console.log('lastAngleHead: ' + lastAngleHead)
-                    console.log('angleHead: ' + angleHead)
-                    console.log('-------------------------')
                 }
             }
 
             if (angle != undefined && isHeadAnimation == true) {
                 angleHead += ((absoluteValue(lastAngleHead, angle)) * type) / 10
-                transXSnake += translateX / 10
-                transYSnake += translateY / 10
-                console.log('angleHead: ' + angleHead)
-                console.log('transX: ' + transXSnake)
-                console.log('transY: ' + transYSnake)
             }
 
+            snakeHead.style.transform = 'rotate(' + angleHead + 'deg)'// + 'translate(' +  lastAnimationHead.transY + 'px, ' + lastAnimationHead.transX  + 'px)'
+
+            canvasHead = document.getElementById('canvas-head')
             let ctxHead = canvasHead.getContext('2d')
 
             if (canvasHead.getContext) {
                 ctxHead.clearRect(0, 0, 60, 60)
                 ctxHead.save()
-                ctxHead.translate(5 + transXSnake, 5 + transYSnake)
-
-                ctxHead.rotate(angleHead * (Math.PI / 180))
-                ctxHead.fillStyle = 'red'//'rgb(38, 8, 189)'
+                ctxHead.translate(5, 5)
+                ctxHead.fillStyle = 'green'//'rgb(38, 8, 189)'
                 ctxHead.beginPath()
                 ctxHead.arc(-4.26, -79.87, 85, (90 - 2.87) * (Math.PI / 180), (84.4262) * (Math.PI / 180), true)
                 ctxHead.arc(2.06, -15.18, 20, (90 - 5.5738) * (Math.PI / 180), 61.8275 * (Math.PI / 180), true)
@@ -878,6 +875,44 @@
                 ctxHead.arc(-4.26, 129.87, 85, (270 + 5.5738) * (Math.PI / 180), (270 + 2.87) * (Math.PI / 180), true)
                 ctxHead.lineTo(0, 5.02)
                 ctxHead.fill()
+
+                ctxHead.fillStyle = '#5A7D59'
+                ctxHead.beginPath()
+                ctxHead.arc(30.5, 15, 4, 90*(Math.PI/180), 300*(Math.PI/180))
+                ctxHead.lineTo(38.5, 15)
+                ctxHead.arc(37.5, 16.73, 2, 300*(Math.PI/180), 87.7958*(Math.PI/180))
+                ctxHead.lineTo(30.5, 19)
+                ctxHead.fill()
+
+                ctxHead.beginPath()
+                ctxHead.fillStyle = '#395138'
+                ctxHead.arc(35, 16.11, 2.71, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctxHead.fill()
+
+
+                ctxHead.beginPath()
+                ctxHead.fillStyle = '#395138'
+                ctxHead.arc(47, 23, .5, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctxHead.fill()
+
+                ctxHead.fillStyle = '#5A7D59'
+                ctxHead.beginPath()
+                ctxHead.arc(30.5, 35, 4, 60*(Math.PI/180), 270*(Math.PI/180))
+                ctxHead.lineTo(37.58, 31.27)
+                ctxHead.arc(37.5, 33.27, 2, 267.7958*(Math.PI/180), 60*(Math.PI/180))
+                ctxHead.lineTo(32.5, 38.46)
+                ctxHead.fill()
+
+                ctxHead.fillStyle = '#395138'
+                ctxHead.beginPath()
+                ctxHead.arc(35, 33.89, 2.71, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctxHead.fill() 
+
+                ctxHead.beginPath()
+                ctxHead.fillStyle = '#395138'
+                ctxHead.arc(47, 27, .5, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctxHead.fill()
+                ctxHead.restore()
                 ctxHead.restore()
             }
 
@@ -892,46 +927,28 @@
             if (lastKey != actualDirection) {
                 switch (actualDirection) {
                     case 'w':
-                        setTimeout(
-                            function () {
-                                snakeConection.transform = 'rotate(0deg)'
-                                snakeConection.top = '50px'
-                                snakeConection.left = '5px'
-                                if (hasBody && actualDirection === 'w') { snakeConection.display = 'block' }
-                            }, kls
-                        )
+                        snakeConection.transform = 'rotate(0deg)'
+                        snakeConection.top = '50px'
+                        snakeConection.left = '5px'
+                        if (hasBody && actualDirection === 'w') { snakeConection.display = 'block' }
                         break
                     case 's':
-                        setTimeout(
-                            function () {
-                                snakeConection.transform = 'rotate(0deg)'
-                                snakeConection.top = '-10px'
-                                snakeConection.left = '5px'
-                                if (hasBody && actualDirection === 's') { snakeConection.display = 'block' }
-                            }, kls
-                        )
+                        snakeConection.transform = 'rotate(0deg)'
+                        snakeConection.top = '-10px'
+                        snakeConection.left = '5px'
+                        if (hasBody && actualDirection === 's') { snakeConection.display = 'block' }
                         break
                     case 'a':
-                        setTimeout(
-                            function () {
-                                snakeConection.transform = 'rotate(90deg)'
-                                snakeConection.top = '20px'
-                                snakeConection.left = '35px'
-
-                                if (hasBody && actualDirection === 'a') { snakeConection.display = 'block' }
-                            }, kls
-                        )
+                        snakeConection.transform = 'rotate(90deg)'
+                        snakeConection.top = '20px'
+                        snakeConection.left = '35px'
+                        if (hasBody && actualDirection === 'a') { snakeConection.display = 'block' }
                         break
                     case 'd':
-                        setTimeout(
-                            function () {
-                                snakeConection.transform = 'rotate(90deg)'
-                                snakeConection.top = '20px'
-                                snakeConection.left = '-25px'
-
-                                if (hasBody && actualDirection === 'd') { snakeConection.display = 'block' }
-                            }, kls
-                        )
+                        snakeConection.transform = 'rotate(90deg)'
+                        snakeConection.top = '20px'
+                        snakeConection.left = '-25px'
+                        if (hasBody && actualDirection === 'd') { snakeConection.display = 'block' }
                         break
                 }
                 lastKey = actualDirection
@@ -962,14 +979,19 @@
         #snake {
             width: 50px;
             height: 50px;
+            /* background-color: green; */
             position: absolute;
         }
 
         #snake-head {
             position: absolute;
-            /* background-color: rgb(38, 8, 189); */
-            transform: translate(-5px, -5px);
             z-index: 10;
+            width: 50px;
+            height: 50px;
+        }
+
+        #canvas-head {
+            transform: translate(-5px, -5px);
         }
 
         #snake-conection {
@@ -1033,7 +1055,9 @@
         <div id="map">
 
             <div id="snake">
-                <canvas width="60px" height="60px" id="snake-head"></canvas>
+                <span id="snake-head">
+                    <canvas width="60px" height="60px" id="canvas-head"></canvas>
+                </span>
                 <span id="snake-conection"></span>
             </div>
 
@@ -1045,7 +1069,8 @@
     <script>
         var pressed = document.getElementById('pressed')
 
-        var canvasHead = document.getElementById('snake-head')
+        var snakeHead = document.getElementById('snake-head')
+        var canvasHead = document.getElementById('canvas-head')
 
         canvasHead.addEventListener('onload', drawHead())
 

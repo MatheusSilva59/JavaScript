@@ -17,6 +17,7 @@
 
     <script>
         var angleRotate = 0
+        var x = 0
         var animation
 
         function rotateSquare() {
@@ -26,7 +27,7 @@
         function draw() {
             var ctx = canvas.getContext('2d')
             let a = 0
-            if (angleRotate === -180) { angleRotate = 0 }
+            if (angleRotate === 90) { angleRotate = 0; x = 0 }
             if (canvas.getContext) {
 
                 ctx.clearRect(0, 0, 500, 500)
@@ -36,7 +37,7 @@
                 //ctx.translate(125, 125)
 
                 ctx.scale(5, 5)
-                ctx.translate(50, 50)
+                ctx.translate(0 + x, 50)
                 ctx.rotate(angleRotate * (Math.PI / 180))
 
                 ctx.beginPath()
@@ -67,11 +68,50 @@
 
                 ctx.fill()
 
+                ctx.fillStyle = 'red'
+                ctx.fillRect(0,0, 50,50)
+                ctx.fillStyle = 'black'
+                ctx.beginPath()
+                ctx.arc(30.5, 15, 4, 90*(Math.PI/180), 300*(Math.PI/180))
+                ctx.lineTo(38.5, 15)
+                ctx.arc(37.5, 16.73, 2, 300*(Math.PI/180), 87.7958*(Math.PI/180))
+                ctx.lineTo(30.5, 19)
+                ctx.fill()
+
+                ctx.beginPath()
+                ctx.fillStyle = 'white'
+                ctx.arc(35, 16.11, 2.71, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctx.fill()
+
+
+                ctx.beginPath()
+                ctx.fillStyle = 'black'
+                ctx.arc(47, 23, 1, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctx.fill()
+
+                ctx.fillStyle = 'black'
+                ctx.beginPath()
+                ctx.arc(30.5, 35, 4, 60*(Math.PI/180), 270*(Math.PI/180))
+                ctx.lineTo(37.58, 31.27)
+                ctx.arc(37.5, 33.27, 2, 267.7958*(Math.PI/180), 60*(Math.PI/180))
+                ctx.lineTo(32.5, 38.46)
+                ctx.fill()
+
+                ctx.fillStyle = 'white'
+                ctx.beginPath()
+                ctx.arc(35, 33.89, 2.71, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctx.fill() 
+
+                ctx.beginPath()
+                ctx.fillStyle = 'black'
+                ctx.arc(47, 27, 1, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctx.fill()
                 ctx.restore()
 
             }
-            angleRotate -= 1
-            rotateSquare()
+            angleRotate += 1
+            x += 5/9
+            //rotateSquare()
         }
         // 3 quadrados girando sob o mesmo eixo
         // ctx.save()
@@ -123,12 +163,20 @@
         canvas {
             border: 1px solid red;
         }
+        #teste{
+            border: 1px solid red;
+            width: 300px;
+            height: 300px;
+            transform-origin: left top;
+            transform: rotate(45deg);
+        }
     </style>
 </head>
 
 <body>
     <div class="d-flex justify-content-center align-items-center">
         <canvas width="500" height="500" id="canvas"></canvas>
+        <div id="teste"></div>
     </div>
     <script>
         var canvas = document.getElementById('canvas')
