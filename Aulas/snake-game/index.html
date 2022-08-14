@@ -138,7 +138,7 @@
                 lastPosTop = arrayLastPositions[indexLocal].top
                 if (indexLocal === 0 && arrayLastPositions.length === lengthBody) { arrayLastPositions.shift() }
             }
-
+            //console.log(arrayLastPositions)
 
             if (bodySet.length === 0) {
                 lastPosBodyLeft = lastPosLeft
@@ -175,6 +175,7 @@
 
                 if (hasBody) {
                     filletBodyApply()
+                    drawLast()
                 }
                 else {
                     lastPosLeftSnake = leftPos
@@ -410,12 +411,14 @@
                 redeclareConst()
                 drawAll()
                 drawHead(lastAnimationHead.angle, lastAnimationHead.transX, lastAnimationHead.transY, lastAnimationHead.type)
+                drawLast()
             }
 
         }
         function redeclareConst() {
             snakePos = document.getElementById('snake').style
 
+            lastBody = document.getElementById('last-body')
             snakeHead = document.getElementById('snake-head')
             canvasHead = document.getElementById('canvas-head')
 
@@ -443,6 +446,33 @@
                     i++
                 }
             }
+            //temporário spawn
+            leftPos = 200
+            topPos = 200
+            snakePos.left = '200px'
+            snakePos.top = '200px'
+            for (let x = 0; x < 29; x++){
+                arrayLastPositions[x] = { left: 55 + x*5, top: 200 }
+            }
+            //lengthBody = score === 0 ? lengthBody : 10 * (score + 1)
+            score = 2
+            //console.log(arrayLastPositions  )
+            hasBody = true
+            statusDirection.x = 'right'
+            statusDirection.y = 'bottom'
+            statusDirection.lastX = 0
+            statusDirection.lastY = 200
+            lastPosLeftSnake = 200
+            lastPosTopSnake = 200
+            document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + 150 + stepToCSS + '; top: ' + 200 + stepToCSS + '"><span class="snake-body-style" style="width: 60px; height: 40px"></span></span>'
+            document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + 100 + stepToCSS + '; top: ' + 200 + stepToCSS + '"><span class="snake-body-style" style="width: 60px; height: 40px"></span></span>'
+            redeclareConst()
+            lastBody.style.left = '100px'
+            lastBody.style.top = '200px'
+
+ 
+            drawHead()
+            drawLast()
             //console.log(allPos)
         }
 
@@ -508,7 +538,6 @@
         function bodySnakeComputed() {
 
             for (let i = 0; i < bodySet.length; i++) {
-
                 if (i != bodySet.length - 1) {
                     if (isEating) {
                         bodyArray[i] = arrayLastPositions[lengthBody - (10 * i) - 20 + auxIndexOthers]
@@ -608,7 +637,7 @@
                 endCycle++
                 if (statusDirection.lastY != topPos) {
                     if (lastPosLeftSnake > leftPos) {
-                        console.log('INDO PARA ESQUERDA')
+                        //console.log('INDO PARA ESQUERDA')
                         if (statusDirection.y === 'top') {
                             drawHead(-180, 5, 5, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
@@ -683,13 +712,14 @@
                 }
                 lastPosTopSnake = topPos
             }
-
+            
             if (endCycle != 0) {
                 if (leftPos % 50 === 0 && topPos % 50 === 0) {
                     endCycle = 0
                     lastPosLeftSnake = leftPos
                     lastPosTopSnake = topPos
                 }
+                //console.log(statusDirection)
             }
         }
 
@@ -717,6 +747,13 @@
                     }
 
                     if (i === bodySet.length - 1) {
+
+                        //bodySetStyle[i].style.backgroundColor = 'red'
+
+                        
+
+                        lastBody.style.left = bodyArray[i].left + stepToCSS
+                        lastBody.style.top = bodyArray[i].top + stepToCSS
 
                         if (filletPosition.length != 0 && bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
 
@@ -836,6 +873,7 @@
 
             if (angle != angleHead) {
                 isHeadAnimation = true
+                //console.log(angle)
             }
             else {
                 isHeadAnimation = false
@@ -863,54 +901,54 @@
                 ctxHead.translate(5, 5)
                 ctxHead.fillStyle = 'green'//'rgb(38, 8, 189)'
                 ctxHead.beginPath()
-                ctxHead.arc(-4.26, -79.87, 85, (90 - 2.87) * (Math.PI / 180), (84.4262) * (Math.PI / 180), true)
-                ctxHead.arc(2.06, -15.18, 20, (90 - 5.5738) * (Math.PI / 180), 61.8275 * (Math.PI / 180), true)
-                ctxHead.arc(17.17, 13.03, 12, (180 + 61.8275) * (Math.PI / 180), (180 + 113.7578) * (Math.PI / 180))
-                ctxHead.arc(-18.29, 93.58, 100, (180 + 113.7578) * (Math.PI / 180), (180 + 130.3635) * (Math.PI / 180))
-                ctxHead.arc(40, 25, 10, (180 + 130.3635) * (Math.PI / 180), 0 * (Math.PI / 180))
-                ctxHead.arc(40, 25, 10, 0 * (Math.PI / 180), 49.6365 * (Math.PI / 180))
-                ctxHead.arc(-18.29, -43.58, 100, (180 - 130.3635) * (Math.PI / 180), (180 - 113.7578) * (Math.PI / 180))
-                ctxHead.arc(17.17, 36.97, 12, (180 - 113.7578) * (Math.PI / 180), (180 - 61.8275) * (Math.PI / 180))
-                ctxHead.arc(2.06, 65.18, 20, (270 + 28.1725) * (Math.PI / 180), (270 + 5.5738) * (Math.PI / 180), true)
-                ctxHead.arc(-4.26, 129.87, 85, (270 + 5.5738) * (Math.PI / 180), (270 + 2.87) * (Math.PI / 180), true)
+                ctxHead.arc(-4.26, -79.87, 85, deg(90 - 2.87), deg(84.4262), true)
+                ctxHead.arc(2.06, -15.18, 20, deg(90 - 5.5738),  deg(61.8275), true)
+                ctxHead.arc(17.17, 13.03, 12, deg(180 + 61.8275), deg(180 + 113.7578))
+                ctxHead.arc(-18.29, 93.58, 100, deg(180 + 113.7578), deg(180 + 130.3635))
+                ctxHead.arc(40, 25, 10, deg(180 + 130.3635), deg(0))
+                ctxHead.arc(40, 25, 10, deg(0), deg(49.6365))
+                ctxHead.arc(-18.29, -43.58, 100, deg(180 - 130.3635), deg(180 - 113.7578))
+                ctxHead.arc(17.17, 36.97, 12, deg(180 - 113.7578), deg(180 - 61.8275))
+                ctxHead.arc(2.06, 65.18, 20, deg(270 + 28.1725), deg(270 + 5.5738), true)
+                ctxHead.arc(-4.26, 129.87, 85, deg(270 + 5.5738), deg(270 + 2.87), true)
                 ctxHead.lineTo(0, 5.02)
                 ctxHead.fill()
 
                 ctxHead.fillStyle = '#5A7D59'
                 ctxHead.beginPath()
-                ctxHead.arc(30.5, 15, 4, 90*(Math.PI/180), 300*(Math.PI/180))
+                ctxHead.arc(30.5, 15, 4, deg(90), deg(300))
                 ctxHead.lineTo(38.5, 15)
-                ctxHead.arc(37.5, 16.73, 2, 300*(Math.PI/180), 87.7958*(Math.PI/180))
+                ctxHead.arc(37.5, 16.73, 2, deg(300), deg(87.7958))
                 ctxHead.lineTo(30.5, 19)
                 ctxHead.fill()
 
                 ctxHead.beginPath()
                 ctxHead.fillStyle = '#395138'
-                ctxHead.arc(35, 16.11, 2.71, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctxHead.arc(35, 16.11, 2.71, deg(0), deg(360))
                 ctxHead.fill()
 
 
                 ctxHead.beginPath()
                 ctxHead.fillStyle = '#395138'
-                ctxHead.arc(47, 23, .5, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctxHead.arc(47, 23, .5, deg(0), deg(360))
                 ctxHead.fill()
 
                 ctxHead.fillStyle = '#5A7D59'
                 ctxHead.beginPath()
-                ctxHead.arc(30.5, 35, 4, 60*(Math.PI/180), 270*(Math.PI/180))
+                ctxHead.arc(30.5, 35, 4, deg(60), deg(270))
                 ctxHead.lineTo(37.58, 31.27)
-                ctxHead.arc(37.5, 33.27, 2, 267.7958*(Math.PI/180), 60*(Math.PI/180))
+                ctxHead.arc(37.5, 33.27, 2, deg(267.7958), deg(60))
                 ctxHead.lineTo(32.5, 38.46)
                 ctxHead.fill()
 
                 ctxHead.fillStyle = '#395138'
                 ctxHead.beginPath()
-                ctxHead.arc(35, 33.89, 2.71, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctxHead.arc(35, 33.89, 2.71, deg(0), deg(360))
                 ctxHead.fill() 
 
                 ctxHead.beginPath()
                 ctxHead.fillStyle = '#395138'
-                ctxHead.arc(47, 27, .5, 0*(Math.PI/180), 360*(Math.PI/180))
+                ctxHead.arc(47, 27, .5, deg(0), deg(360))
                 ctxHead.fill()
                 ctxHead.restore()
                 ctxHead.restore()
@@ -953,6 +991,58 @@
                 }
                 lastKey = actualDirection
             }
+        }
+        function lastBodyDirection(){
+            let lastIndex = bodyArray.length - 1
+            let penultimateIndex = bodyArray.length - 2
+            try{
+                if (bodyArray[lastIndex].left > bodyArray[penultimateIndex].left){
+                    console.log('LEFT')
+                    return 0
+                }
+                else if (bodyArray[lastIndex].left < bodyArray[penultimateIndex].left){
+                    // console.log('lastIndex: ' + bodyArray[lastIndex].left)
+                    // console.log('punultimateIndex: ' + bodyArray[penultimateIndex].left)
+                    console.log('RIGHT')
+                    return 180
+                }
+                else if (bodyArray[lastIndex].top > bodyArray[penultimateIndex].top){
+                    console.log('TOP')
+                    return 90
+                }
+                else if (bodyArray[lastIndex].top < bodyArray[penultimateIndex].top){
+                    // console.log('lastIndex: ' + bodyArray[lastIndex].left)
+                    // console.log('punultimateIndex: ' + bodyArray[penultimateIndex].left)
+                    console.log('BOTTOM')
+                    return 270
+                }
+            }catch{}
+        }
+        function drawLast(){
+            canvasLastBody = document.getElementById('canvas-last-body')
+            lastBody = document.getElementById('last-body')
+            let ctx = canvasLastBody.getContext('2d')
+            let angle = lastBodyDirection()
+            
+            lastBody.style.transform = 'rotate(' + angle  + 'deg)'
+            if (canvasLastBody.getContext){
+                ctx.clearRect(0, 0, 60, 60)
+                ctx.save()
+                ctx.translate(10, 5)
+                //ctx.fillStyle = 'gray'
+                ctx.beginPath()
+                ctx.arc(25, 25, 20, deg(270), deg(90))
+                ctx.lineTo(25, 50)
+                ctx.lineTo(50, 50)
+                ctx.lineTo(50, 0)
+                ctx.lineTo(25, 0)
+                ctx.lineTo(25, 5)
+                ctx.fill()
+                ctx.restore()
+            }
+        }
+        function deg(value){
+            return value * (Math.PI/180)
         }
     </script>
 
@@ -1001,7 +1091,16 @@
             position: absolute;
             display: none;
         }
-
+        #last-body{
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            z-index: 10;
+            /* background-color: purple; */
+        }
+        #canvas-last-body{
+            transform: translate(-5px, -5px);
+        }
         .snake-body {
             width: 50px;
             height: 50px;
@@ -1061,6 +1160,10 @@
                 <span id="snake-conection"></span>
             </div>
 
+            <div id="last-body">
+                <canvas width="60px" height="60px" id="canvas-last-body"></canvas>
+            </div>
+
             <div class="food" id="food"></div>
 
         </div>
@@ -1068,11 +1171,13 @@
 
     <script>
         var pressed = document.getElementById('pressed')
-
+        var lastBody = document.getElementById('last-body')
+        var canvasLastBody = document.getElementById('canvas-last-body')
         var snakeHead = document.getElementById('snake-head')
         var canvasHead = document.getElementById('canvas-head')
-
+        
         canvasHead.addEventListener('onload', drawHead())
+        canvasLastBody.addEventListener('onload', drawLast())
 
         var snakePos = document.getElementById('snake').style
         var snakeConection = document.getElementById('snake-conection').style
@@ -1081,6 +1186,7 @@
 
         var snakePosGet = window.getComputedStyle(document.getElementById('snake'))
         var foodPosGet = window.getComputedStyle(document.getElementById('food'))
+
         initiate()
         randomPosition() //Alterar posição da comida inicial
     </script>
