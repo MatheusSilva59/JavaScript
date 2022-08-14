@@ -28,6 +28,8 @@
             var ctx = canvas.getContext('2d')
             let a = 0
             if (angleRotate === 90) { angleRotate = 0; x = 0 }
+            let rotate = document.getElementById('rotate')
+            rotate.style.transform = 'rotate(90deg)'
             if (canvas.getContext) {
 
                 ctx.clearRect(0, 0, 500, 500)
@@ -38,13 +40,15 @@
 
                 ctx.scale(5, 5)
                 ctx.translate(25, 25)
-                ctx.rotate(angleRotate * (Math.PI / 180))
+                ctx.rotate(0 * (Math.PI / 180))
 
                 ctx.beginPath()
-                ctx.arc(25, 25, 25, deg(270), deg(90))
-                ctx.lineTo(50, 50)
-                ctx.lineTo(50, 0)
+                ctx.arc(25, 25, 25, deg(90), deg(270))
                 ctx.lineTo(25, 0)
+                ctx.lineTo(0, 0)
+                ctx.lineTo(0, 50)
+                ctx.lineTo(25, 50)
+                ctx.lineTo(25, 45)
                 ctx.fill()
                 ctx.restore()
 
@@ -186,18 +190,32 @@
 
         #teste {
             border: 1px solid red;
+            background-color: green;
             width: 300px;
             height: 300px;
-            transform-origin: left top;
+            transform-origin: center right;
             transform: rotate(45deg);
+        }
+        #rotate{
+            display: none;
+        }
+        #teste0{
+            margin-top: 10rem;
+            border: 1px solid red;
+            width: 500px;
+            height: 500px;
         }
     </style>
 </head>
 
 <body>
     <div class="d-flex justify-content-center align-items-center">
-        <canvas width="500" height="500" id="canvas"></canvas>
-        <div id="teste"></div>
+        <div id="rotate">
+            <canvas width="500" height="500" id="canvas"></canvas>
+        </div>
+        <div id="teste0">
+            <div id="teste"></div>
+        </div>
     </div>
     <script>
         var canvas = document.getElementById('canvas')
