@@ -759,38 +759,20 @@
                         bodySet[i].style.top = bodyArray[i].top + stepToCSS
                     }
 
-                    if (i === bodySet.length - 1) {
 
-                        //bodySetStyle[i].style.backgroundColor = 'red'
-
-                        if (abc <= 25) {
-                            lastBody.style.left = bodyArray[i].left + stepToCSS
-                            lastBody.style.top = bodyArray[i].top + stepToCSS
-                        }
-
-                        if (leftPos % 50 === 0 && topPos % 50 === 0) {
-                            bodySetStyle[i].style.display = 'none'
-                            // if (bodyArray[bodySet.length - 2].left != bodyArray[bodySet.length - 1].left){
-                            //     bodySetStyle[i].style.width = '40px'
-                            //     bodySetStyle[i].style.height = '40px'
-                            // }
-                            // else if (bodyArray[bodySet.length - 2].top != bodyArray[bodySet.length - 1].top){
-                            //     bodySetStyle[i].style.height = '40px'
-                            //     bodySetStyle[i].style.width = '40px'
-                            // }
-                        }
+                    if (i === bodySet.length - 2) {
 
                         if (filletPosition.length != 0 && bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
 
-                            // setTimeout(
-                            //     function () {
-                            //         let fill = document.getElementsByClassName('fill')[0]
-                            //         if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
-                            //     }, 0
-                            // )
+                            setTimeout(
+                                function () {
+                                    let fill = document.getElementsByClassName('fill')[0]
+                                    if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
+                                }, 100
+                            )
 
-                            let fill = document.getElementsByClassName('fill')[0]
-                            if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
+                            // let fill = document.getElementsByClassName('fill')[0]
+                            // if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
 
                             setTimeout(
                                 function () {
@@ -800,6 +782,29 @@
                             )
                             filletPosition.shift()
                         }
+                    }
+
+                    if (i === bodySet.length - 1) {
+
+                        if (true) {
+                            lastBody.style.left = bodyArray[i].left + stepToCSS
+                            lastBody.style.top = bodyArray[i].top + stepToCSS
+                        }
+                        bodySetStyle[i].style.display = 'none'
+                        // if (leftPos % 50 === 0 && topPos % 50 === 0 || 1 > 0) {
+                        //     bodySetStyle[i].style.display = 'none'
+                        //     // if (bodyArray[bodySet.length - 2].left != bodyArray[bodySet.length - 1].left){
+                        //     //     bodySetStyle[i].style.width = '40px'
+                        //     //     bodySetStyle[i].style.height = '40px'
+                        //     // }
+                        //     // else if (bodyArray[bodySet.length - 2].top != bodyArray[bodySet.length - 1].top){
+                        //     //     bodySetStyle[i].style.height = '40px'
+                        //     //     bodySetStyle[i].style.width = '40px'
+                        //     // }
+                        // }
+                    }
+                    else{
+                        bodySetStyle[i].style.display = 'block'
                     }
                 }
             }
@@ -1034,7 +1039,7 @@
                         if (lastBodyStatus.y === 'top') {
                             lastBodyStatus.lastY = bodyArray[lastIndex].top
                             if (log) { console.log('baixo para cima /// indo para esquerda') }
-                            drawLast(-180, '-', 'center left')
+                            drawLast(-180, '-', 'left top')
                             //drawLast(0, '-')
                         }
                         else if (lastBodyStatus.y === 'bottom') {
@@ -1061,7 +1066,7 @@
                     }
                     //console.log(lastBodyStatus)
                 }
-                if (lastBodyStatus.lastX != bodyArray[lastIndex].left) {
+                else if (lastBodyStatus.lastX != bodyArray[lastIndex].left) {
                     if (bodyArray[lastIndex].top > bodyArray[penultimateIndex].top) {
                         //console.log('TOP')
                         if (lastBodyStatus.x === 'left') {
@@ -1143,7 +1148,7 @@
                 isBodyAnimation = false
                 abc = 0
                 if (pivot === 'center top') {
-                    lastBody.style.transformOrigin = 'center center'
+                    //lastBody.style.transformOrigin = 'center center'
                 }
                 lastAngleBody = angle
                 //canvasHead.style.transformOrigin = 'center center'
@@ -1157,21 +1162,16 @@
             abc += 5
 
             if (abc > 25) {
-                console.log('abc: ' + abc)
-                
-                if (pivot === 'center top') {
-                    lastBody.style.transformOrigin = pivot
-                    if (angle != undefined && isBodyAnimation == true) {
-                        angleBody += ((absoluteValue(lastAngleBody, angle)) * type) / 5
-                        console.log('angleBody: ' + angleBody)
-                    }
-                    lastBody.style.transform = 'rotate(' + (angleBody) + 'deg) '
+
+                // clearAllInterval()
+                // window.cancelAnimationFrame(isMoving)
+                // isCollidingBody = true
+
+                if (angle != undefined && isBodyAnimation == true) {
+                    angleBody += ((absoluteValue(lastAngleBody, angle)) * type) / 5
+                    //console.log('angleBody: ' + angleBody)
                 }
-                else{
-                    clearAllInterval()
-                    window.cancelAnimationFrame(isMoving)
-                    isCollidingBody = true
-                }
+                lastBody.style.transform = 'rotate(' + (angleBody) + 'deg)'
             }
 
 
@@ -1185,23 +1185,23 @@
             if (canvasLastBody.getContext) {
                 ctx.clearRect(0, 0, 60, 60)
                 ctx.save()
-                ctx.translate(-5, 5)
-                // ctx.fillStyle = 'gray'
+                ctx.translate(10, 5)
+                // ctx.fillStyle = 'purple'
                 // ctx.beginPath()
                 // ctx.arc(25, 25, 20, deg(90), deg(270))
                 // ctx.lineTo(25, 0)
-                // ctx.lineTo(-5, 0)
-                // ctx.lineTo(-5, 50)
+                // ctx.lineTo(-10, 0)
+                // ctx.lineTo(-10, 50)
                 // ctx.lineTo(25, 50)
                 // ctx.lineTo(25, 45)
                 // ctx.fill()
 
 
-                ctx.fillStyle = 'black'
+                ctx.fillStyle = 'green'
                 ctx.beginPath()
                 ctx.arc(25, 25, 20, deg(90), deg(270))
-                ctx.lineTo(50, 5)
-                ctx.lineTo(50, 45)
+                ctx.lineTo(45, 5)
+                ctx.lineTo(45, 45)
                 ctx.lineTo(25, 45)
                 ctx.lineTo(25, 35)
                 ctx.fill()
@@ -1263,7 +1263,7 @@
             width: 50px;
             height: 50px;
             position: absolute;
-            z-index: 10;
+            z-index: 2;
             /* background-color: purple; */
         }
 
