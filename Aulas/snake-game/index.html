@@ -196,9 +196,9 @@
                 }
 
                 if (isBodyAnimation) {
-                    drawLast(lastAnimationBody.angle, lastAnimationBody.type, lastAnimationBody.pivot)
+                    drawLast(lastAnimationBody.angle)
                 }
-                else {
+                else if(!animationBodyByfood) {
                     lastBodyDirection()
                 }
 
@@ -398,6 +398,9 @@
                 }
             }
         }
+        
+        var animationBodyByfood = false
+
         function collisionFood() { //Melhorar sistema de colisão com a comida, há falhas não frequentes
 
             redeclareConst()
@@ -416,15 +419,48 @@
 
 
                 redeclareConst()
+
+
+                lastBody.style.left = lastPosBodyLeft + stepToCSS
+                lastBody.style.top = lastPosBodyTop + stepToCSS
+                lastFill.style.left = lastPosBodyLeft + stepToCSS
+                lastFill.style.top = lastPosBodyTop + stepToCSS
+                bodySetStyle[score - 1].style.display = 'none'
+                bodySetStyle[score - 2].style.display = 'block'
+
+                animationBodyByfood = true
+
+                if (bodyArray[score - 2].left > lastPosBodyLeft) {
+                    drawLast(0, 'noDelay')
+                    console.log('angle: 0')
+                }
+                else if (bodyArray[score - 2].left < lastPosBodyLeft) {
+                    drawLast(180, 'noDelay')
+                    console.log('angle: 180')
+                }
+                else if (bodyArray[score - 2].top > lastPosBodyTop) {
+                    drawLast(90, 'noDelay')
+                    console.log('angle: 90')
+                }
+                else if (bodyArray[score - 2].top < lastPosBodyTop) {
+                    drawLast(270, 'noDelay')
+                    console.log('angle: 270')
+                }
+                console.log('left: ' + bodyArray[score - 2].left)
+                console.log('top: ' + bodyArray[score - 2].top)
+                console.log('lastLeft: ' + lastPosBodyLeft)
+                console.log('lastTop: ' + lastPosBodyTop)
+
                 drawAll()
                 drawHead(lastAnimationHead.angle, lastAnimationHead.type)
-                drawLast(lastAnimationBody.angle, lastAnimationBody.type, lastAnimationBody.pivot)
+
             }
 
         }
         function redeclareConst() {
             snakePos = document.getElementById('snake').style
 
+            lastFill = document.getElementById('last-fill')
             lastBody = document.getElementById('last-body')
             snakeHead = document.getElementById('snake-head')
             canvasHead = document.getElementById('canvas-head')
@@ -441,7 +477,7 @@
         var allIndex = []
         function initiate() {
 
-            mapWidth = 700 - stepToCalc
+            mapWidth = 1400 - stepToCalc
             mapHeight = 600 - stepToCalc
 
             let i = 0
@@ -476,12 +512,15 @@
             redeclareConst()
             lastBody.style.left = '100px'
             lastBody.style.top = '200px'
-
+            lastFill.style.left = '100px'
+            lastFill.style.top = '200px'
 
             lastBodyStatus.x = 'right'
             lastBodyStatus.y = 'bottom'
             lastBodyStatus.lastX = 50
             lastBodyStatus.lastY = 200
+
+            bodySetStyle[score - 1].style.display = 'none'
 
             drawHead()
             onlyDrawLast()
@@ -762,14 +801,36 @@
 
                     if (i === bodySet.length - 2) {
 
-                        if (filletPosition.length != 0 && bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
-
+                        if (fillPosition.length != 0 && bodyArray[i].top === fillPosition[0].top && bodyArray[i].left === fillPosition[0].left){
                             setTimeout(
                                 function () {
                                     let fill = document.getElementsByClassName('fill')[0]
                                     if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
-                                }, 100
+                                }, 130
                             )
+                            fillPosition.shift()
+                        }
+
+                    }
+
+                    if (i === bodySet.length - 1) {
+
+                        if (true) {
+                            lastBody.style.left = bodyArray[i].left + stepToCSS
+                            lastBody.style.top = bodyArray[i].top + stepToCSS
+                            lastFill.style.left = bodyArray[i].left + stepToCSS
+                            lastFill.style.top = bodyArray[i].top + stepToCSS
+                        }
+                        bodySetStyle[i].style.display = 'none'
+
+                        if (filletPosition.length != 0 && bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
+
+                            // setTimeout(
+                            //     function () {
+                            //         let fill = document.getElementsByClassName('fill')[0]
+                            //         if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
+                            //     }, 130
+                            // )
 
                             // let fill = document.getElementsByClassName('fill')[0]
                             // if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
@@ -778,32 +839,12 @@
                                 function () {
                                     let fillet = document.getElementsByClassName('fillet')[0]
                                     if (leaveMap() === false && isCollidingBody === false) { fillet.remove() }
-                                }, timeDelay + 100
+                                }, timeDelay
                             )
                             filletPosition.shift()
                         }
                     }
-
-                    if (i === bodySet.length - 1) {
-
-                        if (true) {
-                            lastBody.style.left = bodyArray[i].left + stepToCSS
-                            lastBody.style.top = bodyArray[i].top + stepToCSS
-                        }
-                        bodySetStyle[i].style.display = 'none'
-                        // if (leftPos % 50 === 0 && topPos % 50 === 0 || 1 > 0) {
-                        //     bodySetStyle[i].style.display = 'none'
-                        //     // if (bodyArray[bodySet.length - 2].left != bodyArray[bodySet.length - 1].left){
-                        //     //     bodySetStyle[i].style.width = '40px'
-                        //     //     bodySetStyle[i].style.height = '40px'
-                        //     // }
-                        //     // else if (bodyArray[bodySet.length - 2].top != bodyArray[bodySet.length - 1].top){
-                        //     //     bodySetStyle[i].style.height = '40px'
-                        //     //     bodySetStyle[i].style.width = '40px'
-                        //     // }
-                        // }
-                    }
-                    else{
+                    else {
                         bodySetStyle[i].style.display = 'block'
                     }
                 }
@@ -811,6 +852,7 @@
         }
 
         var filletPosition = []
+        var fillPosition = []
 
         function drawFillet(posTop, posLeft, rotate, transX, transY, time) {
 
@@ -824,7 +866,7 @@
 
 
             filletPosition.push({ left: posLeft, top: posTop })
-
+            fillPosition.push({ left: posLeft, top: posTop })
 
             filletLocal.style.left = (posLeft + transX) + stepToCSS
             filletLocal.style.top = (posTop + transY) + stepToCSS
@@ -832,6 +874,7 @@
 
             fillLocal.style.left = (posLeft + transX) + stepToCSS
             fillLocal.style.top = (posTop + transY) + stepToCSS
+            fillLocal.style.transform = 'rotate(' + rotate + 'deg)'
 
             redeclareConst()
         }
@@ -861,7 +904,7 @@
 
                     if (fill.getContext) {
                         ctxFill.fillStyle = 'green'
-                        ctxFill.fillRect(10, 10, 30, 30)
+                        ctxFill.fillRect(0, 0, 50, 50)
                     }
                 } catch { }
             }
@@ -1029,8 +1072,8 @@
 
         var lastBodyStatus = { x: 'none', y: 'none', lastX: 'none', lastY: 'none' }
         function lastBodyDirection() {
-            let lastIndex = bodyArray.length - 1
-            let penultimateIndex = bodyArray.length - 2
+            let lastIndex = bodySet.length - 1
+            let penultimateIndex = bodySet.length - 2
             let log = false
             try {
                 if (lastBodyStatus.lastY != bodyArray[lastIndex].top) {
@@ -1039,14 +1082,12 @@
                         if (lastBodyStatus.y === 'top') {
                             lastBodyStatus.lastY = bodyArray[lastIndex].top
                             if (log) { console.log('baixo para cima /// indo para esquerda') }
-                            drawLast(-180, '-', 'left top')
-                            //drawLast(0, '-')
+                            drawLast(-180)
                         }
                         else if (lastBodyStatus.y === 'bottom') {
                             lastBodyStatus.lastY = bodyArray[lastIndex].top
                             if (log) { console.log('cima para baixo /// indo para esquerda') }
-                            drawLast(180, '+')
-                            //drawLast()
+                            drawLast(180)
                         }
                         lastBodyStatus.x = 'left'
                     }
@@ -1055,12 +1096,12 @@
                         if (lastBodyStatus.y === 'top') {
                             lastBodyStatus.lastY = bodyArray[lastIndex].top
                             if (log) { console.log('baixo para cima /// indo para direita') }
-                            drawLast(0, '+')
+                            drawLast(0)
                         }
                         else if (lastBodyStatus.y === 'bottom') {
                             lastBodyStatus.lastY = bodyArray[lastIndex].top
                             if (log) { console.log('cima para baixo /// indo para direita') }
-                            drawLast(0, '-')
+                            drawLast(0)
                         }
                         lastBodyStatus.x = 'right'
                     }
@@ -1072,12 +1113,12 @@
                         if (lastBodyStatus.x === 'left') {
                             lastBodyStatus.lastX = bodyArray[lastIndex].left
                             if (log) { console.log('indo para esquerda /// baixo para cima') }
-                            drawLast(270, '+')
+                            drawLast(270)
                         }
                         else if (lastBodyStatus.x === 'right') {
                             lastBodyStatus.lastX = bodyArray[lastIndex].left
                             if (log) { console.log('indo para direita /// baixo para cima') }
-                            drawLast(-90, '-', 'center top')
+                            drawLast(-90)
                         }
                         lastBodyStatus.y = 'top'
 
@@ -1087,12 +1128,12 @@
                         if (lastBodyStatus.x === 'left') {
                             lastBodyStatus.lastX = bodyArray[lastIndex].left
                             if (log) { console.log('indo para esquerda /// cima para baixo') }
-                            drawLast(-270, '-')
+                            drawLast(-270)
                         }
                         else if (lastBodyStatus.x === 'right') {
                             lastBodyStatus.lastX = bodyArray[lastIndex].left
                             if (log) { console.log('indo para direita /// cima para baixo') }
-                            drawLast(90, '+')
+                            drawLast(90)
 
                         }
                         lastBodyStatus.y = 'bottom'
@@ -1102,90 +1143,55 @@
             } catch { console.log('TNC') }
         }
 
-        var lastAnimationBody = { angle: 0, type: 'none', pivot: 'none' }
+        var lastAnimationBody = { angle: 0 }
         var lastTypeBody
         var angleBody = 0
         var lastAngleBody = 0
         var isOriginBody = false
         var isBodyAnimation = false
-        var abc = 0
+        var timerLast
         var asd = 0
-        function drawLast(angle, type, pivot) {
+
+        function drawLast(angle, delay) {
+
             lastBody = document.getElementById('last-body')
+            lastFill = document.getElementById('last-fill')
 
             lastAnimationBody.angle = angle
-            lastAnimationBody.type = type
-            lastAnimationBody.pivot = pivot
 
-            //lastBody.style.transformOrigin = 'center top'
-
-            if (lastTypeBody != type && lastTypeBody != undefined && lastAngleBody != 0) {
-
-                if (type === '-') {
-                    angleBody -= 360
-                    lastAngleBody -= 360
-                }
-                else {
-                    angleBody += 360
-                    lastAngleBody += 360
-                }
+            if (delay === undefined) {
+                //isBodyAnimation = true
+                timerLast = setTimeout(
+                    function () {
+                        if (!animationBodyByfood){
+                            lastFill.style.transform = 'rotate(' + (angle) + 'deg)'
+                        }
+                    }, 140
+                )
             }
+            else{
 
-            lastTypeBody = lastTypeBody === type ? lastTypeBody : type
-            type = type === '-' ? -1 : 1
-
-            if (angle === 0 && positiveNumber(angleBody) >= 270) {
-                angle = 360 * type
-                isOriginBody = true
+                lastFill.style.transform = 'rotate(' + (angle) + 'deg)'
+                setTimeout(
+                    function(){
+                        animationBodyByfood = false
+                    }, 135
+                )
             }
-
-            if (angle != angleBody) {
-                isBodyAnimation = true
-                //console.log(angle)
-                //console.log('angle: ' + angle + ' /// ' + 'angleBody: ' + angleBody)
-            }
-            else {
-                isBodyAnimation = false
-                abc = 0
-                if (pivot === 'center top') {
-                    //lastBody.style.transformOrigin = 'center center'
-                }
-                lastAngleBody = angle
-                //canvasHead.style.transformOrigin = 'center center'
-                if (isOriginBody) {
-                    angleBody = 0
-                    lastAngleBody = 0
-                    isOriginBody = false
-                }
-            }
-
-            abc += 5
-
-            if (abc > 25) {
-
-                // clearAllInterval()
-                // window.cancelAnimationFrame(isMoving)
-                // isCollidingBody = true
-
-                if (angle != undefined && isBodyAnimation == true) {
-                    angleBody += ((absoluteValue(lastAngleBody, angle)) * type) / 5
-                    //console.log('angleBody: ' + angleBody)
-                }
-                lastBody.style.transform = 'rotate(' + (angleBody) + 'deg)'
-            }
-
-
             onlyDrawLast()
 
         }
         function onlyDrawLast() {
             canvasLastBody = document.getElementById('canvas-last-body')
+            canvasLastBodyFill = document.getElementById('canvas-last-body-fill')
+
             let ctx = canvasLastBody.getContext('2d')
+            let ctxFill = canvasLastBodyFill.getContext('2d')
 
             if (canvasLastBody.getContext) {
                 ctx.clearRect(0, 0, 60, 60)
                 ctx.save()
-                ctx.translate(10, 5)
+                ctx.translate(5, 5)
                 // ctx.fillStyle = 'purple'
                 // ctx.beginPath()
                 // ctx.arc(25, 25, 20, deg(90), deg(270))
@@ -1199,13 +1205,21 @@
 
                 ctx.fillStyle = 'green'
                 ctx.beginPath()
-                ctx.arc(25, 25, 20, deg(90), deg(270))
-                ctx.lineTo(45, 5)
-                ctx.lineTo(45, 45)
-                ctx.lineTo(25, 45)
-                ctx.lineTo(25, 35)
+                ctx.arc(25, 25, 20, deg(0), deg(360))
+                // ctx.lineTo(45, 5)
+                // ctx.lineTo(45, 45)
+                // ctx.lineTo(25, 45)
+                // ctx.lineTo(25, 35)
                 ctx.fill()
                 ctx.restore()
+            }
+            if (canvasLastBodyFill.getContext) {
+                ctxFill.clearRect(0, 0, 60, 60)
+                ctxFill.save()
+                ctxFill.translate(5, 5)
+                ctxFill.fillStyle = 'green'
+                ctxFill.fillRect(25, 5, 50, 40)
+                ctxFill.restore()
             }
         }
         function deg(value) {
@@ -1263,12 +1277,25 @@
             width: 50px;
             height: 50px;
             position: absolute;
-            z-index: 2;
             /* background-color: purple; */
+            z-index: 10;
+        }
+
+        #last-fill {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            z-index: 2;
         }
 
         #canvas-last-body {
             transform: translate(-5px, -5px);
+            position: absolute;
+        }
+
+        #canvas-last-body-fill {
+            transform: translate(-5px, -5px);
+            position: absolute;
         }
 
         .snake-body {
@@ -1286,15 +1313,14 @@
             z-index: 1;
         }
 
-        .food {
+        .food{
             width: 50px;
             height: 50px;
             position: absolute;
-            background-color: red;
+
             z-index: 6;
         }
-
-        .way {
+        .way{
             width: 50px;
             height: 50px;
             position: absolute;
@@ -1333,8 +1359,12 @@
             <div id="last-body">
                 <canvas width="60px" height="60px" id="canvas-last-body"></canvas>
             </div>
-
-            <div class="food" id="food"></div>
+            <div id="last-fill">
+                <canvas width="60px" height="60px" id="canvas-last-body-fill"></canvas>
+            </div>
+            <div class="food d-flex justify-content-center align-items-center" id="food">
+                <i class="fa-solid fa-apple-whole fa-3x"></i>
+            </div>
 
         </div>
     </main>
@@ -1342,7 +1372,9 @@
     <script>
         var pressed = document.getElementById('pressed')
         var lastBody = document.getElementById('last-body')
+        var lastFill = document.getElementById('last-fill')
         var canvasLastBody = document.getElementById('canvas-last-body')
+        var canvasLastBodyFill = document.getElementById('canvas-last-body-fill')
         var snakeHead = document.getElementById('snake-head')
         var canvasHead = document.getElementById('canvas-head')
 

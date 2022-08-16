@@ -39,16 +39,15 @@
                 //ctx.translate(125, 125)
 
                 ctx.scale(5, 5)
-                ctx.translate(25, 25)
+                ctx.translate(25, 50)
                 ctx.rotate(0 * (Math.PI / 180))
-
+                ctx.fillStyle = 'green'
                 ctx.beginPath()
-                ctx.arc(25, 25, 25, deg(90), deg(270))
-                ctx.lineTo(25, 0)
-                ctx.lineTo(0, 0)
-                ctx.lineTo(0, 50)
-                ctx.lineTo(25, 50)
-                ctx.lineTo(25, 45)
+                ctx.arc(10.23, 60.03, 55.97, deg(180 + 79.4643), deg(180 + 130.3635))
+                ctx.arc(40, 25, 10, deg(180 + 130.3635), deg(0))
+                ctx.arc(40, 25, 10, deg(0), deg(49.6365))
+                ctx.arc(10.23, -10.23, 55.97, deg(49.6365), deg(100.5311))
+                ctx.lineTo(0, 5.02)
                 ctx.fill()
                 ctx.restore()
 
@@ -197,7 +196,7 @@
             transform: rotate(45deg);
         }
         #rotate{
-            display: none;
+
         }
         #teste0{
             margin-top: 10rem;
@@ -213,13 +212,13 @@
         <div id="rotate">
             <canvas width="500" height="500" id="canvas"></canvas>
         </div>
-        <div id="teste0">
+        <!-- <div id="teste0">
             <div id="teste"></div>
-        </div>
+        </div> -->
     </div>
     <script>
         var canvas = document.getElementById('canvas')
-        canvas.addEventListener('onload', rotateSquare())
+        canvas.addEventListener('onload', draw())
     </script>
 </body>
 
