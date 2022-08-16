@@ -56,6 +56,11 @@
         var arrayKeys = new Array()
         var arrayBody = new Array()
 
+        var arrayColors = ['#92D40E', '#971297']
+
+        var snakeColor = '#92D40E'
+        var mapColor = '#060606'
+
         var moveKeys = /[wsad]/i
         document.onkeydown = function (asd) {
             if (asd.key.match(moveKeys) && asd.key.length === 1) {
@@ -418,6 +423,13 @@
                 document.getElementById('h1-nav').innerHTML = score
 
 
+                // if (score % 2 === 0){
+                //     snakeColor = arrayColors[0]
+                // }
+                // else{
+                //     snakeColor = arrayColors[1]
+                // }
+
                 redeclareConst()
 
 
@@ -507,8 +519,8 @@
             statusDirection.lastY = 200
             lastPosLeftSnake = 200
             lastPosTopSnake = 200
-            document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + 150 + stepToCSS + '; top: ' + 200 + stepToCSS + '"><span class="snake-body-style" style="width: 60px; height: 40px"></span></span>'
-            document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + 100 + stepToCSS + '; top: ' + 200 + stepToCSS + '"><span class="snake-body-style" style="width: 60px; height: 40px"></span></span>'
+            document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + 150 + stepToCSS + '; top: ' + 200 + stepToCSS + '"><span class="snake-body-style" style="width: 60px; height: 40px; background-color: ' + snakeColor + '"></span></span>'
+            document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + 100 + stepToCSS + '; top: ' + 200 + stepToCSS + '"><span class="snake-body-style" style="width: 60px; height: 40px; backgroun-cColor: ' + snakeColor + '"></span></span>'
             redeclareConst()
             lastBody.style.left = '100px'
             lastBody.style.top = '200px'
@@ -785,6 +797,7 @@
 
                     xy = window.getComputedStyle(document.getElementsByClassName('snake-body')[i])
 
+                    bodySetStyle[i].style.backgroundColor = snakeColor
 
                     if (bodyArray[i].left != clearUn(xy.left) && bodyArray[i].top == clearUn(xy.top)) {
                         bodySetStyle[i].style.width = '60px'
@@ -824,16 +837,6 @@
                         bodySetStyle[i].style.display = 'none'
 
                         if (filletPosition.length != 0 && bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
-
-                            // setTimeout(
-                            //     function () {
-                            //         let fill = document.getElementsByClassName('fill')[0]
-                            //         if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
-                            //     }, 130
-                            // )
-
-                            // let fill = document.getElementsByClassName('fill')[0]
-                            // if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
 
                             setTimeout(
                                 function () {
@@ -888,7 +891,7 @@
                 let ctx = fillet.getContext('2d')
 
                 if (fillet.getContext) {
-                    ctx.fillStyle = 'gray'
+                    ctx.fillStyle = mapColor
                     ctx.beginPath();
                     ctx.lineTo(50, 0)
                     ctx.lineTo(50, 50)
@@ -903,7 +906,7 @@
                     let ctxFill = fill.getContext('2d')
 
                     if (fill.getContext) {
-                        ctxFill.fillStyle = 'green'
+                        ctxFill.fillStyle = snakeColor
                         ctxFill.fillRect(0, 0, 50, 50)
                     }
                 } catch { }
@@ -976,7 +979,7 @@
                 ctxHead.clearRect(0, 0, 60, 60)
                 ctxHead.save()
                 ctxHead.translate(5, 5)
-                ctxHead.fillStyle = 'green'//'rgb(38, 8, 189)'
+                ctxHead.fillStyle = snakeColor //'rgb(38, 8, 189)'
                 ctxHead.beginPath()
                 ctxHead.arc(-4.26, -79.87, 85, deg(90 - 2.87), deg(84.4262), true)
                 ctxHead.arc(2.06, -15.18, 20, deg(90 - 5.5738), deg(61.8275), true)
@@ -1038,7 +1041,7 @@
 
             //snakeConection.display = 'none'
             let kls = 0
-
+            snakeConection.backgroundColor = snakeColor
             if (lastKey != actualDirection) {
                 switch (actualDirection) {
                     case 'w':
@@ -1203,7 +1206,7 @@
                 // ctx.fill()
 
 
-                ctx.fillStyle = 'green'
+                ctx.fillStyle = snakeColor
                 ctx.beginPath()
                 ctx.arc(25, 25, 20, deg(0), deg(360))
                 // ctx.lineTo(45, 5)
@@ -1217,7 +1220,7 @@
                 ctxFill.clearRect(0, 0, 60, 60)
                 ctxFill.save()
                 ctxFill.translate(5, 5)
-                ctxFill.fillStyle = 'green'
+                ctxFill.fillStyle = snakeColor
                 ctxFill.fillRect(25, 5, 50, 40)
                 ctxFill.restore()
             }
@@ -1232,18 +1235,45 @@
         html {
             z-index: 10;
         }
-
+        :root{
+            --backgroundColor: black;
+            --mapColor: #060606;
+        }
         .nav {
             width: 1400px;
             height: 150px;
-            background-color: lightgray;
+            background-color: #5c680d;;
             z-index: 11;
+            color: white;
         }
-
+        #side-left{
+            width: 99px;
+            height: 750px;
+            position: fixed;
+            z-index: 12;
+            left: 0%;
+            background-color: var(--backgroundColor);
+        }
+        #side-right{
+            width: 99px;
+            height: 750px;
+            position: fixed;
+            z-index: 12;
+            right: 0%;
+            background-color: var(--backgroundColor);
+        }
+        #side-bottom{
+            width: 1600px;
+            height: 83px;
+            background-color: var(--backgroundColor);
+            position: fixed;
+            z-index: 12;
+            bottom: 0%;
+        }
         #map {
             width: 1400px;
             height: 600px;
-            background-color: gray;
+            background-color: var(--mapColor);
             position: relative;
         }
 
@@ -1268,7 +1298,6 @@
         #snake-conection {
             width: 40px;
             height: 10px;
-            background-color: green;
             position: absolute;
             display: none;
         }
@@ -1297,7 +1326,6 @@
             transform: translate(-5px, -5px);
             position: absolute;
         }
-
         .snake-body {
             width: 50px;
             height: 50px;
@@ -1307,7 +1335,6 @@
         .snake-body-style {
             width: 50px;
             height: 50px;
-            background-color: green;
             /* transition-duration: .01s; */
             position: absolute;
             z-index: 1;
@@ -1317,9 +1344,17 @@
             width: 50px;
             height: 50px;
             position: absolute;
-
+            color: white;
             z-index: 6;
         }
+        .fa-3x{
+            animation-name: foodAnimation;
+            animation-duration: 15s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
         .way{
             width: 50px;
             height: 50px;
@@ -1336,26 +1371,56 @@
             position: absolute;
             z-index: 4;
         }
+
+        @keyframes foodAnimation {
+            0%{
+                color: white;
+                font-size: 3rem;
+            }
+            20%{
+                color: blue;
+                font-size: 2.5rem;
+                transform: rotate(8deg);
+            }
+            40%{
+                color: yellow;
+                font-size: 3rem;
+                transform: rotate(-8deg);
+            }
+            60%{
+                color: purple;
+                font-size: 2.5rem;
+                transform: rotate(8deg);
+            }
+            80%{
+                color: orange;
+                font-size: 3rem;
+                transform: rotate-(8deg);
+            }
+            100%{
+                color: red;
+                font-size: 2.5rem;
+                transform: rotate(8deg);
+            }
+        }
+
     </style>
 </head>
 
 <body>
-
-
     <main class="d-flex justify-content-center flex-wrap">
+
         <div class="nav d-block">
-            <h1 id="h1-nav"></h1>
+            <h1 id="h1-nav" class="m-5">0</h1>
             <h2 id="h2-nav"></h2>
         </div>
         <div id="map">
-
             <div id="snake">
                 <span id="snake-head">
                     <canvas width="60px" height="60px" id="canvas-head"></canvas>
                 </span>
                 <span id="snake-conection"></span>
             </div>
-
             <div id="last-body">
                 <canvas width="60px" height="60px" id="canvas-last-body"></canvas>
             </div>
@@ -1365,8 +1430,10 @@
             <div class="food d-flex justify-content-center align-items-center" id="food">
                 <i class="fa-solid fa-apple-whole fa-3x"></i>
             </div>
-
         </div>
+        <div id="side-left"></div>
+        <div id="side-right"></div>
+        <div id="side-bottom"></div>
     </main>
 
     <script>
