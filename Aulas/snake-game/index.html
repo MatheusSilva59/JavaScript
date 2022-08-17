@@ -200,14 +200,9 @@
                     drawHead(lastAnimationHead.angle, lastAnimationHead.type)
                 }
 
-                if (isBodyAnimation) {
-                    drawLast(lastAnimationBody.angle)
-                }
-                else if(!animationBodyByfood) {
-                    lastBodyDirection()
-                }
-
                 if (leftPos % 50 === 0 && topPos % 50 === 0) {
+                    animationBodyByfood = false
+                    lastBodyDirection()
                     //Adiciona posição à lista de banimento de posicionamento para a comida, pois está em uso
                     indexThereSomething.push(coordToIndex(Math.round(leftPos / 50) * 50, Math.round(topPos / 50) * 50))
                     //console.log(indexThereSomething)
@@ -403,14 +398,18 @@
                 }
             }
         }
-        
+
         var animationBodyByfood = false
 
         function collisionFood() { //Melhorar sistema de colisão com a comida, há falhas não frequentes
 
             redeclareConst()
 
-            if (snakePosGet.top === foodPosGet.top && snakePosGet.left === foodPosGet.left) {
+            if (roundByDirection(topPos) + stepToCSS === foodPosGet.top && roundByDirection(leftPos) + stepToCSS === foodPosGet.left) {
+                animationBodyByfood = true
+            }
+
+            if (topPos + stepToCSS === foodPosGet.top && leftPos + stepToCSS === foodPosGet.left) {
 
                 randomPosition()
 
@@ -440,28 +439,26 @@
                 bodySetStyle[score - 1].style.display = 'none'
                 bodySetStyle[score - 2].style.display = 'block'
 
-                animationBodyByfood = true
-
                 if (bodyArray[score - 2].left > lastPosBodyLeft) {
                     drawLast(0, 'noDelay')
-                    console.log('angle: 0')
+                    //console.log('angle: 0')
                 }
                 else if (bodyArray[score - 2].left < lastPosBodyLeft) {
                     drawLast(180, 'noDelay')
-                    console.log('angle: 180')
+                    //console.log('angle: 180')
                 }
                 else if (bodyArray[score - 2].top > lastPosBodyTop) {
                     drawLast(90, 'noDelay')
-                    console.log('angle: 90')
+                    //console.log('angle: 90')
                 }
                 else if (bodyArray[score - 2].top < lastPosBodyTop) {
                     drawLast(270, 'noDelay')
-                    console.log('angle: 270')
+                    //console.log('angle: 270')
                 }
-                console.log('left: ' + bodyArray[score - 2].left)
-                console.log('top: ' + bodyArray[score - 2].top)
-                console.log('lastLeft: ' + lastPosBodyLeft)
-                console.log('lastTop: ' + lastPosBodyTop)
+                // console.log('left: ' + bodyArray[score - 2].left)
+                // console.log('top: ' + bodyArray[score - 2].top)
+                // console.log('lastLeft: ' + lastPosBodyLeft)
+                // console.log('lastTop: ' + lastPosBodyTop)
 
                 drawAll()
                 drawHead(lastAnimationHead.angle, lastAnimationHead.type)
@@ -532,11 +529,12 @@
             lastBodyStatus.lastX = 50
             lastBodyStatus.lastY = 200
 
+            indexThereSomething.push(28, 40, 52)
             bodySetStyle[score - 1].style.display = 'none'
 
             drawHead()
             onlyDrawLast()
-            //console.log(allPos)
+            console.log(allPos)
         }
 
         function checkThereSomething(value) {
@@ -564,12 +562,15 @@
 
         var indexThereSomething = []
 
+        var klms = 88
+
         function randomPosition() {
 
-
+            //let index = klms
             let index = randomNumber()
             foodPos.left = allPos[index].left + stepToCSS
             foodPos.top = allPos[index].top + stepToCSS
+            klms += 12
 
         }
 
@@ -787,6 +788,8 @@
             }
         }
 
+        var noDelayRemoveFill = false
+
         function bodySnakeApply() {
 
             let xy
@@ -814,15 +817,7 @@
 
                     if (i === bodySet.length - 2) {
 
-                        if (fillPosition.length != 0 && bodyArray[i].top === fillPosition[0].top && bodyArray[i].left === fillPosition[0].left){
-                            setTimeout(
-                                function () {
-                                    let fill = document.getElementsByClassName('fill')[0]
-                                    if (leaveMap() === false && isCollidingBody === false) { fill.remove() }
-                                }, 130
-                            )
-                            fillPosition.shift()
-                        }
+
 
                     }
 
@@ -834,17 +829,37 @@
                             lastFill.style.left = bodyArray[i].left + stepToCSS
                             lastFill.style.top = bodyArray[i].top + stepToCSS
                         }
+
                         bodySetStyle[i].style.display = 'none'
+
+
+                        if (fillPosition.length != 0 && roundValue(bodyArray[i].top) === fillPosition[0].top && roundValue(bodyArray[i].left) === fillPosition[0].left) {
+
+                            setTimeout(
+                                function () {
+                                    let fill = document.getElementsByClassName('fill')[0]
+                                    if (leaveMap() === false && isCollidingBody === false && animationBodyByfood === false) {
+                                        console.log(fill)
+                                        fill.remove()
+                                        fillPosition.shift()
+                                    }
+                                }, 0
+                            )
+
+                        }
 
                         if (filletPosition.length != 0 && bodyArray[i].top === filletPosition[0].top && bodyArray[i].left === filletPosition[0].left) {
 
                             setTimeout(
                                 function () {
                                     let fillet = document.getElementsByClassName('fillet')[0]
-                                    if (leaveMap() === false && isCollidingBody === false) { fillet.remove() }
-                                }, timeDelay
+                                    if (leaveMap() === false && isCollidingBody === false && animationBodyByfood === false) {
+                                        fillet.remove()
+                                        filletPosition.shift()
+                                    }
+                                }, 0
                             )
-                            filletPosition.shift()
+
                         }
                     }
                     else {
@@ -881,7 +896,8 @@
 
             redeclareConst()
         }
-
+        var img = new Image()
+        img.src = 'fundo-cut2.png'
         function drawAll() {
             //drawHead()
             onlyDrawLast()
@@ -899,8 +915,8 @@
                     ctx.arc(0, 50, 40, 0 * (Math.PI / 180), 270 * (Math.PI / 180), true)
                     ctx.lineTo(0, 0)
                     ctx.fill()
+                    ctx.drawImage(img, -5, 0)
                 }
-
                 try {
                     let fill = document.getElementsByClassName('fill')[x]
                     let ctxFill = fill.getContext('2d')
@@ -1078,81 +1094,27 @@
             let lastIndex = bodySet.length - 1
             let penultimateIndex = bodySet.length - 2
             let log = false
-            try {
-                if (lastBodyStatus.lastY != bodyArray[lastIndex].top) {
-                    if (bodyArray[lastIndex].left > bodyArray[penultimateIndex].left) {
-                        //console.log('LEFT')
-                        if (lastBodyStatus.y === 'top') {
-                            lastBodyStatus.lastY = bodyArray[lastIndex].top
-                            if (log) { console.log('baixo para cima /// indo para esquerda') }
-                            drawLast(-180)
-                        }
-                        else if (lastBodyStatus.y === 'bottom') {
-                            lastBodyStatus.lastY = bodyArray[lastIndex].top
-                            if (log) { console.log('cima para baixo /// indo para esquerda') }
-                            drawLast(180)
-                        }
-                        lastBodyStatus.x = 'left'
-                    }
-                    else if (bodyArray[lastIndex].left < bodyArray[penultimateIndex].left) {
-                        //console.log('RIGHT')
-                        if (lastBodyStatus.y === 'top') {
-                            lastBodyStatus.lastY = bodyArray[lastIndex].top
-                            if (log) { console.log('baixo para cima /// indo para direita') }
-                            drawLast(0)
-                        }
-                        else if (lastBodyStatus.y === 'bottom') {
-                            lastBodyStatus.lastY = bodyArray[lastIndex].top
-                            if (log) { console.log('cima para baixo /// indo para direita') }
-                            drawLast(0)
-                        }
-                        lastBodyStatus.x = 'right'
-                    }
-                    //console.log(lastBodyStatus)
-                }
-                else if (lastBodyStatus.lastX != bodyArray[lastIndex].left) {
-                    if (bodyArray[lastIndex].top > bodyArray[penultimateIndex].top) {
-                        //console.log('TOP')
-                        if (lastBodyStatus.x === 'left') {
-                            lastBodyStatus.lastX = bodyArray[lastIndex].left
-                            if (log) { console.log('indo para esquerda /// baixo para cima') }
-                            drawLast(270)
-                        }
-                        else if (lastBodyStatus.x === 'right') {
-                            lastBodyStatus.lastX = bodyArray[lastIndex].left
-                            if (log) { console.log('indo para direita /// baixo para cima') }
-                            drawLast(-90)
-                        }
-                        lastBodyStatus.y = 'top'
-
-                    }
-                    else if (bodyArray[lastIndex].top < bodyArray[penultimateIndex].top) {
-                        //console.log('BOTTOM')
-                        if (lastBodyStatus.x === 'left') {
-                            lastBodyStatus.lastX = bodyArray[lastIndex].left
-                            if (log) { console.log('indo para esquerda /// cima para baixo') }
-                            drawLast(-270)
-                        }
-                        else if (lastBodyStatus.x === 'right') {
-                            lastBodyStatus.lastX = bodyArray[lastIndex].left
-                            if (log) { console.log('indo para direita /// cima para baixo') }
-                            drawLast(90)
-
-                        }
-                        lastBodyStatus.y = 'bottom'
-                    }
-                    //console.log(lastBodyStatus)
-                }
-            } catch { console.log('TNC') }
+            if (bodyArray[lastIndex].left > bodyArray[penultimateIndex].left) {
+                drawLast(180)
+            }
+            else if (bodyArray[lastIndex].left < bodyArray[penultimateIndex].left) {
+                drawLast(0)
+            }
+            else if (bodyArray[lastIndex].top > bodyArray[penultimateIndex].top) {
+                drawLast(270)
+            }
+            else if (bodyArray[lastIndex].top < bodyArray[penultimateIndex].top) {
+                drawLast(90)
+            }
         }
 
         var lastAnimationBody = { angle: 0 }
         var lastTypeBody
         var angleBody = 0
-        var lastAngleBody = 0
+        var lastAngleBody
         var isOriginBody = false
         var isBodyAnimation = false
-        var timerLast
+        var timerLast = 0
         var asd = 0
 
         function drawLast(angle, delay) {
@@ -1162,24 +1124,11 @@
 
             lastAnimationBody.angle = angle
 
-            if (delay === undefined) {
-                //isBodyAnimation = true
-                timerLast = setTimeout(
-                    function () {
-                        if (!animationBodyByfood){
-                            lastFill.style.transform = 'rotate(' + (angle) + 'deg)'
-                        }
-                    }, 140
-                )
-            }
-            else{
-
+            if (delay === undefined && animationBodyByfood === false) {
                 lastFill.style.transform = 'rotate(' + (angle) + 'deg)'
-                setTimeout(
-                    function(){
-                        animationBodyByfood = false
-                    }, 135
-                )
+            }
+            else {
+                lastFill.style.transform = 'rotate(' + (angle) + 'deg)'
             }
             onlyDrawLast()
 
@@ -1235,18 +1184,22 @@
         html {
             z-index: 10;
         }
-        :root{
+
+        :root {
             --backgroundColor: black;
             --mapColor: #060606;
         }
+
         .nav {
             width: 1400px;
             height: 150px;
-            background-color: #5c680d;;
+            background-color: #7e7e3a;
+            border-bottom: 3px solid #aab60a;
             z-index: 11;
             color: white;
         }
-        #side-left{
+
+        #side-left {
             width: 99px;
             height: 750px;
             position: fixed;
@@ -1254,7 +1207,8 @@
             left: 0%;
             background-color: var(--backgroundColor);
         }
-        #side-right{
+
+        #side-right {
             width: 99px;
             height: 750px;
             position: fixed;
@@ -1262,7 +1216,8 @@
             right: 0%;
             background-color: var(--backgroundColor);
         }
-        #side-bottom{
+
+        #side-bottom {
             width: 1600px;
             height: 83px;
             background-color: var(--backgroundColor);
@@ -1270,11 +1225,13 @@
             z-index: 12;
             bottom: 0%;
         }
+
         #map {
             width: 1400px;
             height: 600px;
             background-color: var(--mapColor);
             position: relative;
+            background-image: url('fundo.png');
         }
 
         #snake {
@@ -1326,6 +1283,7 @@
             transform: translate(-5px, -5px);
             position: absolute;
         }
+
         .snake-body {
             width: 50px;
             height: 50px;
@@ -1340,14 +1298,15 @@
             z-index: 1;
         }
 
-        .food{
+        .food {
             width: 50px;
             height: 50px;
             position: absolute;
             color: white;
             z-index: 6;
         }
-        .fa-3x{
+
+        .fa-3x {
             animation-name: foodAnimation;
             animation-duration: 15s;
             animation-timing-function: ease;
@@ -1355,7 +1314,7 @@
             animation-direction: alternate;
         }
 
-        .way{
+        .way {
             width: 50px;
             height: 50px;
             position: absolute;
@@ -1373,37 +1332,41 @@
         }
 
         @keyframes foodAnimation {
-            0%{
+            0% {
                 color: white;
                 font-size: 3rem;
             }
-            20%{
+
+            20% {
                 color: blue;
                 font-size: 2.5rem;
                 transform: rotate(8deg);
             }
-            40%{
+
+            40% {
                 color: yellow;
                 font-size: 3rem;
                 transform: rotate(-8deg);
             }
-            60%{
+
+            60% {
                 color: purple;
                 font-size: 2.5rem;
                 transform: rotate(8deg);
             }
-            80%{
+
+            80% {
                 color: orange;
                 font-size: 3rem;
                 transform: rotate-(8deg);
             }
-            100%{
+
+            100% {
                 color: red;
                 font-size: 2.5rem;
                 transform: rotate(8deg);
             }
         }
-
     </style>
 </head>
 

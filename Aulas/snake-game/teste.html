@@ -13,7 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
         crossorigin="anonymous"></script>
-
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/490ac8585b.js" crossorigin="anonymous"></script>
 
     <script>
         var angleRotate = 0
@@ -177,6 +178,9 @@
 
         // ctx.fill()
 
+
+
+
     </script>
     <style>
         body {
@@ -204,21 +208,259 @@
             width: 500px;
             height: 500px;
         }
+        #socket{
+            width: 700px;
+            height: 750px;
+            border: 1px solid red;
+            padding: 1rem;
+        }
+        #control{
+            width: 700px;
+            height: 750px;
+            border: 1px solid green;
+            padding: 1rem 3rem 1rem 3rem;
+            font-size: 1rem;
+            font-weight: bold;
+        }
     </style>
 </head>
-
-<body>
+<body onload="addAllEventListener()">
     <div class="d-flex justify-content-center align-items-center">
-        <div id="rotate">
+        <!-- <div id="rotate" class="mr-5">
             <canvas width="500" height="500" id="canvas"></canvas>
+        </div> -->
+        <div id="socket" class="m-2 d-flex justify-content-center align-items-center">
+            <i id="light" class="fa-solid fa-sun fa-7x"></i>
+        </div>
+        <div id="control">
+            <label for="blur" class="form-label">Blur (px)</label>
+            <input type="range" class="form-range" value="0" min="0" max="50" step="1" id="blur">
+
+            <label for="brightness" class="form-label">brightness(%)</label>
+            <input type="range" class="form-range" value="100" min="0" max="200" step="1" id="brightness">
+            
+            <label for="constrat" class="form-label">contrast(%)</label>
+            <input type="range" class="form-range" value="100" min="0" max="200" step="1" id="constrat">
+
+            <form>
+                <div>
+                    drop-shadow(h-shadow v-shadow blur spread color)
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label for="h-shadow" class="form-label">h-shadow</label>
+                        <input type="range" class="form-range" value="0" min="-50" max="50" step="1" id="h-shadow">
+                    </div>
+                    <div class="col-6">
+                        <label for="v-shadow" class="form-label">v-shadow)</label>
+                        <input type="range" class="form-range" value="0" min="-50" max="50" step="1" id="v-shadow">
+                    </div>
+                    <div class="col-6">
+                        <label for="dropshadow-blur" class="form-label">blur</label>
+                        <input type="range" class="form-range" value="0" min="0" max="50" step="1" id="dropshadow-blur">
+                    </div>
+                    <div class="col-6">
+                        <label for="spread-color" class="form-label">spread color</label>
+                        <input type="color" class="form-range" id="spread-color">
+                    </div>
+                </div>
+            </form>
+
+
+            <label for="grayscale" class="form-label">grayscale(%)</label>
+            <input type="range" class="form-range" value="0" min="0" max="100" step="1" id="grayscale">
+            
+            <label for="hue-rotate" class="form-label">hue-rotate(deg)</label>
+            <input type="range" class="form-range" value="0" min="0" max="50" step="1" id="hue-rotate">
+            
+            <label for="invert" class="form-label">invert(%)</label>
+            <input type="range" class="form-range" value="0" min="0" max="100" step="1" id="invert">
+            
+            <label for="opacity" class="form-label">opacity(%)</label>
+            <input type="range" class="form-range" value="100" min="0" max="200" step="1" id="opacity">
+            
+            <label for="saturate" class="form-label">saturate(%)</label>
+            <input type="range" class="form-range" value="100" min="0" max="200" step="1" id="saturate">
+            
+            <label for="sepia" class="form-label">sepia(%)</label>
+            <input type="range" class="form-range" value="0" min="0" max="100" step="1" id="sepia">
+            
         </div>
         <!-- <div id="teste0">
             <div id="teste"></div>
         </div> -->
     </div>
     <script>
+
+        const light = document.getElementById('light')
+        
+        const blurFilter = document.getElementById('blur')
+        const brightness = document.getElementById('brightness')
+        const contrast = document.getElementById('constrat')
+        const grayscale = document.getElementById('grayscale')
+        const hueRotate = document.getElementById('hue-rotate')
+        const invert = document.getElementById('invert')
+        const opacity = document.getElementById('opacity')
+        const saturate = document.getElementById('saturate')
+        const sepia = document.getElementById('sepia')
+
+        const hShadow = document.getElementById('h-shadow')
+        const vShadow = document.getElementById('v-shadow')
+        const dropshadowBlur = document.getElementById('dropshadow-blur')
+        const spreadColor = document.getElementById('spread-color')
+
+
+        function addAllEventListener(){
+            for (const item in filter){
+                filter[item].var.addEventListener('click', filter[item].function)
+                filter[item].var.addEventListener('mousemove', filter[item].function)
+            }
+        }
+
+        var filter = {hShadow : {
+            filter : '0px ',
+            var : hShadow,
+            function : changeHShadow
+        }, vShadow : {
+            filter : '0px ',
+            var : vShadow,
+            function : changeVShadow
+        }, dropshadowBlur : {
+            filter : '0px ',
+            var : dropshadowBlur,
+            function : changeShadowBlur
+        }, spreadColor : {
+            filter : '#000000',
+            var : spreadColor,
+            function : changeSpreadColor
+        },
+            blur: {
+            filter: 'none',
+            var : blurFilter,
+            function : changeBlur
+        }, brightness: {
+            filter : 'none',
+            var : brightness,
+            function : changeBrightness
+        },
+        contrast: {
+            filter : 'none',
+            var : contrast,
+            function : changeContrast
+        }, grayscale: {
+            filter : 'none',
+            var : grayscale,
+            function: changeGrayScale
+        }, hueRotate: {
+            filter: 'none',
+            var : hueRotate,
+            function : changeHueRotate
+        }, invert: {
+            filter : 'none',
+            var : invert,
+            function : changeInvert
+        }, opacity : {
+            filter : 'none',
+            var : opacity,
+            function : changeOpacity
+        }, 
+        saturate: {
+            filter : 'none',
+            var : saturate,
+            function : changeSaturate
+        }, sepia: {
+            filter : 'none',
+            var : sepia,
+            function : changeSepia
+        }}
+
+        function applyFilter(){
+            let tempFilter = ''
+            for (const item in filter){
+                if ( filter[item].filter != 'none'){
+                    if (filter[item].var === hShadow){
+                        tempFilter += 'drop-shadow(' + filter[item].filter
+                    }
+                    else if (filter[item].var === spreadColor){
+                        tempFilter += filter[item].filter + ')'
+                    }
+                    else{
+                        tempFilter += filter[item].filter
+                    }
+                }
+            }
+            console.log(tempFilter)
+            light.style.filter = tempFilter
+        }
+
+        var lastSpreadColor
+        var animationColor = window.requestAnimationFrame(dynamicColor)
+
+        function dynamicColor(){
+            lastSpreadColor = lastSpreadColor === undefined ? spreadColor.value : lastSpreadColor
+            if (spreadColor.value != lastSpreadColor){
+                lastSpreadColor = + ' ' +spreadColor.value
+                changeSpreadColor()
+            }
+            animationColor = window.requestAnimationFrame(dynamicColor)
+        }
+
+        function changeHShadow(){
+            filter.hShadow.filter = hShadow.value + 'px '
+            applyFilter()
+        }
+        function changeVShadow(){
+            filter.vShadow.filter = vShadow.value + 'px '
+            applyFilter()
+        }
+        function changeShadowBlur(){
+            filter.dropshadowBlur.filter = dropshadowBlur.value + 'px '
+            applyFilter()
+        }
+        function changeSpreadColor(){
+            filter.spreadColor.filter = ' ' + spreadColor.value
+            applyFilter()
+        }
+
+        function changeBlur(){
+            filter.blur.filter = 'blur(' + blurFilter.value + 'px)'
+            applyFilter()
+        }
+        function changeBrightness(){
+            filter.brightness.filter = 'brightness(' + brightness.value + '%)'
+            applyFilter()
+        }
+        function changeContrast(){
+            filter.contrast.filter = 'contrast(' + contrast.value + '%)'
+            applyFilter()
+        }
+        function changeGrayScale(){
+            filter.grayscale.filter = 'grayscale(' + grayscale.value + '%)'
+            applyFilter()
+        }
+        function changeHueRotate(){
+            filter.hueRotate.filter = 'hue-rotate(' + hueRotate.value + 'deg)'
+            applyFilter()
+        }
+        function changeInvert(){
+            filter.invert.filter = 'invert(' + invert.value + '%)'
+            applyFilter()
+        }
+        function changeOpacity(){
+            filter.opacity.filter = 'opacity(' + opacity.value + '%)'
+            applyFilter()
+        }
+        function changeSaturate(){
+            filter.saturate.filter = 'saturate(' + saturate.value + '%)'
+            applyFilter()
+        }
+        function changeSepia(){
+            filter.sepia.filter = 'sepia(' + sepia.value + '%)'
+            applyFilter()
+        }
+
         var canvas = document.getElementById('canvas')
-        canvas.addEventListener('onload', draw())
+        //canvas.addEventListener('onload', draw())
     </script>
 </body>
 
