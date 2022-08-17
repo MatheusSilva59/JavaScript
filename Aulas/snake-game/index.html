@@ -530,6 +530,7 @@
             lastBodyStatus.lastY = 200
 
             indexThereSomething.push(28, 40, 52)
+            actualDirection = 'd'
             bodySetStyle[score - 1].style.display = 'none'
 
             drawHead()
@@ -943,7 +944,7 @@
 
             lastAnimationHead.angle = angle
             lastAnimationHead.type = type
-
+            console.log('asd')
             snakeHead = document.getElementById('snake-head')
 
             if (lastType != type && lastType != undefined && lastAngleHead != 0) {
