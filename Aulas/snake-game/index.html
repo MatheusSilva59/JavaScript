@@ -51,7 +51,7 @@
         var isExecutingD = false
         var isExecutingContinuos = false
 
-        var singleInput = false
+        var byStep = false
 
         var arrayKeys = new Array()
         var arrayBody = new Array()
@@ -62,13 +62,16 @@
         var mapColor = '#060606'
 
         var moveKeys = /[wsad]/i
-        document.onkeydown = function (asd) {
-            if (asd.key.match(moveKeys) && asd.key.length === 1) {
-                moveSnake(asd.key)
-                firstKey = true
 
+        document.onkeydown = function (value) { actions(value) }
+
+        function actions(value) {
+            isReset = false
+            if (value.key.match(moveKeys) && value.key.length === 1) {
+                isPause = false
+                moveSnake(value.key)
                 counter = 0
-                if (numberKeysDown % 2 === 0) { //Contador para evitar dupla inserção de teclas
+                if (numberKeysDown % 2 === 0) { //Contador
                     if (timeInputs === undefined) {
                         timeInputs = setInterval(
                             function () {
@@ -78,21 +81,81 @@
                         )
                     }
                 }
-                numberKeysDown++
             }
-            else if (asd.key == 'p') {
-                if (isMoving != undefined) {
-                    window.cancelAnimationFrame(isMoving)
-                    isMoving = undefined
+            else if (value.key === 'p') {
+                pause(value)
+            }
+            else if (value.key === 'm') {
+                singleInput()
+            }
+            else if (value.key === 'r' && isMoving != undefined) {
+                if (isDead) {
+                    restartGame()
                 }
                 else {
-                    moveSnake(asd.key)
+                    shouldReset = true
                 }
             }
-            else if (asd.key == 'm') {
-                singleInput = singleInput === false ? true : false
-            }
+        }
+        var isPause = false
+        var shouldPause = false
 
+        function pause(value) {
+            if (isMoving != undefined) {
+                shouldPause = true
+            }
+        }
+
+        function singleInput() {
+            byStep = byStep === false ? true : false
+        }
+
+        var shouldReset = false
+        var isReset = false
+        var maxScore = 0
+        function restartGame() {
+
+            isReset = true
+            randomPosition()
+            let fill = document.getElementsByClassName('fill')
+            let fillet = document.getElementsByClassName('fillet')
+
+            for (let i = 0; i < bodyArray.length; i++) {
+                bodySet[0].remove()
+            }
+            for (let p = 0; p < fillPosition.length; p++) {
+                fill[0].remove()
+            }
+            for (let x = 0; x < filletPosition.length; x++) {
+                fillet[0].remove()
+            }
+            fillPosition = []
+            filletPosition = []
+            arrayKeys = []
+            arrayLastKeys = []
+            bodyArray = []
+
+            window.cancelAnimationFrame(isMoving)
+            isCollidingBody = false
+            isMoving = undefined
+
+            posString = ''
+            operationString = ''
+            isLeft = false
+            isValid = false
+
+            isDead = false
+
+            document.getElementById('nav-actual').innerHTML = 0
+
+            maxScore = maxScore < score - 2 ? score - 2 : maxScore
+
+            document.getElementById('nav-max').innerHTML = maxScore
+
+            notExecuting()
+
+            clearAllInterval()
+            initiate()
         }
 
         var posString = ''
@@ -143,7 +206,6 @@
                 lastPosTop = arrayLastPositions[indexLocal].top
                 if (indexLocal === 0 && arrayLastPositions.length === lengthBody) { arrayLastPositions.shift() }
             }
-            //console.log(arrayLastPositions)
 
             if (bodySet.length === 0) {
                 lastPosBodyLeft = lastPosLeft
@@ -176,11 +238,10 @@
                 clearAllInterval()
                 window.cancelAnimationFrame(isMoving)
             }
-            else if (isCollidingBody === false) {
+            else if (isCollidingBody === false && isReset === false) {
 
                 if (hasBody) {
                     filletBodyApply()
-
                 }
                 else {
                     lastPosLeftSnake = leftPos
@@ -205,53 +266,65 @@
                     lastBodyDirection()
                     //Adiciona posição à lista de banimento de posicionamento para a comida, pois está em uso
                     indexThereSomething.push(coordToIndex(Math.round(leftPos / 50) * 50, Math.round(topPos / 50) * 50))
-                    //console.log(indexThereSomething)
                 }
             }
         }
 
+        var isDead = false
 
         function defaultMove() {
 
             if (leftPos % 50 === 0 && topPos % 50 === 0) {
-                if (arrayKeys.length != 0) {
-                    whichDirection(arrayKeys[0])
-                    arrayKeys.shift()
+                if (shouldReset) {
+                    restartGame()
+                    shouldReset = false
                 }
-
-
-                if (arrayLastKeys.length != 0) {
-                    whichDirection(arrayLastKeys[0])
-                    arrayLastKeys.shift()
-                }
-            }
-
-            notExecuting()
-
-            canMove(posString, isLeft, operationString)
-
-
-            if (leaveMap() === false && isCollidingBody === false) {
-
-                bodySnakeApply()
-
-                collisionFood()
-
-                snakeConectionFunc()
-
-                if (hasBody === false && indexThereSomething.length > 1) {
-                    //console.log('INDEX RETIRADO SE NÃO HAVER CORPO: ' + indexThereSomething[0])
-                    indexThereSomething.shift()
-                    //console.log(indexThereSomething)
-                }
-                if (singleInput === false) { isMoving = window.requestAnimationFrame(defaultMove) }
-                else if (repeat < stepToCalc - 5) {
-                    window.requestAnimationFrame(defaultMove)
-                    //console.log('BBBBB: ' + repeat)
-                    repeat += step
+                if (shouldPause){
+                    isPause = true
+                    window.cancelAnimationFrame(isMoving)
+                    isMoving = undefined
+                    shouldPause = false
                 }
             }
+            if (isReset === false && isPause === false) {
+                if (leftPos % 50 === 0 && topPos % 50 === 0 && byStep === false) {
+                    if (arrayKeys.length != 0) {
+                        whichDirection(arrayKeys[0])
+                        arrayKeys.shift()
+                    }
 
+                    if (arrayLastKeys.length != 0) {
+                        whichDirection(arrayLastKeys[0])
+                        arrayLastKeys.shift()
+                    }
+                }
+                notExecuting()
+                canMove(posString, isLeft, operationString)
+                if (leaveMap() === false && isCollidingBody === false) {
+
+                    bodySnakeApply()
+
+                    collisionFood()
+
+                    snakeConectionFunc(actualDirection)
+
+                    if (hasBody === false && indexThereSomething.length > 1) {
+                        //console.log('INDEX RETIRADO SE NÃO HAVER CORPO: ' + indexThereSomething[0])
+                        indexThereSomething.shift()
+                        //console.log(indexThereSomething)
+                    }
+                    if (byStep === false) {
+                        isMoving = window.requestAnimationFrame(defaultMove)
+                    }
+                    else if (repeat < stepToCalc - 5) {
+                        window.requestAnimationFrame(defaultMove)
+                        repeat += step
+                    }
+                }
+                else {
+                    isDead = true
+                }
+            }
         }
 
         var repeat = 0
@@ -267,10 +340,11 @@
             else {
                 arrayLastKeys.push(directionLocal)
             }
-
-            if (singleInput === true) {
+            if (byStep === true) {
                 repeat = 0
-                defaultMove()
+                if (isOtherThan != directionLocal) {
+                    defaultMove()
+                }
             }
             else {
                 if (isMoving === undefined) {
@@ -282,10 +356,12 @@
         }
 
         function whichDirection(direction) {
-            //console.log('DIRECTION: ' + direction)
-            //console.log('arrayKEYS: ' + arrayKeys)
+            // console.log('DIRECTION: ' + direction)
+            // console.log('arrayKEYS: ' + arrayKeys)
+            if (arrayKeys.length > 1) {
+                arrayKeys.pop()
+            }
             switch (direction) {
-
                 case 'w':
                     if (actualDirection != 's' && isExecuting() === false) {
                         isExecutingW = true
@@ -295,6 +371,7 @@
                         actualDirection = 'w'
                         //console.log('W')
                         isValid = true
+                        isOtherThan = 's'
                     }
                     else {
                         isValid = false
@@ -312,6 +389,7 @@
                         actualDirection = 's'
                         //console.log('S')
                         isValid = true
+                        isOtherThan = 'w'
                     }
                     else {
                         isValid = false
@@ -329,6 +407,7 @@
                         actualDirection = 'a'
                         //console.log('A')
                         isValid = true
+                        isOtherThan = 'd'
                     }
                     else {
                         isValid = false
@@ -346,6 +425,7 @@
                         actualDirection = 'd'
                         //console.log('D')
                         isValid = true
+                        isOtherThan = 'a'
                     }
                     else {
                         isValid = false
@@ -419,15 +499,7 @@
 
                 isEating = true
                 score++
-                document.getElementById('h1-nav').innerHTML = score
-
-
-                // if (score % 2 === 0){
-                //     snakeColor = arrayColors[0]
-                // }
-                // else{
-                //     snakeColor = arrayColors[1]
-                // }
+                document.getElementById('nav-actual').innerHTML = score - 2
 
                 redeclareConst()
 
@@ -441,24 +513,16 @@
 
                 if (bodyArray[score - 2].left > lastPosBodyLeft) {
                     drawLast(0, 'noDelay')
-                    //console.log('angle: 0')
                 }
                 else if (bodyArray[score - 2].left < lastPosBodyLeft) {
                     drawLast(180, 'noDelay')
-                    //console.log('angle: 180')
                 }
                 else if (bodyArray[score - 2].top > lastPosBodyTop) {
                     drawLast(90, 'noDelay')
-                    //console.log('angle: 90')
                 }
                 else if (bodyArray[score - 2].top < lastPosBodyTop) {
                     drawLast(270, 'noDelay')
-                    //console.log('angle: 270')
                 }
-                // console.log('left: ' + bodyArray[score - 2].left)
-                // console.log('top: ' + bodyArray[score - 2].top)
-                // console.log('lastLeft: ' + lastPosBodyLeft)
-                // console.log('lastTop: ' + lastPosBodyTop)
 
                 drawAll()
                 drawHead(lastAnimationHead.angle, lastAnimationHead.type)
@@ -484,12 +548,18 @@
         var mapHeight
         var allPos = []
         var allIndex = []
+
+        var isOtherThan
+
         function initiate() {
 
             mapWidth = 1400 - stepToCalc
             mapHeight = 600 - stepToCalc
 
             let i = 0
+
+            allIndex = new Array()
+            allPos = new Array()
 
             for (let x = 0; x <= mapWidth; x += stepToCalc) {
                 for (let y = 0; y <= mapHeight; y += stepToCalc) {
@@ -498,17 +568,17 @@
                     i++
                 }
             }
+            console.log(allPos)
             //temporário spawn
             leftPos = 200
             topPos = 200
             snakePos.left = '200px'
             snakePos.top = '200px'
+            arrayLastPositions = []
             for (let x = 0; x < 29; x++) {
                 arrayLastPositions[x] = { left: 55 + x * 5, top: 200 }
             }
-            //lengthBody = score === 0 ? lengthBody : 10 * (score + 1)
             score = 2
-            //console.log(arrayLastPositions  )
             hasBody = true
             statusDirection.x = 'right'
             statusDirection.y = 'bottom'
@@ -524,18 +594,24 @@
             lastFill.style.left = '100px'
             lastFill.style.top = '200px'
 
-            lastBodyStatus.x = 'right'
-            lastBodyStatus.y = 'bottom'
-            lastBodyStatus.lastX = 50
-            lastBodyStatus.lastY = 200
-
             indexThereSomething.push(28, 40, 52)
+
             actualDirection = 'd'
+            lastKey = undefined
+            isOtherThan = 'a'
+
             bodySetStyle[score - 1].style.display = 'none'
 
-            drawHead()
+            onlyDrawHead()
             onlyDrawLast()
-            console.log(allPos)
+
+            snakeHead.style.transform = 'rotate(' + 0 + 'deg)'
+
+            lastAngleHead = 0
+            angleHead = 0
+            snakeConectionFunc('d')
+
+            lastFill.style.transform = 'rotate(0deg)'
         }
 
         function checkThereSomething(value) {
@@ -552,27 +628,17 @@
         }
 
         function randomNumber() {
-
             let tempAllIndex = allIndex.filter(checkThereSomething)
-
             let value = tempAllIndex[Math.floor(Math.random() * tempAllIndex.length)]
-            //console.log(tempAllIndex)
-            //console.log(value)
             return value
         }
 
-        var indexThereSomething = []
-
-        var klms = 88
+        var indexThereSomething = new Array()
 
         function randomPosition() {
-
-            //let index = klms
             let index = randomNumber()
             foodPos.left = allPos[index].left + stepToCSS
             foodPos.top = allPos[index].top + stepToCSS
-            klms += 12
-
         }
 
         function coordToIndex(left, top) {
@@ -610,7 +676,6 @@
                     else {
                         bodyArray[i] = arrayLastPositions[lengthBody - (10 * i) - 11]
                     }
-
                 }
                 else {
                     if (isEating) {
@@ -643,7 +708,7 @@
 
                             }
                         }
-                    } catch { }
+                    } catch (e) { continue }
                 }
 
 
@@ -707,13 +772,11 @@
                         if (statusDirection.y === 'top') {
                             drawHead(-180, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
-                            //snakeHead.backgroundColor = 'red'
                             statusDirection.lastY = topPos
                         }
                         else if (statusDirection.y === 'bottom') {
                             drawHead(180, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
-                            //snakeHead.backgroundColor = 'blue'
                             statusDirection.lastY = topPos
                         }
                         statusDirection.x = 'left'
@@ -723,13 +786,11 @@
                         if (statusDirection.y === 'top') {
                             drawHead(0, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
-                            //snakeHead.backgroundColor = 'orange'
                             statusDirection.lastY = topPos
                         }
                         else if (statusDirection.y === 'bottom') {
                             drawHead(0, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
-                            //snakeHead.backgroundColor = 'white'
                             statusDirection.lastY = topPos
                         }
                         statusDirection.x = 'right'
@@ -748,13 +809,11 @@
                         if (statusDirection.x === 'left') {
                             drawHead(270, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 180, -5, 5, bodyArray.length)
-                            //snakeHead.backgroundColor = 'lightblue'
                             statusDirection.lastX = leftPos
                         }
                         else if (statusDirection.x === 'right') {
                             drawHead(-90, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 90, 5, 5, bodyArray.length)
-                            //snakeHead.backgroundColor = 'darkred'
                             statusDirection.lastX = leftPos
                         }
                         statusDirection.y = 'top'
@@ -764,13 +823,11 @@
                         if (statusDirection.x === 'left') {
                             drawHead(-270, '-')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 270, -5, -5, bodyArray.length)
-                            //snakeHead.backgroundColor = 'darkgreen'
                             statusDirection.lastX = leftPos
                         }
                         else if (statusDirection.x === 'right') {
                             drawHead(90, '+')
                             drawFillet(lastPosTopSnake, lastPosLeftSnake, 0, 5, -5, bodyArray.length)
-                            //snakeHead.backgroundColor = 'purple'
                             statusDirection.lastX = leftPos
                         }
                         statusDirection.y = 'bottom'
@@ -785,7 +842,6 @@
                     lastPosLeftSnake = leftPos
                     lastPosTopSnake = topPos
                 }
-                //console.log(statusDirection)
             }
         }
 
@@ -815,13 +871,6 @@
                         bodySet[i].style.top = bodyArray[i].top + stepToCSS
                     }
 
-
-                    if (i === bodySet.length - 2) {
-
-
-
-                    }
-
                     if (i === bodySet.length - 1) {
 
                         if (true) {
@@ -840,7 +889,7 @@
                                 function () {
                                     let fill = document.getElementsByClassName('fill')[0]
                                     if (leaveMap() === false && isCollidingBody === false && animationBodyByfood === false) {
-                                        console.log(fill)
+                                        //console.log(fill)
                                         fill.remove()
                                         fillPosition.shift()
                                     }
@@ -926,7 +975,7 @@
                         ctxFill.fillStyle = snakeColor
                         ctxFill.fillRect(0, 0, 50, 50)
                     }
-                } catch { }
+                } catch (e) { continue }
             }
 
         }
@@ -944,7 +993,6 @@
 
             lastAnimationHead.angle = angle
             lastAnimationHead.type = type
-            console.log('asd')
             snakeHead = document.getElementById('snake-head')
 
             if (lastType != type && lastType != undefined && lastAngleHead != 0) {
@@ -969,13 +1017,10 @@
 
             if (angle != angleHead) {
                 isHeadAnimation = true
-                //console.log(angle)
-                //console.log('POHA: ' + angle)
             }
             else {
                 isHeadAnimation = false
                 lastAngleHead = angle
-                //canvasHead.style.transformOrigin = 'center center'
                 if (isOrigin) {
                     angleHead = 0
                     lastAngleHead = 0
@@ -987,8 +1032,12 @@
                 angleHead += ((absoluteValue(lastAngleHead, angle)) * type) / 10
             }
 
-            snakeHead.style.transform = 'rotate(' + angleHead + 'deg)'// + 'translate(' +  lastAnimationHead.transY + 'px, ' + lastAnimationHead.transX  + 'px)'
+            snakeHead.style.transform = 'rotate(' + angleHead + 'deg)'
 
+            onlyDrawHead()
+        }
+
+        function onlyDrawHead() {
             canvasHead = document.getElementById('canvas-head')
             let ctxHead = canvasHead.getContext('2d')
 
@@ -1050,14 +1099,11 @@
                 ctxHead.restore()
                 ctxHead.restore()
             }
-
-
         }
         var lastKey
-        function snakeConectionFunc() {
 
-            //snakeConection.display = 'none'
-            let kls = 0
+        function snakeConectionFunc(actualDirection) {
+
             snakeConection.backgroundColor = snakeColor
             if (lastKey != actualDirection) {
                 switch (actualDirection) {
@@ -1089,12 +1135,9 @@
                 lastKey = actualDirection
             }
         }
-
-        var lastBodyStatus = { x: 'none', y: 'none', lastX: 'none', lastY: 'none' }
         function lastBodyDirection() {
             let lastIndex = bodySet.length - 1
             let penultimateIndex = bodySet.length - 2
-            let log = false
             if (bodyArray[lastIndex].left > bodyArray[penultimateIndex].left) {
                 drawLast(180)
             }
@@ -1110,13 +1153,6 @@
         }
 
         var lastAnimationBody = { angle: 0 }
-        var lastTypeBody
-        var angleBody = 0
-        var lastAngleBody
-        var isOriginBody = false
-        var isBodyAnimation = false
-        var timerLast = 0
-        var asd = 0
 
         function drawLast(angle, delay) {
 
@@ -1145,24 +1181,11 @@
                 ctx.clearRect(0, 0, 60, 60)
                 ctx.save()
                 ctx.translate(5, 5)
-                // ctx.fillStyle = 'purple'
-                // ctx.beginPath()
-                // ctx.arc(25, 25, 20, deg(90), deg(270))
-                // ctx.lineTo(25, 0)
-                // ctx.lineTo(-10, 0)
-                // ctx.lineTo(-10, 50)
-                // ctx.lineTo(25, 50)
-                // ctx.lineTo(25, 45)
-                // ctx.fill()
 
 
                 ctx.fillStyle = snakeColor
                 ctx.beginPath()
                 ctx.arc(25, 25, 20, deg(0), deg(360))
-                // ctx.lineTo(45, 5)
-                // ctx.lineTo(45, 45)
-                // ctx.lineTo(25, 45)
-                // ctx.lineTo(25, 35)
                 ctx.fill()
                 ctx.restore()
             }
@@ -1191,13 +1214,14 @@
             --mapColor: #060606;
         }
 
+
+
         .nav {
             width: 1400px;
             height: 150px;
-            background-color: #7e7e3a;
-            border-bottom: 3px solid #aab60a;
             z-index: 11;
             color: white;
+            background: url('asd.png') #090909 no-repeat;
         }
 
         #side-left {
@@ -1238,7 +1262,6 @@
         #snake {
             width: 50px;
             height: 50px;
-            /* background-color: green; */
             position: absolute;
         }
 
@@ -1264,7 +1287,6 @@
             width: 50px;
             height: 50px;
             position: absolute;
-            /* background-color: purple; */
             z-index: 10;
         }
 
@@ -1294,7 +1316,6 @@
         .snake-body-style {
             width: 50px;
             height: 50px;
-            /* transition-duration: .01s; */
             position: absolute;
             z-index: 1;
         }
@@ -1368,15 +1389,56 @@
                 transform: rotate(8deg);
             }
         }
+
+        .nav {
+            position: relative;
+        }
+
+        .nav h1 {
+            display: inline-block;
+            margin-right: 2rem;
+        }
+
+        .nav div:first-child {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 10%;
+        }
+
+        .nav div:last-child {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+        }
+
+        .nav .fa-apple-whole {
+            color: #c0ca3d;
+        }
+
+        .nav .fa-trophy {
+            color: orange;
+        }
+
+        .nav .fa-solid {
+            font-size: 3rem !important;
+        }
     </style>
 </head>
 
 <body>
     <main class="d-flex justify-content-center flex-wrap">
 
-        <div class="nav d-block">
-            <h1 id="h1-nav" class="m-5">0</h1>
-            <h2 id="h2-nav"></h2>
+        <div class="nav d-block d-flex">
+            <div>
+                <h1 id="nav-actual">0</h1>
+                <span><i class="fa-solid fa-apple-whole"></i></span>
+            </div>
+            <div>
+                <h1 id="nav-max">0</h2>
+                    <span><i class="fa-solid fa-trophy"></i></span>
+            </div>
         </div>
         <div id="map">
             <div id="snake">
