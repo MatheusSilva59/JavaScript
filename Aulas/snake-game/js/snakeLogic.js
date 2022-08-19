@@ -580,7 +580,7 @@ function initiate() {
     body1style.style.width = '60px'
     body1style.style.height = '40px'
     body1style.style.backgroundColor = snakeColor
-    body1.append(body1style)
+    body1.appendChild(body1style)
     body1.className = 'snake-body d-flex justify-content-center align-items-center'
     body1.style.left = '150px'
     body1.style.top = '200px'
@@ -589,7 +589,7 @@ function initiate() {
     body2style.style.width = '60px'
     body2style.style.height = '40px'
     body2style.style.backgroundColor = snakeColor
-    body2.append(body2style)
+    body2.appendChild(body2style)
     body2.className = 'snake-body d-flex justify-content-center align-items-center'
     body2.style.left = '100px'
     body2.style.top = '200px'

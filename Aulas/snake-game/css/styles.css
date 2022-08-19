@@ -3,6 +3,7 @@
 body,
 html {
     z-index: 10;
+    background-color: var(--backgroundColor);
 }
 
 :root {
@@ -18,37 +19,11 @@ html {
     background: url('../images/nav.png') #090909 no-repeat;
 }
 
-#side-left {
-    width: 99px;
-    height: 750px;
-    position: fixed;
-    z-index: 12;
-    left: 0%;
-    background-color: var(--backgroundColor);
-}
-
-#side-right {
-    width: 99px;
-    height: 750px;
-    position: fixed;
-    z-index: 12;
-    right: 0%;
-    background-color: var(--backgroundColor);
-}
-
-#side-bottom {
-    width: 1600px;
-    height: 83px;
-    background-color: var(--backgroundColor);
-    position: fixed;
-    z-index: 12;
-    bottom: 0%;
-}
-
 #map {
     width: 1400px;
     height: 600px;
     background-color: var(--mapColor);
+    overflow: hidden;
     position: relative;
     background-image: url('../images/fundo.png');
 }
