@@ -1,0 +1,220 @@
+@charset "UTF-8";
+
+body,
+html {
+    z-index: 10;
+}
+
+:root {
+    --backgroundColor: black;
+    --mapColor: #060606;
+}
+
+.nav {
+    width: 1400px;
+    height: 150px;
+    z-index: 11;
+    color: white;
+    background: url('../images/nav.png') #090909 no-repeat;
+}
+
+#side-left {
+    width: 99px;
+    height: 750px;
+    position: fixed;
+    z-index: 12;
+    left: 0%;
+    background-color: var(--backgroundColor);
+}
+
+#side-right {
+    width: 99px;
+    height: 750px;
+    position: fixed;
+    z-index: 12;
+    right: 0%;
+    background-color: var(--backgroundColor);
+}
+
+#side-bottom {
+    width: 1600px;
+    height: 83px;
+    background-color: var(--backgroundColor);
+    position: fixed;
+    z-index: 12;
+    bottom: 0%;
+}
+
+#map {
+    width: 1400px;
+    height: 600px;
+    background-color: var(--mapColor);
+    position: relative;
+    background-image: url('../images/fundo.png');
+}
+
+#snake {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+}
+
+#snake-head {
+    position: absolute;
+    z-index: 10;
+    width: 50px;
+    height: 50px;
+}
+
+#canvas-head {
+    transform: translate(-5px, -5px);
+}
+
+#snake-conection {
+    width: 40px;
+    height: 10px;
+    position: absolute;
+    display: none;
+}
+
+#last-body {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 10;
+}
+
+#last-fill {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 2;
+}
+
+#canvas-last-body {
+    transform: translate(-5px, -5px);
+    position: absolute;
+}
+
+#canvas-last-body-fill {
+    transform: translate(-5px, -5px);
+    position: absolute;
+}
+
+.snake-body {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+}
+
+.snake-body-style {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 1;
+}
+
+.food {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    color: white;
+    z-index: 6;
+}
+
+.fa-3x {
+    animation-name: foodAnimation;
+    animation-duration: 15s;
+    animation-timing-function: ease;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.way {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: red;
+}
+
+.fillet {
+    position: absolute;
+    z-index: 5;
+}
+
+.fill {
+    position: absolute;
+    z-index: 4;
+}
+
+@keyframes foodAnimation {
+    0% {
+        color: white;
+        font-size: 3rem;
+    }
+
+    20% {
+        color: blue;
+        font-size: 2.5rem;
+        transform: rotate(8deg);
+    }
+
+    40% {
+        color: yellow;
+        font-size: 3rem;
+        transform: rotate(-8deg);
+    }
+
+    60% {
+        color: purple;
+        font-size: 2.5rem;
+        transform: rotate(8deg);
+    }
+
+    80% {
+        color: orange;
+        font-size: 3rem;
+        transform: rotate-(8deg);
+    }
+
+    100% {
+        color: red;
+        font-size: 2.5rem;
+        transform: rotate(8deg);
+    }
+}
+
+.nav {
+    position: relative;
+}
+
+.nav h1 {
+    display: inline-block;
+    margin-right: 2rem;
+}
+
+.nav div:first-child {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 10%;
+}
+
+.nav div:last-child {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+}
+
+.nav .fa-apple-whole {
+    color: #c0ca3d;
+}
+
+.nav .fa-trophy {
+    color: orange;
+}
+
+.nav .fa-solid {
+    font-size: 3rem !important;
+}
