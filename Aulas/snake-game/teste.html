@@ -179,7 +179,22 @@
         // ctx.fill()
 
 
-
+        function asd(){
+            let limit = 99
+            let s = 0
+            let seq = new Array()
+            for(let i = 1; i <= limit; i++){
+                if (i % 2 != 0){
+                    seq.push(i*(2 * i + 1))
+                }
+                else{
+                    seq.push(i * seq[0 + s])
+                    //console.log(i * seq[0 + s] + ' /// ' + i + ' /// ' + seq[0+s])
+                    s++
+                }
+            }
+            console.log(seq)
+        }
 
     </script>
     <style>
@@ -291,7 +306,7 @@
         </div> -->
     </div>
     <script>
-
+        asd()
         const light = document.getElementById('light')
         
         const blurFilter = document.getElementById('blur')
