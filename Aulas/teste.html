@@ -193,12 +193,7 @@
                     }
                 }
                 else{
-                    if (seq.length === 0){
-                        seq.push(i * seq[0 + s])
-                    }
-                    else{
-                        seq.push(i * seq[0 + s] + seq[s])
-                    }
+                    seq.push(i * seq[0 + s] + seq[s])
                     s++
                 }
             }

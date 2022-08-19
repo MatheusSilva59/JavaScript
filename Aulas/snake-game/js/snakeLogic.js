@@ -499,7 +499,7 @@ function collisionFood() { //Melhorar sistema de colisão com a comida, há falh
         score++
         document.getElementById('nav-actual').innerHTML = score - 2
 
-        if ((score - 2) === 335){ // win
+        if (score === 335){ // win
             shouldPause = true
         }
 
