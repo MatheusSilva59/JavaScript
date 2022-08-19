@@ -470,16 +470,15 @@ var animationBodyByfood = false
 var willEat = false
 function collisionFood() { //Melhorar sistema de colisão com a comida, há falhas não frequentes
 
-    
+
 
     if (roundByDirection(topPos) + stepToCSS === foodPosGet.top && roundByDirection(leftPos) + stepToCSS === foodPosGet.left) {
         animationBodyByfood = true
     }
 
     if (willEat) {
-
-        indexThereSomething.push(coordToIndex(Math.round(lastPosBodyLeft / 50) * 50, Math.round(lastPosBodyTop / 50) * 50))
-
+        //indexThereSomething.push(coordToIndex(Math.round(lastPosBodyLeft / 50) * 50, Math.round(lastPosBodyTop / 50) * 50))
+        //console.log('asd')
         randomPosition()
 
         hasBody = true
@@ -494,11 +493,15 @@ function collisionFood() { //Melhorar sistema de colisão com a comida, há falh
         bodyTempStyle.className = 'snake-body-style'
         bodyTemp.appendChild(bodyTempStyle)
         map.appendChild(bodyTemp)
-    
+
 
         isEating = true
         score++
         document.getElementById('nav-actual').innerHTML = score - 2
+
+        if ((score - 2) === 335){ // win
+            shouldPause = true
+        }
 
         lastBody.style.left = lastPosBodyLeft + stepToCSS
         lastBody.style.top = lastPosBodyTop + stepToCSS
@@ -551,7 +554,7 @@ function initiate() {
             i++
         }
     }
-    //console.log(allPos)
+    console.log(allPos)
     //temporário spawn
     leftPos = 200
     topPos = 200
@@ -601,7 +604,7 @@ function initiate() {
     lastBody.style.top = '200px'
     lastFill.style.left = '100px'
     lastFill.style.top = '200px'
-    
+
     indexThereSomething = new Array()
     indexThereSomething.push(28, 40, 52)
 
@@ -708,13 +711,9 @@ function bodySnakeComputed() {
 
 
             try {
-                if (leftPos % 50 === 0 && topPos % 50 === 0) {
-
-                    if (bodyArray[i].left === allPos[indexThereSomething[1]].left &&
-                        bodyArray[i].top === allPos[indexThereSomething[1]].top) {
-
+                if (leftPos % 50 === 0 && topPos % 50 === 0 && willEat === false) {
+                    if (bodyArray[i].left === allPos[indexThereSomething[1]].left && bodyArray[i].top === allPos[indexThereSomething[1]].top) {
                         indexThereSomething.shift()
-
                     }
                 }
             } catch (e) { continue }
@@ -956,7 +955,7 @@ function drawFillet(posTop, posLeft, rotate, transX, transY, time) {
     fillLocal.style.top = (posTop + transY) + stepToCSS
     fillLocal.style.transform = 'rotate(' + rotate + 'deg)'
 
-    
+
 }
 
 var img = new Image()
