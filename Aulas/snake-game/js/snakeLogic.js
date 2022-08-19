@@ -470,7 +470,7 @@ var animationBodyByfood = false
 var willEat = false
 function collisionFood() { //Melhorar sistema de colisão com a comida, há falhas não frequentes
 
-    redeclareConst()
+    
 
     if (roundByDirection(topPos) + stepToCSS === foodPosGet.top && roundByDirection(leftPos) + stepToCSS === foodPosGet.left) {
         animationBodyByfood = true
@@ -484,14 +484,21 @@ function collisionFood() { //Melhorar sistema de colisão com a comida, há falh
 
         hasBody = true
 
-        document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + lastPosBodyLeft + stepToCSS + '; top: ' + lastPosBodyTop + stepToCSS + '"><span class="snake-body-style"></span></span>'
+        let map = document.querySelector('.map')
+        let bodyTemp = document.createElement('span')
+        let bodyTempStyle = document.createElement('span')
+
+        bodyTemp.className = 'snake-body d-flex justify-content-center align-items-center'
+        bodyTemp.style.left = lastPosBodyLeft + stepToCSS
+        bodyTemp.style.top = lastPosBodyTop + stepToCSS
+        bodyTempStyle.className = 'snake-body-style'
+        bodyTemp.appendChild(bodyTempStyle)
+        map.appendChild(bodyTemp)
+    
 
         isEating = true
         score++
         document.getElementById('nav-actual').innerHTML = score - 2
-
-        redeclareConst()
-
 
         lastBody.style.left = lastPosBodyLeft + stepToCSS
         lastBody.style.top = lastPosBodyTop + stepToCSS
@@ -513,24 +520,11 @@ function collisionFood() { //Melhorar sistema de colisão com a comida, há falh
             drawLast(270, 'noDelay')
         }
 
-        drawAll()
-        drawHead(lastAnimationHead.angle, lastAnimationHead.type)
+        //drawAll()
+        //drawHead(lastAnimationHead.angle, lastAnimationHead.type)
 
     }
 
-}
-function redeclareConst() {
-    snakePos = document.getElementById('snake').style
-
-    lastFill = document.getElementById('last-fill')
-    lastBody = document.getElementById('last-body')
-    snakeHead = document.getElementById('snake-head')
-    canvasHead = document.getElementById('canvas-head')
-
-    snakeConection = document.getElementById('snake-conection').style
-    foodPos = document.getElementById('food').style
-    snakePosGet = window.getComputedStyle(document.getElementById('snake'))
-    foodPosGet = window.getComputedStyle(document.getElementById('food'))
 }
 
 var mapWidth
@@ -575,9 +569,34 @@ function initiate() {
     statusDirection.lastY = 200
     lastPosLeftSnake = 200
     lastPosTopSnake = 200
-    document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + 150 + stepToCSS + '; top: ' + 200 + stepToCSS + '"><span class="snake-body-style" style="width: 60px; height: 40px; background-color: ' + snakeColor + '"></span></span>'
-    document.getElementById('map').innerHTML += '<span class="snake-body d-flex justify-content-center align-items-center" style="left:' + 100 + stepToCSS + '; top: ' + 200 + stepToCSS + '"><span class="snake-body-style" style="width: 60px; height: 40px; backgroun-cColor: ' + snakeColor + '"></span></span>'
-    redeclareConst()
+
+    let map = document.querySelector('.map')
+    let body1 = document.createElement('span')
+    let body1style = document.createElement('span')
+    let body2 = document.createElement('span')
+    let body2style = document.createElement('span')
+
+    body1style.className = 'snake-body-style'
+    body1style.style.width = '60px'
+    body1style.style.height = '40px'
+    body1style.style.backgroundColor = snakeColor
+    body1.append(body1style)
+    body1.className = 'snake-body d-flex justify-content-center align-items-center'
+    body1.style.left = '150px'
+    body1.style.top = '200px'
+
+    body2style.className = 'snake-body-style'
+    body2style.style.width = '60px'
+    body2style.style.height = '40px'
+    body2style.style.backgroundColor = snakeColor
+    body2.append(body2style)
+    body2.className = 'snake-body d-flex justify-content-center align-items-center'
+    body2.style.left = '100px'
+    body2.style.top = '200px'
+
+    map.appendChild(body1)
+    map.appendChild(body2)
+
     lastBody.style.left = '100px'
     lastBody.style.top = '200px'
     lastFill.style.left = '100px'
@@ -909,8 +928,16 @@ var fillPosition = []
 
 function drawFillet(posTop, posLeft, rotate, transX, transY, time) {
 
-    document.getElementById('map').innerHTML += '<canvas class="fillet" width=50px height=50px></canvas>'
-    document.getElementById('map').innerHTML += '<canvas class="fill" width=50px height=50px></canvas>'
+    //document.getElementById('map').innerHTML += '<canvas class="fillet" width=50px height=50px></canvas>'
+    //document.getElementById('map').innerHTML += '<canvas class="fill" width=50px height=50px></canvas>'
+
+    let map = document.querySelector('.map')
+    let fillet = document.createElement('canvas')
+    let fill = document.createElement('canvas')
+    fill.className = 'fill'
+    fillet.className = 'fillet'
+    map.appendChild(fill)
+    map.appendChild(fillet)
 
     drawAll()
 
@@ -929,7 +956,7 @@ function drawFillet(posTop, posLeft, rotate, transX, transY, time) {
     fillLocal.style.top = (posTop + transY) + stepToCSS
     fillLocal.style.transform = 'rotate(' + rotate + 'deg)'
 
-    redeclareConst()
+    
 }
 
 var img = new Image()
@@ -941,6 +968,9 @@ function drawAll() {
 
         let fillet = document.getElementsByClassName('fillet')[x]
         let ctx = fillet.getContext('2d')
+
+        ctx.canvas.height = 50
+        ctx.canvas.width = 50
 
         if (fillet.getContext) {
             ctx.fillStyle = mapColor
@@ -958,6 +988,9 @@ function drawAll() {
     for (let y = 0; y < document.getElementsByClassName('fill').length; y++) {
         let fill = document.getElementsByClassName('fill')[y]
         let ctxFill = fill.getContext('2d')
+
+        ctxFill.canvas.height = 50
+        ctxFill.canvas.width = 50
 
         if (fill.getContext) {
             ctxFill.fillStyle = snakeColor
