@@ -5,8 +5,148 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMCA SCRIPT</title>
+    <style>
+        body{
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        .container{
+            width: 100%;
+            /* border: 1px solid red; */
+            display: flex;
+            justify-content: center;
+        }
+        .content{
+            width: 500px;
+            height: 500px;
+            border: 1px solid green;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .content h1{
+            transform: translate(0%, -50%);
+        }
+    </style>
+    <script>
+
+        // var serie = 'Sandman'
+
+        // function scope(){
+        //     var h1 = document.getElementById('h1')
+        //     if (true){
+        //         h1.textContent = serie
+        //     }
+        // }
+        
+        // var nome = 'Juanito'
+        // console.log(`Olá ${nome}, seja bem-vindo.`)
+
+        // // var squareRoot = (x = 1) => {
+        // //     return Math.sqrt(x)
+        // // }
+        // var squareRoot = x => Math.sqrt(x)
+        // var evenOrOdd = x => x % 2 === 0 ? 'par' : 'impar'
+
+        
+        // console.log(squareRoot(9))
+        // var n = 5
+        // console.log(`O número ${n} é ${evenOrOdd(n)}`)
+
+        class ContaBancaria{
+            constructor(){
+                this.agencia = 1234
+                this.numeroConta = 5678
+                this.saldo = 50
+                this.limite = 15000
+            }
+            depositar(valorDeposito){
+                this.saldo += valorDeposito
+            }
+            sacar(valorSaque){
+                this.saldo -= valorSaque
+            }
+            consultarSaldo(){
+                return this.saldo
+            }
+        }
+        // conta = new ContaBancaria()
+        // conta.depositar(450)
+        // console.log(conta.consultarSaldo())
+
+        class Tv{
+            constructor(){
+                this._relacaoCanais = Array(1, 2, 3, 4, 5)
+                this._canalAtivo = 5
+                this._volume = 5
+            }
+
+            get canalAtivo(){
+                return this._canalAtivo
+            }
+            set canalAtivo(canal){
+                this._canalAtivo = canal
+            }
+        }
+
+        class Animal{
+            constructor(tamanho, cor){
+                this.tamanho = tamanho
+                this.cor = cor
+            }
+            comer(){
+                console.log('comer')
+            }
+            dormir(){
+                console.log('dormir')
+            }
+        }
+        class Passaro extends Animal{
+            constructor(tamanho, cor, bico){
+                super(tamanho, cor)
+                this.bico = bico
+            }
+        }
+        class Cachorro extends Animal{
+            constructor(tamanho, cor, orelhas){
+                super(tamanho, cor)
+                this.orelhas = orelhas
+            }
+        }
+
+        //Função do super é acessar e enviar informações para o construtor pai da classe
+
+        // let passaro = new Passaro(10, 'preto', 'médio')
+        // let cachorro = new Cachorro(20, 'cinza', 'longas e caídas')
+        // let cachorro1 = new Cachorro()
+        // console.log(passaro)
+        // console.log(cachorro)
+        // console.log(cachorro1)
+
+        // let funcConstrutora = function(){
+        //     this.a = 'a'
+        //     this.b = () => {console.log('THIS.B')}
+        // }
+        // let aF = new funcConstrutora()
+        // aF.b()
+
+
+        let a = {a : 'a'}
+        let b = {__proto__: a,b : 'b'}
+        let c = {__proto__: b,c : 'c'}
+        console.log(c)
+        console.log(c.a)
+
+    </script>
 </head>
 <body>
-    
+    <div class="container">
+        <div class="content">
+            <h1 id="h1"></h1>
+        </div>
+    </div>
+
+    <script>
+
+    </script>
 </body>
 </html>

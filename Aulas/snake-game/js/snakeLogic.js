@@ -470,8 +470,6 @@ var animationBodyByfood = false
 var willEat = false
 function collisionFood() { //Melhorar sistema de colisão com a comida, há falhas não frequentes
 
-
-
     if (roundByDirection(topPos) + stepToCSS === foodPosGet.top && roundByDirection(leftPos) + stepToCSS === foodPosGet.left) {
         animationBodyByfood = true
     }
@@ -554,7 +552,7 @@ function initiate() {
             i++
         }
     }
-    console.log(allPos)
+    //console.log(allPos)
     //temporário spawn
     leftPos = 200
     topPos = 200
@@ -605,7 +603,7 @@ function initiate() {
     lastFill.style.left = '100px'
     lastFill.style.top = '200px'
 
-    indexThereSomething = new Array()
+    indexThereSomething = Array()
     indexThereSomething.push(28, 40, 52)
 
     actualDirection = 'd'
