@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMCA SCRIPT</title>
     <style>
-        body{
+        body {
             background-color: rgba(0, 0, 0, 0.9);
         }
-        .container{
+
+        .container {
             width: 100%;
             /* border: 1px solid red; */
             display: flex;
             justify-content: center;
         }
-        .content{
+
+        .content {
             width: 500px;
             height: 500px;
             border: 1px solid green;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
-        .content h1{
+
+        .content h1 {
             transform: translate(0%, -50%);
         }
     </style>
@@ -37,7 +42,7 @@
         //         h1.textContent = serie
         //     }
         // }
-        
+
         // var nome = 'Juanito'
         // console.log(`Olá ${nome}, seja bem-vindo.`)
 
@@ -47,25 +52,25 @@
         // var squareRoot = x => Math.sqrt(x)
         // var evenOrOdd = x => x % 2 === 0 ? 'par' : 'impar'
 
-        
+
         // console.log(squareRoot(9))
         // var n = 5
         // console.log(`O número ${n} é ${evenOrOdd(n)}`)
 
-        class ContaBancaria{
-            constructor(){
+        class ContaBancaria {
+            constructor() {
                 this.agencia = 1234
                 this.numeroConta = 5678
                 this.saldo = 50
                 this.limite = 15000
             }
-            depositar(valorDeposito){
+            depositar(valorDeposito) {
                 this.saldo += valorDeposito
             }
-            sacar(valorSaque){
+            sacar(valorSaque) {
                 this.saldo -= valorSaque
             }
-            consultarSaldo(){
+            consultarSaldo() {
                 return this.saldo
             }
         }
@@ -73,41 +78,41 @@
         // conta.depositar(450)
         // console.log(conta.consultarSaldo())
 
-        class Tv{
-            constructor(){
+        class Tv {
+            constructor() {
                 this._relacaoCanais = Array(1, 2, 3, 4, 5)
                 this._canalAtivo = 5
                 this._volume = 5
             }
 
-            get canalAtivo(){
+            get canalAtivo() {
                 return this._canalAtivo
             }
-            set canalAtivo(canal){
+            set canalAtivo(canal) {
                 this._canalAtivo = canal
             }
         }
 
-        class Animal{
-            constructor(tamanho, cor){
+        class Animal {
+            constructor(tamanho, cor) {
                 this.tamanho = tamanho
                 this.cor = cor
             }
-            comer(){
+            comer() {
                 console.log('comer')
             }
-            dormir(){
+            dormir() {
                 console.log('dormir')
             }
         }
-        class Passaro extends Animal{
-            constructor(tamanho, cor, bico){
+        class Passaro extends Animal {
+            constructor(tamanho, cor, bico) {
                 super(tamanho, cor)
                 this.bico = bico
             }
         }
-        class Cachorro extends Animal{
-            constructor(tamanho, cor, orelhas){
+        class Cachorro extends Animal {
+            constructor(tamanho, cor, orelhas) {
                 super(tamanho, cor)
                 this.orelhas = orelhas
             }
@@ -130,23 +135,81 @@
         // aF.b()
 
 
-        let a = {a : 'a'}
-        let b = {__proto__: a,b : 'b'}
-        let c = {__proto__: b,c : 'c'}
-        console.log(c)
-        console.log(c.a)
+        let a = { a: 'a' }
+        let b = { __proto__: a, b: 'b' }
+        let c = { __proto__: b, c: 'c' }
+        //console.log(c)
+        //console.log(c.a)
 
     </script>
+    <style>
+        .form-control {
+            height: 35px;
+            border: none;
+            box-sizing: border-box;
+            padding: 10px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-control:first-child,
+        .form-control:last-child {
+            background-color: #e5e5e5;
+        }
+
+        form {
+            /* width: 100%; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .btn-submit:hover {
+            background-color: #838282;
+            transition-duration: .4s;
+            cursor: pointer;
+        }
+
+        #text-result {
+            width: 90%;
+            margin: 10px 30px;
+            background-color: white;
+            border-radius: 10px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
         <div class="content">
             <h1 id="h1"></h1>
+            <form>
+                <label class="form-control" for="text">Escreva algo para ser salvo:</label>
+                <input class="form-control" type="text" id="text">
+                <input class="form-control btn btn-submit" type="submit" id="enviar" value="Salvar">
+            </form>
+            <input class="form-control" type="text" id="text-result" disabled>
         </div>
     </div>
 
     <script>
 
+        document.getElementById('enviar').addEventListener('click', addOrReadFromLocalStorage)
+
+        function addOrReadFromLocalStorage() {
+            window.localStorage.setItem('texto', document.getElementById('text').value)
+            if (typeof (Storage) !== "undefined") {
+                document.getElementById('text-result').value = window.localStorage.texto
+            }
+        }
+        if (typeof (Storage) !== "undefined") {
+            document.getElementById('text-result').value = window.localStorage.texto
+        }
     </script>
 </body>
+
 </html>
