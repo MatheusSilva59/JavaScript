@@ -170,6 +170,7 @@
 
         .btn-submit:hover {
             background-color: #838282;
+            color: white;
             transition-duration: .4s;
             cursor: pointer;
         }
@@ -192,7 +193,7 @@
                 <input class="form-control" type="text" id="text">
                 <input class="form-control btn btn-submit" type="submit" id="enviar" value="Salvar">
             </form>
-            <input class="form-control" type="text" id="text-result" disabled>
+            <textarea class="form-control" id="text-result" cols="30" rows="10"></textarea>
         </div>
     </div>
 
@@ -201,13 +202,21 @@
         document.getElementById('enviar').addEventListener('click', addOrReadFromLocalStorage)
 
         function addOrReadFromLocalStorage() {
-            window.localStorage.setItem('texto', document.getElementById('text').value)
             if (typeof (Storage) !== "undefined") {
-                document.getElementById('text-result').value = window.localStorage.texto
+                if (window.localStorage.getItem(0) != null){
+                    window.localStorage.setItem(0, document.getElementById('text-result').value)
+                }
+                else{
+                    window.localStorage.setItem(0, '')
+                }
+                window.localStorage.setItem(window.localStorage.length, document.getElementById('text').value)
             }
         }
         if (typeof (Storage) !== "undefined") {
-            document.getElementById('text-result').value = window.localStorage.texto
+            if (window.localStorage.getItem(0) != null){
+                document.getElementById('text-result').value = window.localStorage.getItem(0)
+            }
+            document.getElementById('text-result').value += window.localStorage.getItem(window.localStorage.length - 1)
         }
     </script>
 </body>

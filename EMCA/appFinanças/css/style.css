@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+.background-color{
+    background-color: #007BFF;
+}
+.border{
+    border: 1px solid red !important;
+}
+.custom-nav-icon{
+    font-size: 1.8rem;
+    color: white;
+    border-color: #9ec7e8 !important;
+}
+.nav-link{
+    color: white;
+    font-size: 1.2rem;
+}
+.nav-link:hover{
+    color: #a4a1c5;
+}
+.custom-success-bg{
+    background-color: #28a745;
+}
+.custom-success-text{
+    color: #28a745;
+}

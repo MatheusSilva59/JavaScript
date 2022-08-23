@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanças</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/490ac8585b.js" crossorigin="anonymous"></script>
+
+    <!-- custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- custom JS -->
+    <script src="js/logicApp.js"></script>
+    
+    <style>
+        .table-group-divider {
+            border-top: 2px solid #afa6a6;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="mb-5 py-3 background-color">
+        <nav class="navbar">
+            <div class="container">
+                <img class="navbar-brand" src="" alt="">
+                <button class="navbar-toggler ms-auto custom-nav-icon" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="index.html">Cadastro</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="consultar.html">Consulta</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <section>
+            <h1 class="display-3">Consulta de despesas</h1>
+            <form action="" class="row mt-5 justify-content-center">
+                <div class="col-12 row p-0">
+                    <div class="col-12 col-md-6 my-2">
+                        <input class="form-control form-control-lg" type="date" name="date" id="date">
+                    </div>
+                    <div class="col-12 col-md-6 my-2">
+                        <select class="form-select form-select-lg" name="category" id="category">
+                            <option selected>Tipo</option>
+                            <option value="education">Educação</option>
+                            <option value="food">Alimentação</option>
+                            <option value="leisure">Lazer</option>
+                            <option value="health">Saúde</option>
+                            <option value="transport">Trasnporte</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 row p-0">
+                    <div class="col-12 col-md-8 my-2">
+                        <input class="form-control form-control-lg" type="text" name="description" id="description"
+                            placeholder="Descrição">
+                    </div>
+                    <div class="col-12 col-md-4 d-flex my-2">
+                        <input class="form-control form-control-lg" type="text" name="cash-value" id="cash-value"
+                            placeholder="Valor">
+                        <button type="button" class="btn btn-lg background-color btn-outline-primary ms-2"
+                            onclick="showAllExpense()">
+                            <i class="fa-solid fa-magnifying-glass text-white"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section>
+            <hr>
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider" id="tbody-main">
+                    <tr>
+                        <td>123</td>
+                        <td>123</td>
+                        <td>123</td>
+                        <td>123</td>
+                        <td class="text-center">
+                            <button class="btn btn-danger">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+
+</html>
