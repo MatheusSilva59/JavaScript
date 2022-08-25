@@ -2,6 +2,8 @@ function add() {
     if (isValid()) {
         window.localStorage.setItem(realLengthStorage(), JSON.stringify(new Expense()))
         myModalSuccess.show()
+        jsonToObject()
+        showAllExpense()
     }
     else{
         myModalFail.show()
@@ -72,8 +74,14 @@ function initiate() {
     })
 
     filterClass = new Expense()
+
     jsonToObject()
     showAllExpense()
+
+    filterSection.style.left = '50%'
+    registerSection.style.left = '50%'
+    numberA = 50
+    
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 }
@@ -94,7 +102,6 @@ function showAllExpense() {
         for (index in window['class' + item]) {
             let td = document.createElement('td')
             if (window['class' + item][index].length > 20) {
-                console.log('grande')
                 td.textContent = window['class' + item][index].toString().slice(0, 10)
                 let btn = document.createElement('button')
                 let i = document.createElement('i')
@@ -137,9 +144,9 @@ function showAllExpense() {
         i.className = 'fa-solid fa-xmark'
         btn.appendChild(i)
         btn.addEventListener('click', () => {
-            let tempTr = document.getElementById(`tr${localStorage.key(item)}`)
+            let tempTr = document.getElementById(btn.parentNode.parentNode.id)
             tbody.removeChild(tempTr)
-            window.localStorage.removeItem(localStorage.key(item))
+            window.localStorage.removeItem(btn.parentNode.parentNode.id.toString().replace('tr', ''))
         })
         td.appendChild(btn)
         tr.appendChild(td)
@@ -163,10 +170,10 @@ function translateCategory(value) {
     }
 }
 function updateValue() {
-    filterClass.date = document.getElementById('date').value
-    filterClass.category = document.getElementById('category').value
-    filterClass.description = document.getElementById('description').value
-    filterClass.cashValue = document.getElementById('cash-value').value
+    filterClass.date = document.getElementById('date-filter').value
+    filterClass.category = document.getElementById('category-filter').value
+    filterClass.description = document.getElementById('description-filter').value
+    filterClass.cashValue = document.getElementById('cash-value-filter').value
 }
 function filter() {
     updateValue()
@@ -199,4 +206,46 @@ function filter() {
         }
     }
 }
-
+let lastDirectionPanel = 'filter'
+function changePanel(direction){
+    if (direction === 'register' && lastDirectionPanel === 'filter'){
+        window.cancelAnimationFrame(frameSlider)
+        lastDirectionPanel = 'register'
+        animationPanel(filterSection, registerSection, 0, 'left')
+        btnFilter.className = 'btn btn-light'
+        btnRegister.className = 'btn btn-light active'
+    }
+    else if(direction === 'filter' && lastDirectionPanel === 'register'){
+        window.cancelAnimationFrame(frameSlider)
+        lastDirectionPanel = 'filter'
+        animationPanel(filterSection, registerSection, 50, 'right')
+        btnFilter.className = 'btn btn-light active'
+        btnRegister.className = 'btn btn-light'
+    }
+}
+let actualWidth
+let slider
+function resize(){
+    actualWidth = window.getComputedStyle(document.getElementById('container')).width
+    slider = document.getElementById('slider')
+    actualWidth = actualWidth.replace('px', '')
+    slider.style.width = `${2 * actualWidth}px`
+    slider.style.transform = `translate(${((2 * actualWidth)/2 + 12) * -1}px, 0)`
+}
+let numberA = 0
+let step = 2
+let frameSlider 
+function animationPanel(a, b, target, direction){
+    if (direction === 'left'){
+        numberA -= step
+    }
+    else{
+        numberA += step
+    }
+    a.style.left = `${numberA}%`
+    b.style.left = `${numberA}%`
+    console.log(numberA)
+    if (numberA != target){
+        frameSlider = window.requestAnimationFrame(() => {animationPanel(a, b, target, direction)})
+    }
+}

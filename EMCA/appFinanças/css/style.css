@@ -53,3 +53,36 @@
 .min-width-150{
     min-width: 150px;
 }
+
+#register {
+    margin: 0;
+    position: relative;
+}
+
+#filter {
+    margin: 0;
+    position: relative;
+}
+
+#slider {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+}
+
+main {
+    overflow: hidden;
+}
+.btn-custom-select{
+    background-color: #bc7f2c;
+    color: white;
+    border: none;
+}
+.btn-custom-select:hover{
+    background-color: #9c794873;
+    color: white;
+}
+.btn-custom-select:active{
+    background-color: #9c794873;
+    color: white;
+}

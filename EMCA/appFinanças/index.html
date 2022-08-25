@@ -23,110 +23,158 @@
     <!-- custom JS -->
     <script src="js/logicApp.js"></script>
 
-    <style>
-
-    </style>
-
 </head>
 
 <body>
-    <header class="mb-5 py-3 background-color">
-        <nav class="navbar">
+    <header class="mb-2 pt-3 pb-2 background-color">
+        <nav class="navbar custom-nav">
             <div class="container">
-                <img class="navbar-brand" src="" alt="">
-                <button class="navbar-toggler ms-auto custom-nav-icon" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#mainNav">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="mainNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Cadastro</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="consultar.html">Consulta</a>
-                        </li>
-                    </ul>
-                </div>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" id="btn-filter" onclick="changePanel('filter')" class="btn btn-light active">Consultar Despesas</button>
+                    <button type="button" id="btn-register" onclick="changePanel('register')" class="btn btn-light">Registrar Despesas</button>
+                  </div>
             </div>
         </nav>
     </header>
-    <main class="container">
-        <section>
-            <h1 class="display-3">Registro de nova despesa</h1>
-            <form class="row mt-5 justify-content-center">
-                <div class="col-12 row p-0">
-                    <div class="col-12 col-md-6 my-2">
-                        <input class="form-control form-control-lg" type="date" name="date" id="date">
-                    </div>
-                    <div class="col-12 col-md-6 my-2">
-                        <select class="form-select form-select-lg" name="category" id="category">
-                            <option selected>Tipo</option>
-                            <option value="education">Educação</option>
-                            <option value="food">Alimentação</option>
-                            <option value="leisure">Lazer</option>
-                            <option value="health">Saúde</option>
-                            <option value="transport">Transporte</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-12 row p-0">
-                    <div class="col-12 col-md-8 my-2">
-                        <input class="form-control form-control-lg" type="text" name="description" id="description"
-                            placeholder="Descrição">
-                    </div>
-                    <div class="col-12 col-md-4 d-flex my-2">
-                        <input class="form-control form-control-lg" type="text" name="cash-value" id="cash-value"
-                            placeholder="Valor">
-                        <button type="button" class="btn btn-lg background-color btn-outline-primary ms-2" id="add">
-                            <i class="fa-solid fa-plus text-white"></i>
-                        </button>
-                        <div class="modal fade" tabindex="-1" id="success-modal">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="custom-success-text">Registro inserido</h3>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Despesa cadastrada com sucesso
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-success custom-success-bg text-light"
-                                            data-bs-dismiss="modal">Voltar</button>
-                                    </div>
-                                </div>
-                            </div>
+    <main class="container" id="container">
+        <div id="slider">
+            <section id="filter" class="container">
+                <h1 class="display-3">Consulta de despesas</h1>
+                <form action="" class="row mt-5 justify-content-center">
+                    <div class="col-12 row p-0">
+                        <div class="col-12 col-md-6 my-2">
+                            <input class="form-control form-control-lg" type="date" name="date-filter" id="date-filter">
                         </div>
-                        <div class="modal fade" tabindex="-1" id="fail-modal">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="custom-fail-text">Registro não inserido</h3>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Despesa não cadastrada
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger custom-fail-bg text-light"
-                                            data-bs-dismiss="modal">Voltar</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-12 col-md-6 my-2">
+                            <select class="form-select form-select-lg" name="category-filter" id="category-filter">
+                                <option selected>Tipo</option>
+                                <option value="education">Educação</option>
+                                <option value="food">Alimentação</option>
+                                <option value="leisure">Lazer</option>
+                                <option value="health">Saúde</option>
+                                <option value="transport">Transporte</option>
+                            </select>
                         </div>
                     </div>
-                </div>
-            </form>
+                    <div class="col-12 row p-0">
+                        <div class="col-12 col-md-8 my-2">
+                            <div class="input-group">
+                                <input class="form-control form-control-lg" type="text" name="description-filter"
+                                    id="description-filter" placeholder="Descrição">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-item active" id="findForProximity">Busca por aproximação</li>
+                                    <li class="dropdown-item" id="findForIdentity">Busca por identidade</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 d-flex my-2">
+                            <input class="form-control form-control-lg" type="text" name="cash-value-filter"
+                                id="cash-value-filter" placeholder="Valor">
+                            <button type="button" class="btn btn-lg background-color btn-outline-primary ms-2"
+                                onclick="filter()">
+                                <i class="fa-solid fa-magnifying-glass text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+            <section id="register" class="container">
+                <h1 class="display-3">Registro de nova despesa</h1>
+                <form class="row mt-5 justify-content-center">
+                    <div class="col-12 row p-0">
+                        <div class="col-12 col-md-6 my-2">
+                            <input class="form-control form-control-lg" type="date" name="date" id="date">
+                        </div>
+                        <div class="col-12 col-md-6 my-2">
+                            <select class="form-select form-select-lg" name="category" id="category">
+                                <option selected>Tipo</option>
+                                <option value="education">Educação</option>
+                                <option value="food">Alimentação</option>
+                                <option value="leisure">Lazer</option>
+                                <option value="health">Saúde</option>
+                                <option value="transport">Transporte</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 row p-0">
+                        <div class="col-12 col-md-8 my-2">
+                            <input class="form-control form-control-lg" type="text" name="description" id="description"
+                                placeholder="Descrição">
+                        </div>
+                        <div class="col-12 col-md-4 d-flex my-2">
+                            <input class="form-control form-control-lg" type="text" name="cash-value" id="cash-value"
+                                placeholder="Valor">
+                            <button type="button" class="btn btn-lg background-color btn-outline-primary ms-2" id="add">
+                                <i class="fa-solid fa-plus text-white"></i>
+                            </button>
+                        </div>
+                </form>
+            </section>
+        </div>
+        <section class="table-responsive">
+            <hr>
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col" class="min-width-100">Data</th>
+                        <th scope="col" class="min-width-100">Tipo</th>
+                        <th scope="col" class="min-width-150">Descrição</th>
+                        <th scope="col" class="min-width-80">Valor</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider" id="tbody-main">
+                </tbody>
+            </table>
         </section>
+        <div class="modal fade" tabindex="-1" id="success-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="custom-success-text">Registro inserido</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Despesa cadastrada com sucesso
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success custom-success-bg text-light"
+                            data-bs-dismiss="modal">Voltar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" tabindex="-1" id="fail-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="custom-fail-text">Registro não inserido</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Despesa não cadastrada
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger custom-fail-bg text-light"
+                            data-bs-dismiss="modal">Voltar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>
         document.getElementById('add').addEventListener('click', add)
+        window.addEventListener('resize', resize)
         const myModalSuccess = new bootstrap.Modal('#success-modal')
         const myModalFail = new bootstrap.Modal('#fail-modal')
+        const btnFilter = document.getElementById('btn-filter')
+        const btnRegister = document.getElementById('btn-register')
+        const filterSection = document.getElementById('filter')
+        const registerSection = document.getElementById('register')
+        initiate()
+        resize()
     </script>
 </body>
 
