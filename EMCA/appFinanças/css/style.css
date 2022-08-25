@@ -24,3 +24,32 @@
 .custom-success-text{
     color: #28a745;
 }
+.custom-fail-bg{
+    background-color: #c53030;
+}
+.custom-fail-text{
+    color: #c53030;
+}
+.btn-popover{
+    border: none;
+    background-color: transparent;
+    display: inline !important;
+    position: relative;
+}
+.icon-popover{
+    position: absolute;
+    left: 2px;
+    top: -9px;
+}
+.icon-popover:hover{
+    color: #007BFF;
+}
+.min-width-80{
+    min-width: 80;
+}
+.min-width-100{
+    min-width: 100px;
+}
+.min-width-150{
+    min-width: 150px;
+}

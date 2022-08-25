@@ -22,7 +22,7 @@
 
     <!-- custom JS -->
     <script src="js/logicApp.js"></script>
-    
+
     <style>
         .table-group-divider {
             border-top: 2px solid #afa6a6;
@@ -30,7 +30,7 @@
     </style>
 </head>
 
-<body onload="addClassToFilter(), showAllExpense()">
+<body>
     <header class="mb-5 py-3 background-color">
         <nav class="navbar">
             <div class="container">
@@ -67,14 +67,22 @@
                             <option value="food">Alimentação</option>
                             <option value="leisure">Lazer</option>
                             <option value="health">Saúde</option>
-                            <option value="transport">Trasnporte</option>
+                            <option value="transport">Transporte</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-12 row p-0">
                     <div class="col-12 col-md-8 my-2">
-                        <input class="form-control form-control-lg" type="text" name="description" id="description"
-                            placeholder="Descrição">
+                        <div class="input-group">
+                            <input class="form-control form-control-lg" type="text" name="description" id="description"
+                                placeholder="Descrição">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false"></button>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item active" id="findForProximity">Busca por aproximação</li>
+                                <li class="dropdown-item" id="findForIdentity">Busca por identidade</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-12 col-md-4 d-flex my-2">
                         <input class="form-control form-control-lg" type="text" name="cash-value" id="cash-value"
@@ -87,33 +95,24 @@
                 </div>
             </form>
         </section>
-        <section>
+        <section class="table-responsive">
             <hr>
             <table class="table align-middle">
                 <thead>
                     <tr>
-                        <th>Data</th>
-                        <th>Tipo</th>
-                        <th>Descrição</th>
-                        <th>Valor</th>
+                        <th scope="col" class="min-width-100">Data</th>
+                        <th scope="col" class="min-width-100">Tipo</th>
+                        <th scope="col" class="min-width-150">Descrição</th>
+                        <th scope="col" class="min-width-80">Valor</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider" id="tbody-main">
-                    <!-- <tr>
-                        <td>123</td>
-                        <td>123</td>
-                        <td>123</td>
-                        <td>123</td>
-                        <td class="text-center">
-                            <button class="btn btn-danger">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </td>
-                    </tr> -->
                 </tbody>
             </table>
         </section>
     </main>
+    <script>
+        initiate()
+    </script>
 </body>
-
 </html>

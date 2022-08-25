@@ -66,7 +66,7 @@
                             <option value="food">Alimentação</option>
                             <option value="leisure">Lazer</option>
                             <option value="health">Saúde</option>
-                            <option value="transport">Trasnporte</option>
+                            <option value="transport">Transporte</option>
                         </select>
                     </div>
                 </div>
@@ -99,6 +99,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="modal fade" tabindex="-1" id="fail-modal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="custom-fail-text">Registro não inserido</h3>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Despesa não cadastrada
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger custom-fail-bg text-light"
+                                            data-bs-dismiss="modal">Voltar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -107,7 +125,8 @@
 
     <script>
         document.getElementById('add').addEventListener('click', add)
-        const myModal = new bootstrap.Modal('#success-modal')
+        const myModalSuccess = new bootstrap.Modal('#success-modal')
+        const myModalFail = new bootstrap.Modal('#fail-modal')
     </script>
 </body>
 
