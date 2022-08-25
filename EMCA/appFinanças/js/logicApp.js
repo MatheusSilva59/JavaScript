@@ -1,7 +1,7 @@
 
 function add() {
     if (isValid()) {
-        window.localStorage.setItem(window.localStorage.length, JSON.stringify(new Expense()))
+        window.localStorage.setItem(localStorage.length, JSON.stringify(new Expense()))
         myModal.show()
     }
     else {
@@ -46,29 +46,80 @@ function isValid() {
         return true
     }
 }
+let filterClass
+function addClassToFilter(){
+    filterClass = new Expense()
+    jsonToObject()
+}
+function jsonToObject(){
+    for (let item = 0; item < localStorage.length; item++){
+        window['class' + item] = JSON.parse(localStorage[localStorage.key(item)])
+    }
+}
 function showAllExpense() {
-    //let tbody = document.querySelector('tbody-main')
-    //let tempTr = document.createElement('tr')
-    let tbody = document.querySelector('#tbody-main')
+    var tbody = document.querySelector('#tbody-main')
+    //clear all nodes
+    while (tbody.firstChild){
+        tbody.removeChild(tbody.firstChild)
+    }
+
     for (let item = 0; item < localStorage.length; item++) {
-        let temp = JSON.parse(localStorage[item])
         let tr = document.createElement('tr')
-        for (index in temp) {
+        for (index in window ['class' + item]) {
             let td = document.createElement('td')
-            td.textContent = temp[index]
+            td.textContent = window['class' + item][index]
             tr.appendChild(td)
         }
-        //btn
+        // button
         let td = document.createElement('td')
         let btn = document.createElement('btn')
         let i = document.createElement('i')
-        td.className = 'text-center'
+        td.className = 'text-center'  
         btn.className = 'btn btn-danger'
         i.className = 'fa-solid fa-xmark'
         btn.appendChild(i)
+        btn.addEventListener('click', () => {
+            let tempTr = document.getElementById(`tr${localStorage.key(item)}`)
+            tbody.removeChild(tempTr)
+            //window.localStorage.removeItem(localStorage.key(item))
+            reOrderStorage()
+        })
         td.appendChild(btn)
         tr.appendChild(td)
-        //btn fim
+        // button end
+        tr.id = 'tr' + localStorage.key(item)
         tbody.appendChild(tr)
     }
 }
+function updateValue(){
+    filterClass.date = document.getElementById('date').value
+    filterClass.category = document.getElementById('category').value
+    filterClass.description = document.getElementById('description').value
+    filterClass.cashValue = document.getElementById('cash-value').value
+}
+function filter(){
+    updateValue()
+    for (let item = 0; item < localStorage.length; item++){
+        let tempTr = document.getElementById(`tr${localStorage.key(item)}`)
+        for (index in window ['class' + item]) {
+            if (index != 'description'){
+                if (filterClass[index] === window['class' + item][index] || filterClass[index] === '' || filterClass[index] === 'Tipo'){
+                    tempTr.style.display = 'table-row'
+                }
+                else{
+                    tempTr.style.display = 'none'
+                    break
+                }
+            }
+        }
+    }
+}
+function reOrderStorage(){
+    for (let item = 0; item < localStorage.length; item++){
+        localStorage.setItem(item, JSON.stringify(window ['class' + localStorage.key(item)]))
+        console.log(window ['class' + localStorage.key(item)])
+        console.log(localStorage.key(item))
+        console.log(item)
+    }
+}
+

@@ -30,7 +30,7 @@
     </style>
 </head>
 
-<body>
+<body onload="addClassToFilter(), showAllExpense()">
     <header class="mb-5 py-3 background-color">
         <nav class="navbar">
             <div class="container">
@@ -80,7 +80,7 @@
                         <input class="form-control form-control-lg" type="text" name="cash-value" id="cash-value"
                             placeholder="Valor">
                         <button type="button" class="btn btn-lg background-color btn-outline-primary ms-2"
-                            onclick="showAllExpense()">
+                            onclick="filter()">
                             <i class="fa-solid fa-magnifying-glass text-white"></i>
                         </button>
                     </div>
@@ -99,7 +99,7 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider" id="tbody-main">
-                    <tr>
+                    <!-- <tr>
                         <td>123</td>
                         <td>123</td>
                         <td>123</td>
@@ -109,7 +109,7 @@
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </section>
